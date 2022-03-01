@@ -1,0 +1,5 @@
+{
+    "component": true,
+    "usingComponents":{},
+	"navigationBarTitleText": "自定义消息"
+}

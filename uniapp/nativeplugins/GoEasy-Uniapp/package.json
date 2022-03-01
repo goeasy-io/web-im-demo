@@ -1,0 +1,70 @@
+{
+	"name": "GoEasy消息推送v1.2.3",
+	"id": "GoEasy-Uniapp",
+	"version": "1.2.3",
+	"description": "GoEasy消息推送，厂商通道集成, 参数顺序乱七八糟，GoEasy也很无奈：），因为Uniapp插件的参数是无序的",
+	"_dp_type": "nativeplugin",
+	"_dp_nativeplugin": {
+		"android": {
+			"plugins": [{
+				"type": "module",
+				"name": "GoEasy-Uniapp",
+				"class": "io.goeasy.uniapp.UniappPlugin"
+			}],
+			"hooksClass": "io.goeasy.uniapp.UniappPlugin",
+			"integrateType": "aar",
+			"compileOptions": {
+				"sourceCompatibility": "1.8",
+				"targetCompatibility": "1.8"
+			},
+			"minSdkVersion": "19",
+			"useAndroidX": true,
+			"parameters": {
+				"OPPO appid": {
+					"key": "io.goeasy.oppo.app_id",
+					"value": "_${OPPO appid}"
+				},
+				"OPPO appkey": {
+					"key": "io.goeasy.oppo.app_key"
+				},
+				"OPPO appsecret": {
+					"key": "io.goeasy.oppo.app_secret"
+				},
+				"HuaWei APP ID": {
+					"key": "com.huawei.hms.client.appid"
+				},
+				"VIVO AppID": {
+					"key": "com.vivo.push.app_id"
+				},
+				"VIVO AppKey": {
+					"key": "com.vivo.push.api_key"
+				},
+				"XIAOMI AppID": {
+					"key": "io.goeasy.xiaomi.app_id",
+					"value": "_${XIAOMI AppID}"
+				},
+				"XIAOMI AppKey": {
+					"key": "io.goeasy.xiaomi.app_key",
+					"value": "_${XIAOMI AppKey}"
+				},
+				"MEIZU App ID": {
+					"key": "io.goeasy.meizu.app_id",
+					"value": "_${MEIZU App ID}"
+				},
+				"MEIZU App Key": {
+					"key": "io.goeasy.meizu.app_key"
+				}
+			}
+		},
+		"ios": {
+			"plugins": [{
+				"type": "module",
+				"name": "GoEasy-Uniapp",
+				"class": "UniappModule"
+			}],
+			"hooksClass": "UniappProxy",
+			"integrateType": "framework",
+			"deploymentTarget": "9.0"
+		}
+	}
+}

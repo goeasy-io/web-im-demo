@@ -1,0 +1,67 @@
+/* login.wxss */
+
+page {
+	width: 100%;
+	height: 100%;
+	font-family: Source Han Sans CN;
+}
+
+.login {
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	padding: 72rpx;
+}
+
+form{
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+.title {
+	width: 100%;
+	font-size: 84rpx;
+	font-style: normal;
+	font-weight: bold;
+	color: #D02129;
+	text-align: center;
+	margin-bottom: 140rpx;
+}
+
+.login-tips {
+	text-align: center;
+	margin-top: 40rpx;
+	color: #999999;
+}
+
+.input-box {
+	width: 100%;
+	height: 100rpx;
+	padding: 20rpx;
+	border: 2rpx solid #D02129;
+	box-sizing: border-box;
+	margin-bottom: 40rpx;
+}
+
+.error {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	height: 120rpx;
+	padding-left: 20rpx;
+	box-sizing: border-box;
+	margin-bottom: 40rpx;
+	color: #D02129;
+	background: rgba(208, 33, 41, 0.1);
+}
+
+.login-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 100rpx;
+	color: #FFFFFF;
+	background: #D02129;
+}

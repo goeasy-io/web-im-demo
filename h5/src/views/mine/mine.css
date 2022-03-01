@@ -1,0 +1,61 @@
+.mine{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.top{
+    background: #F3F4F7;
+}
+
+.mine-info-title {
+    height: 0.4rem;
+    line-height: 0.4rem;
+    box-sizing: content-box;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.16rem;
+}
+
+.mine-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 2.06rem;
+}
+
+.mine-info img{
+    width: 0.78rem;
+    height: 0.78rem;
+    border-radius: 0.05rem;
+}
+
+.mine-info .name{
+    font-size: 0.19rem;
+    line-height: 0.4rem;
+}
+
+.bottom{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    height: 1.65rem;
+    line-height: 0.4rem;
+    text-align: center;
+}
+
+.bottom .title {
+    font-size: 0.185rem
+}
+
+.logout{
+    width: 1.35rem;
+    height: 0.4rem;
+    margin: 0 auto;
+    border-radius: 0.05rem;
+    font-size: 0.16rem;
+    line-height: 0.4rem;
+    color: #FFFFFF;
+    background-color: #618DFF;
+}

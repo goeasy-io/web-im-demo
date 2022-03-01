@@ -1,0 +1,7 @@
+<view class="goeasy-audio-player" bindtap="playAudio">
+	<view class="audio-facade" style="width:{{width}}rpx">
+		<image wx:if="{{!play}}" class="audio-facade-bg" src="/static/images/audioImage/voice.png"></image>
+		<image wx:else class="audio-facade-bg audio-play-icon" src="/static/images/audioImage/play.gif"></image>
+		<view class="record-second">{{finalDuration}}</view>
+	</view>
+</view>

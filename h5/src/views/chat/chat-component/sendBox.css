@@ -1,0 +1,146 @@
+.send-box{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  font-size: 0.16rem;
+}
+.send-box .send-box-top{
+  display: flex;
+  padding-top: 0.1rem;
+  padding-bottom: 0.1rem;
+  backdrop-filter: blur(0.27rem);
+  height: 0.6rem;
+  background:#FAFAFA;
+  width: 100%;
+}
+.send-box-top .record-icon{
+  font-size: 0.16rem;
+  width: 0.4rem;
+  height: 0.4rem;
+  line-height: 0.4rem;
+  text-align: center;
+  background: url("/static/images/record-appearance-icon.png") no-repeat center;
+  background-size: 50%;
+  -webkit-tap-highlight-color:rgba(0,0,0,0);
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+.send-box-top .record-open-icon{
+  background: url("/static/images/jianpan.png") no-repeat center;
+  background-size: 70%;
+  -webkit-tap-highlight-color:rgba(0,0,0,0);
+}
+.send-box-top .message-record-container{
+  width: 2.1rem;
+  height: 0.4rem;
+  line-height: 0.4rem;
+}
+.send-box-top .message-record-container .record-button{
+  width: 2.1rem;
+  height: 0.4rem;
+  line-height: 0.4rem;
+  border-radius: 0.06rem;
+  font-size: 0.14rem;
+  background: #cccccc;
+  color: #ffffff;
+  text-align: center;
+}
+.send-box-top .message-record-container .message-input{
+  width: 2.1rem;
+  height: 0.4rem;
+  line-height: 0.4rem;
+  padding-left: 0.1rem;
+  font-size: 0.14rem;
+  border-radius: 0.06rem;
+  box-sizing: border-box;
+  background: #EFEFEF;
+  outline: none;
+  border:1px solid #cccccc;
+}
+
+.send-box-top .action-icon-container{
+  width: 1.2rem;
+  flex-grow: 0;
+  flex-shrink: 0;
+  display: flex;
+}
+.send-box-top .action-icon-container .emoji-icon{
+  color: #9D9D9D;
+  position: relative;
+  width:0.4rem;
+  height: 0.4rem;
+  line-height: 0.4rem;
+  -webkit-tap-highlight-color:rgba(0,0,0,0);
+  background: url("/static/images/emoji.png") no-repeat center;
+  background-size: 60%;
+}
+.send-box-top .action-icon-container .more-icon{
+  color: #9D9D9D;
+  position: relative;
+  width:0.4rem;
+  height: 0.4rem;
+  line-height: 0.4rem;
+  -webkit-tap-highlight-color:rgba(0,0,0,0);
+  background: url("/static/images/more.png") no-repeat center;
+  background-size: 70%;
+}
+.send-box-top .action-icon-container .send-btn{
+  font-size: 0.15rem;
+  width: 0.4rem;
+  height: 0.4rem;
+  line-height: 0.4rem;
+  color:#82868E ;
+}
+
+.send-box-bottom{
+  height: 1.5rem;
+  width:100%;
+  padding: 0.1rem;
+  box-sizing: border-box;
+  background: #ffffff;
+}
+.send-box-bottom .emoji-container{
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  height: 100%;
+
+}
+.send-box-bottom .emoji-container img{
+  width:0.5rem;
+  height: 0.5rem;
+}
+.send-box-bottom .more-container{
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+.send-box-bottom .more-container .more-item{
+  display: flex;
+  flex-direction: column;
+  width: 0.75rem;
+  height: 0.75rem;
+  margin-right: 0.1rem;
+  align-items: center;
+  position: relative;
+}
+.send-box-bottom .more-container .more-item img{
+  height: 0.5rem;
+  width: 0.5rem;
+}
+.send-box-bottom .more-container .more-item span{
+  font-size: 0.1rem;
+  text-align: center;
+  line-height: 0.25rem;
+}
+.send-box-bottom .more-container .more-item .img-input{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top:0;
+  left:0;
+  opacity: 0;
+}

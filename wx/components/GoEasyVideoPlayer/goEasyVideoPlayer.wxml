@@ -1,0 +1,3 @@
+<view class="goeasy-video-player" style="width0;height:0;overflow:hidden">
+	<video id="videoPlayer" wx:if="{{show}}" src="{{src}}" autoplay="true" custom-cache="{{false}}" bindfullscreenchange="onFullScreenChange" bindplay="onPlay"  controls duration="{{duration}}"></video>
+</view>

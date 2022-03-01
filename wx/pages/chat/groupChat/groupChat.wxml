@@ -1,0 +1,88 @@
+<page-meta>
+	<navigation-bar background-color="#D02129" title="{{groupTitle}}"/>
+</page-meta>
+<view class="groupChat">
+	<view>
+		<image class="group-member-icon" src="/static/images/group-icon.png" bindtap="showMembers"/>
+		<view scroll-y class="scroll-view">
+			<view class="header">
+				<text>{{allHistoryLoaded ? '已经没有更多的历史消息' : '下拉获取历史消息'}}</text>
+			</view>
+			<!--已经收到的消息-->
+			<view wx:for="{{messages || []}}" wx:for-index="index" wx:key="index" wx:for-item="message">
+				<!--时间显示，类似于微信，隔5分钟不发言，才显示时间-->
+				<view class="time-lag">
+					{{message.showTime}}
+				</view>
+				<view class="{{message.senderId == currentUser.uuid ? 'message-item self' : 'message-item'}}">
+					<view class="avatar {{message.senderId !== currentUser.uuid?'other-icon':'self-icon'}}">
+						<image class="avatar" src="{{message.senderData.avatar}}" />
+					</view>
+					<view class="content">
+						<image src="/static/images/pending.gif" class="pending" wx:if="{{ message.status === 'new'}}"></image>
+						<image src="/static/images/failed.png" class="send-fail" wx:if="{{message.status === 'fail'}}"></image>
+						<rich-text class="text-content" nodes="{{message.node}}" wx:if="{{message.type ==='text'}}"></rich-text>
+						<image class="image-content" wx:if="{{message.type === 'image'}}" src="{{message.payload.url}}" bindtap="previewImage"
+							   data-src="{{message.payload.url}}" mode="aspectFit"/>
+						<GoEasyAudioPlayer id="goEasyAudio" wx:if="{{message.type =='audio'}}" src="{{message.payload.url}}" duration="{{message.payload.duration}}" />
+						<view class="video-snapshot" bindtap="playVideo" data-url="{{message.payload.video.url}}" data-duration="{{message.payload.video.duration}}"  wx:if="{{message.type == 'video'}}">
+							<image class="thumbnail-image" src="{{message.payload.thumbnail.url}}" mode="aspectFit"></image>
+							<image class="play-icon" src="/static/images/videoImage/play.png"  mode="aspectFit"></image>
+						</view>
+						<view class="custom-message" wx:if="{{message.type === 'order'}}">
+							<view class="title">
+								<image src="../../../static/images/order.png"></image>
+								<text>自定义消息</text>
+							</view>
+							<view class="custom-message-item">编号: {{message.payload.number}}</view>
+							<view class="custom-message-item">商品: {{message.payload.goods}}</view>
+							<view class="custom-message-item">金额: {{message.payload.price}}</view>
+						</view>
+					</view>
+				</view>
+			</view>
+		</view>
+		<!--发送消息，视频，语音，自定义消息操作-->
+		<view class="action-box">
+			<view class="action-top">
+				<view bindtap="switchAudioKeyboard" class="action-icon">
+					<image wx:if="{{!recordVisible}}" class="microphone-icon" src="/static/images/record-appearance-icon.png"></image>
+					<image wx:else class="keyboard-icon" src="/static/images/jianpan.png"></image>
+				</view>
+				<!-- 录音 -->
+				<GoEasyRecorder style="flex: 1;" wx:if="{{recordVisible}}" bind:onStop="onRecordStop"></GoEasyRecorder>
+				<!-- GoEasyIM最大支持3k的文本消息，如需发送长文本，需调整输入框maxlength值 -->
+				<input wx:else type="text" maxlength="700" placeholder="发送消息" confirm-hold hold-keyboard="{{true}}" adjust-position="{{true}}" class="msg-input-box"
+					   data-content="content" bindinput="setContent" bindfocus="messageInputFocusin" value="{{content}}" />
+				<view class="action-icon">
+					<image src="/static/images/emoji.png" class="emoji-icon" bindtap="showEmoji"></image>
+				</view>
+				<view class="action-icon">
+					<image src="/static/images/more.png" class="more-icon" bindtap="showMore"></image>
+				</view>
+				<view class="send-btn-box" bindtap="sendTextMessage">发送</view>
+			</view>
+			<!--展示表情列表-->
+			<view class="action-bottom" wx:if="{{emoji.show}}" style="justify-content: space-around">
+				<image class="image" wx:for="{{emoji.map}}" wx:for-item="emojiItem" wx:for-index="key"  wx:key="key" src="{{emoji.url + emojiItem}}" bindtap="selectEmoji" data-emojiKey="{{key}}"></image>
+			</view>
+			<!--更多-->
+			<view class="action-bottom" wx:if="{{more.show}}">
+				<view class="more-item" bindtap="sendImage">
+					<image class="image" src="../../../static/images/tupian.png"></image>
+					<text class="text">图片</text>
+				</view>
+				<view class="more-item" bindtap="sendVideo">
+					<image class="image" src="../../../static/images/shipin.png"></image>
+					<text class="text">视频</text>
+				</view>
+				<view class="more-item" bindtap="showCustomMessageForm">
+					<image class="image" src="../../../static/images/custom.png"></image>
+					<text class="text">自定义消息</text>
+				</view>
+			</view>
+		</view>
+	</view>
+	<GoEasyVideoPlayer id="videoPlayer"></GoEasyVideoPlayer>
+	<GoEasyCustomMessage id="customMessage" bind:sendCustomMessage="sendCustomMessage"></GoEasyCustomMessage>
+</view>

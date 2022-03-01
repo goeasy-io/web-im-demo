@@ -1,0 +1,15 @@
+<!--groupMember.wxml-->
+<page-meta>
+	<navigation-bar
+		front-color="#FFFFFF"
+		background-color="#D02129"
+		title="群成员({{groupMemberNum}})"
+	/>
+</page-meta>
+<view class="groupMember">
+	<view class="member-layer">
+		<view class="member">
+			<image src="{{member.avatar}}" class="group-member-avatar avatar" wx:for="{{groupMembersMap}}" wx:key="key" wx:for-item="member"/>
+		</view>
+	</view>
+</view>

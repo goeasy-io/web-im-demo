@@ -1,0 +1,6 @@
+<view class="goeasy-recorder">
+	<view bindtouchstart="startRecord" bindtouchend="stopRecord" class="record-msg-box">
+		{{recording ? '松开发送' : '按下录音'}}
+	</view>
+	<image wx:if="{{recording}}" class="record-icon" src="../../static/images/recordImage/loading.gif"></image>
+</view>

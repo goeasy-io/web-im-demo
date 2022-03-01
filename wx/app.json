@@ -1,0 +1,45 @@
+{
+	"pages": [
+		"pages/conversations/conversations",
+		"pages/login/login",
+		"pages/contacts/contacts",
+		"pages/mine/mine",
+		"pages/chat/groupChat/groupChat",
+		"pages/chat/privateChat/privateChat",
+		"pages/chat/groupMember/groupMember"
+	],
+	"window": {
+		"backgroundTextStyle": "light",
+		"navigationBarBackgroundColor": "#fff",
+		"navigationBarTitleText": "WeChat",
+		"navigationBarTextStyle": "black"
+	},
+	"sitemapLocation": "sitemap.json",
+	"tabBar" : {
+		"color":"#454750",
+		"selectedColor":"#D02129",
+		"borderStyle":"black",
+		"backgroundColor":"#F8F7F7",
+		"height" : "60px",
+		"list" : [
+			{
+				"pagePath" : "pages/conversations/conversations",
+				"text":"信息",
+				"iconPath":"static/images/chat.png",
+				"selectedIconPath":"static/images/chat-active.png"
+			},
+			{
+				"pagePath" : "pages/contacts/contacts",
+				"text" : "通讯录",
+				"iconPath":"static/images/contacts.png",
+				"selectedIconPath":"static/images/contacts-active.png"
+			},
+			{
+				"pagePath" : "pages/mine/mine",
+				"text" : "我",
+				"iconPath":"static/images/mine.png",
+				"selectedIconPath":"static/images/mine-active.png"
+			}
+		]
+	}
+}

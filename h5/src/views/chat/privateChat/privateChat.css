@@ -1,0 +1,77 @@
+.chat{
+  height: 100%;
+  width: 100%;
+}
+.chat .header{
+  width: 100%;
+  height: 0.45rem;
+  line-height: 0.45rem;
+  font-size: 0.18rem;
+  text-align: center;
+  background: rgb(243, 244, 247);
+  color: #000000;
+  font-weight: bold;
+  position: relative;
+}
+.chat .header .back-btn{
+  padding:0 0.2rem;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.chat .header .title{
+  font-size: 0.15rem;
+}
+.chat .message-container{
+  padding-bottom: 1rem;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+.chat .message-container .group-member{
+  right: 0.1rem;
+  width: 0.3rem;
+  height: 0.3rem;
+  top:0.07rem;
+  position: fixed;
+  right: 0.1rem;
+  top:0.6rem;
+  z-index: 2;
+  border-radius: 0.3rem;
+  background:#C4C4C4 url("/images/group-icon.png") no-repeat center;
+  background-size: 80%;
+}
+.chat .message-container .history-load-tip{
+  font-size: 0.12rem;
+  height: 0.45rem;
+  line-height: 0.45rem;
+  width: 100%;
+  text-align: center;
+  color: grey;
+  flex-shrink: 0;
+  flex-grow: 0;
+}
+.chat .message-container .scroll-view{
+  height: 100%;
+  padding-left: 0.1rem;
+  padding-right: 0.1rem;
+  box-sizing: border-box;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.chat .message-container .scroll-view .time-lag{
+  font-size: 0.1rem;
+  text-align: center;
+}
+.chat .img-layer{
+  width: 100%;
+  height: 100%;
+  background: #262628;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.chat .img-layer img{
+  max-width: 100%;
+  max-height: 100%;
+}

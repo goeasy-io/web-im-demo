@@ -1,0 +1,40 @@
+<view class="conversations-container">
+	<scroll-view class="conversations" scroll-y="true" enable-flex="true">
+		<view wx:if="{{conversations.length !=0}}">
+			<view class="scroll-item" wx:for="{{conversations}}" wx:for-item="conversation" wx:key="key">
+				<view class="item-head">
+					<image src="{{conversation.data.avatar}}" class="head-icon"></image>
+					<view wx:if="{{conversation.unread}}" class="item-head_unread">{{conversation.unread}}</view>
+				</view>
+				<view class="scroll-item_info">
+					<view class="item-info-top">
+						<text class="item-info-top_name">{{conversation.data.name}}</text>
+						<view class="item-info-top_time">{{conversation.lastMessage.date}}</view>
+					</view>
+					<view class="item-info-bottom">
+						<view class="item-info-bottom-item" bindtap="navigateToChat"  data-conversation="{{conversation}}" >
+							<view class="item-info-top_content" wx:if="{{conversation.lastMessage.type == 'text'}}">{{conversation.lastMessage.payload.text}}</view>
+							<view class="item-info-top_content" wx:elif="{{conversation.lastMessage.type == 'video'}}">[视频消息]</view>
+							<view class="item-info-top_content" wx:elif="{{conversation.lastMessage.type == 'audio'}}">[语音消息]</view>
+							<view class="item-info-top_content" wx:elif="{{conversation.lastMessage.type == 'image'}}">[图片消息]</view>
+							<view class="item-info-top_content" wx:elif="{{conversation.lastMessage.type == 'file'}}">[文件消息]</view>
+							<view class="item-info-top_content" wx:elif="{{conversation.lastMessage.type == 'order'}}">[自定义消息:订单]</view>
+							<view class="item-info-top_content" wx:else>[[未识别内容]]</view>
+							<image class="item-info-bottom_action" catchtap="showAction" data-conversation="{{conversation}}" src="../../static/images/action.png"></image>
+						</view>
+					</view>
+				</view>
+			</view>
+		</view>
+		<view class="no-conversation" wx:else>
+			当前没有会话为空
+		</view>
+		<view class="action-container" wx:if="{{action.show}}">
+			<view class="layer" bindtap="closeMask"></view>
+			<view class="action-box">
+				<view class="action-item" bindtap="topConversation">{{action.conversation.top ? '取消置顶' : '置顶聊天'}}</view>
+				<view class="action-item" bindtap="removeConversation">删除聊天</view>
+			</view>
+		</view>
+	</scroll-view>
+</view>

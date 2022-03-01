@@ -1,0 +1,11 @@
+<!--login.wxml-->
+<div class="mine">
+		<div class="top">
+				<image src="{{currentUser.avatar}}"></image>
+				<view class="name">{{currentUser.name}}</view>
+		</div>
+		<div class="bottom">
+				<text>欢迎体验GoEasyIM</text>
+				<view class="logout" bindtap="logout">注销</view>
+		</div>
+</div>

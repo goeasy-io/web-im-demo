@@ -1,0 +1,11 @@
+{
+	"navigationBarTitleText": "",
+	"enablePullDownRefresh" : true,
+	"backgroundTextStyle" : "dark",
+	"usingComponents": {
+		"GoEasyRecorder": "/components/GoEasyRecorder/goEasyRecorder",
+		"GoEasyAudioPlayer": "/components/GoEasyAudioPlayer/goEasyAudioPlayer",
+		"GoEasyVideoPlayer": "/components/GoEasyVideoPlayer/goEasyVideoPlayer",
+		"GoEasyCustomMessage": "/components/GoEasyCustomMessage/customMessage"
+	}
+}
