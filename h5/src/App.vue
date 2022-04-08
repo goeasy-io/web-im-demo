@@ -1,33 +1,28 @@
 <template>
-  <div id="app">
-    <router-view></router-view>
-  </div>
+    <div id="app" @contextmenu.prevent="">
+        <router-view />
+    </div>
 </template>
 
-<script>
+<style lang="scss">
+@import url('//at.alicdn.com/t/font_2486466_8s7bs6ei53j.css');
 
-  export default {
-    name: 'App'
-  }
-</script>
-
-<style>
-  *{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: '微软雅黑';
-  }
-  html,body{
-    width: 100%;
+body {
+    background-color: #f5f5f5;
+}
+#app {
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    color: #2c3e50;
     height: 100%;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-  }
-  #app {
-    width: 3.75rem;
-    height: 100%;
-    overflow: hidden;
-  }
+}
+// 阿里字体图标设置
+.icon,
+.iconfont {
+    font-family: 'iconfont' !important;
+    font-size: 16px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-stroke-width: 0.2px;
+    -moz-osx-font-smoothing: grayscale;
+}
 </style>

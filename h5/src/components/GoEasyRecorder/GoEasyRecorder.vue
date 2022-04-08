@@ -6,104 +6,104 @@
 </template>
 
 <script>
-    import Recorder from 'recorder-core';
-    import 'recorder-core/src/engine/mp3'
-    import 'recorder-core/src/engine/mp3-engine'
-    export default {
-        name: "GoEasyRecorder",
-        data () {
-            return {
-                recording : false,
-                recorder : null,
-                file : null
+import Recorder from 'recorder-core';
+import 'recorder-core/src/engine/mp3'
+import 'recorder-core/src/engine/mp3-engine'
+export default {
+    name: "GoEasyRecorder",
+    data () {
+        return {
+            recording : false,
+            recorder : null,
+            file : null
+        }
+    },
+    mounted() {
+        this.init()
+    },
+    beforeDestroy() {
+        this.close();
+        this.recorder = null;
+    },
+    methods : {
+        init() {
+            this.recorder = Recorder({
+                type : 'mp3',
+                sampleRate:16000,
+                bitRate:16,
+                onProcess : function () {}
+            });
+            this.recorder.open(() => {
+                console.log('录音授权成功')
+                //授权成功
+            }, (e) => {
+                console.log('录音授权失败',e);
+                //授权失败
+                this.close()
+            })
+        },
+        onStateChange () {
+            if(this.recording) {
+                this.stop()
+            }else{
+                this.start()
             }
         },
-        mounted() {
-            this.init()
+        start () {
+            this.recording = true;
+            if(this.recorder && this.recorder.state !== 1) {
+                this.recorder.start()
+            }
         },
-        beforeDestroy() {
-            this.close();
-            this.recorder = null;
+        stop () {
+            this.recorder.stop((blob, duration) => {
+                this.recording = false;
+                this.open = false;
+                let file = new File([blob], 'audio.mp3', {type: blob.type, lastModified: Date.now()});
+                this.$emit('onComplete', file);
+            }, (msg) => {
+                console.log(msg)
+            })
         },
-        methods : {
-            init() {
-                this.recorder = Recorder({
-                    type : 'mp3',
-                    sampleRate:16000,
-                    bitRate:16,
-                    onProcess : function () {
-
-                    }
-                });
-                this.recorder.open(() => {
-                    console.log('录音授权成功')
-                    //授权成功
-                }, (e) => {
-                    console.log('录音授权失败',e);
-                    //授权失败
-                    this.close()
-                })
-            },
-            onStateChange () {
-                if(this.recording) {
-                    this.stop()
-                }else{
-                    this.start()
-                }
-            },
-            start () {
-                this.recording = true;
-                if(this.recorder && this.recorder.state != 1) {
-                    this.recorder.start()
-                }
-            },
-            stop () {
-                this.recorder.stop((blob, duration) => {
-                    this.recording = false;
-                    this.open = false;
-                    let file = new File([blob], 'audio.mp3', {type: blob.type, lastModified: Date.now()});
-                    this.$emit('onComplete', file);
-                }, (msg) => {
-                    console.log(msg)
-                })
-            },
-            close () {
-                this.open = true;
-                if(this.recorder) {
-                    this.recorder.close();
-                }
+        close () {
+            this.open = true;
+            if(this.recorder) {
+                this.recorder.close();
             }
         }
     }
+}
 </script>
 
 <style scoped>
-    .goEasy-recorder{
-        width: 2.1rem;
-        display: flex;
-    }
+.goEasy-recorder{
+    width: 100px;
+    display: flex;
+    flex: 1;
+    align-items: center;
+    align-self: center;
+}
 
-    .goEasy-recorder .record-input{
-        width: 2.1rem;
-        height: 0.4rem;
-        line-height: 0.4rem;
-        border-radius: 0.06rem;
-        font-size: 0.14rem;
-        color: #ffffff;
-        text-align: center;
-        background: #cccccc;
-    }
+.goEasy-recorder .record-input{
+    width: 210px;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #ffffff;
+    text-align: center;
+    background: #af4e4e;
+}
 
-    .record-loading{
-        position: absolute;
-        top:50%;
-        left: 50%;
-        width: 1.5rem;
-        height: 1.5rem;
-        margin: -4rem -0.75rem;
-        background: #262628 url("./images/loading.gif") no-repeat center;
-        background-size: 100%;
-        border-radius: 0.2rem;
-    }
-
+.record-loading{
+    position: absolute;
+    top:40%;
+    left: 50%;
+    width: 150px;
+    height: 150px;
+    margin: -40px -75px;
+    background: #262628 url("../../assets/img/loading.gif") no-repeat center;
+    background-size: 100%;
+    border-radius: 20px;
+}
 </style>

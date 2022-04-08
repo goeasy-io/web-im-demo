@@ -24,8 +24,8 @@ npm run serve
 ```
 
 ### 体验
-1. 要发送语音、视频和图片，请先[配置阿里云OSS参数](https://www.goeasy.io/cn/im/media/alioss.html) 
-2. 在restapi.js 里 可以找到用户名和密码 
+1. 要发送语音、视频和图片，请先[配置阿里云OSS参数](https://www.goeasy.io/cn/im/media/alioss.html)
+2. 在restapi.js 里 可以找到用户名和密码
 3. 系统默认不启用用户上下线提醒服务，付费应用可以登陆GoEasy，在“我的应用”里启用
 
 

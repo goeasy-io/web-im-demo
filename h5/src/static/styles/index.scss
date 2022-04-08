@@ -1,0 +1,35 @@
+// 全局样式
+body {
+  margin: 0;
+  padding: 0;
+  font-size: 12px;
+  height: 100%;
+}
+
+img {
+  max-width: 100%;
+}
+
+p {
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+  outline: none;
+  font-size: 20px;
+  color: #333;
+}
+
+a:visited {
+  color: #333;
+}
+
+ul {
+  list-style: none;
+}
+
+.text-center {
+  text-align: center;
+}
