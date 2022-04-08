@@ -11,7 +11,7 @@
 						</div>
 					</div>
 				</div>
-				<view class="contacts-title" v-if="friends && friends.length !=0">联系人</view>
+				<view class="contacts-title" v-if="friends && friends.length !==0">联系人</view>
 	            <div class="user-list">
 	                <div class="user-list-item" v-for="(friend, uuid) in friends" :key="uuid" @click="enterChat(friend.uuid, 'private')">
 	                    <div class="user-item-avatar">
@@ -19,7 +19,6 @@
 	                    </div>
 	                    <div class="user-item-info">
 	                        <span class="user-item-info__name">{{friend.name}}</span>
-							<span class="online-tips">{{friend.online ? '在线' :'离线'}}</span>
 	                    </div>
 	                </div>
 	            </div>
@@ -28,11 +27,10 @@
 </template>
 
 <script>
-
-	import restApi from "../../lib/restapi";
+	import restApi from '../../lib/restapi';
 
 	export default {
-		name: "contacts",
+		name: 'contacts',
 		data () {
 			return {
 				friends : [],
@@ -40,66 +38,12 @@
 			}
 		},
 		onShow () {
-			this.init()
+			let currentUser = uni.getStorageSync('currentUser');
+			this.friends = restApi.findFriends(currentUser);
+			this.groups = restApi.findGroups(currentUser);
 		},
 		methods : {
-			init () {
-				let currentUser = uni.getStorageSync('currentUser');
-				let friendList = restApi.findFriends(currentUser);
-				friendList.map((friend ,index)=> {
-					friend.online = false;
-					this.$set(this.friends, index, friend);
-				});
-				this.groups = restApi.findGroups(currentUser);
-				this.subscribeUserPresence();
-				this.hereNow();
-				this.goEasy.im.on(this.GoEasy.IM_EVENT.USER_PRESENCE, (user) => {
-					this.friends.map(friend => {
-						if (friend.uuid == user.id) {
-							let state = user.action === 'online' || user.action === 'join';
-							this.$set(friend, 'online', state);
-						}
-					})
-				})
-			},
-			subscribeUserPresence () {
-				let friendIds = [];
-				this.friends.map(friend => {
-					friendIds.push(friend.uuid);
-				});
-				this.goEasy.im.subscribeUserPresence({
-					userIds: friendIds,
-					onSuccess: function () {
-						console.log('订阅上下线成功')
-					},
-					onFailed: function (error) {
-						console.log('订阅好友上下线失败',error)
-					}
-				});
-			},
-			hereNow () {
-				let self = this;
-				let friendIds = [];
-				this.friends.map(friend => {
-					friendIds.push(friend.uuid);
-				})
-				this.goEasy.im.hereNow({
-					userIds: friendIds,
-					onSuccess: function (result) {
-						result.content.map(friend => {
-							self.friends.map(item => {
-								if(item.uuid == friend.id) {
-									item.online = true;
-								}
-							})
-						})
-					},
-					onFailed: function (error) {
-						console.log('获取好友在线状态失败',error)
-					}
-				});
-			},
-			enterChat (uuid, type) {//进入私聊
+			enterChat (uuid, type) {//进入聊天页面
 				let path = type === this.GoEasy.IM_SCENE.PRIVATE
 						? '../chat/privateChat/privateChat?to=' + uuid
 						: '../chat/groupChat/groupChat?to=' + uuid;
@@ -190,9 +134,5 @@
 	  height: 32rpx!important;
 	  right: 0;
 	  bottom: 0;
-	}
-	.contacts .online-tips{
-		font-size: 28rpx;
-		color: #666666;
 	}
 </style>

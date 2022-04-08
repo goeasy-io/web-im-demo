@@ -19,7 +19,7 @@
 			}
 		},
 		onLoad (options) {
-			//对话数据
+			//群成员数据
 			this.users = JSON.parse(options.users);
 			uni.setNavigationBarTitle({
 				title : '成员（' + (Object.keys(this.users).length || 0) +'）'

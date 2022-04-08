@@ -1,4 +1,3 @@
-<script src="../../lib/imservice.js"></script>
 <template>
     <div class="mine">
         <div class="top">
@@ -20,19 +19,14 @@
             }
         },
         onShow () {
-			this.init()
+            this.currentUser = uni.getStorageSync('currentUser');
         },
         methods : {
-			init () {
-				//本应该在onshow里面做，uniapp新版本有bug，switchTab不会触发onShow
-				this.currentUser = uni.getStorageSync('currentUser');
-			},
             logout () {
                 this.goEasy.disconnect({
                     onSuccess: function(){
                         console.log('断连成功')
                         uni.removeStorageSync('currentUser');
-                        getApp().globalData.imService = null;
                         uni.navigateTo({
                             url : '../login/login'
                         })
@@ -84,6 +78,5 @@
 		border-radius: 10rpx;
 		color: #FFFFFF;
 		font-size: 32rpx;
-		
 	}
 </style>

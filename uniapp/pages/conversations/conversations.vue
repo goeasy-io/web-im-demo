@@ -1,6 +1,6 @@
 <template>
     <scroll-view class="conversations" scroll-y="true">
-		<view v-if="conversations.length !=0">
+		<view v-if="conversations.length > 0">
 			<view class="scroll-item" v-for="(conversation, key) in conversations" :key="key">
 				<view class="item-head">
 					<image :src="conversation.data.avatar" class="head-icon"></image>
@@ -13,13 +13,18 @@
 					</view>
 					<view class="item-info-bottom">
 						<view class="item-info-bottom-item" @click="navigateToChat(conversation)">
-							<view class="item-info-top_content" v-if="conversation.lastMessage.type == 'text'">{{conversation.lastMessage.payload.text}}</view>
-							<view class="item-info-top_content" v-else-if="conversation.lastMessage.type == 'video'">[视频消息]</view>
-							<view class="item-info-top_content" v-else-if="conversation.lastMessage.type == 'audio'">[语音消息]</view>
-							<view class="item-info-top_content" v-else-if="conversation.lastMessage.type == 'image'">[图片消息]</view>
-							<view class="item-info-top_content" v-else-if="conversation.lastMessage.type == 'file'">[文件消息]</view>
-							<view class="item-info-top_content" v-else-if="conversation.lastMessage.type == 'order'">[自定义消息:订单]</view>
-							<view class="item-info-top_content" v-else>[[未识别内容]]</view>
+							<view class="item-info-top_content">
+								<text class="unread-text">{{conversation.lastMessage.read === false && conversation.lastMessage.senderId === currentUser.uuid?'[未读]':''}}</text>
+								<text v-if="conversation.type === 'private'">{{conversation.lastMessage.senderId === currentUser.uuid? '我': conversation.data.name}}:</text>
+								<text v-else>{{conversation.lastMessage.senderId === currentUser.uuid? '我': conversation.lastMessage.senderData.name}}:</text>
+								<text v-if="conversation.lastMessage.type === 'text'">{{conversation.lastMessage.payload.text}}</text>
+								<text v-else-if="conversation.lastMessage.type === 'video'">[视频消息]</text>
+								<text v-else-if="conversation.lastMessage.type === 'audio'">[语音消息]</text>
+								<text v-else-if="conversation.lastMessage.type === 'image'">[图片消息]</text>
+								<text v-else-if="conversation.lastMessage.type === 'file'">[文件消息]</text>
+								<text v-else-if="conversation.lastMessage.type === 'order'">[自定义消息:订单]</text>
+								<text v-else>[[未识别内容]]</text>
+							</view>
 							<view class="item-info-bottom_action" @click.stop="showAction(conversation)"></view>
 						</view>
 					</view>
@@ -29,71 +34,114 @@
 		<view class="no-conversation" v-else>
 			当前没有会话
 		</view>
-		<view class="action-container" v-if="action.show">
-			<view class="layer" @click="action.show = false"></view>
+		<view class="action-container" v-if="actionPopup.visible">
+			<view class="layer" @click="actionPopup.visible = false"></view>
 			<view class="action-box">
-				<view class="action-item" @click="topConversation">{{action.conversation.top ? '取消置顶' : '置顶聊天'}}</view>
-				<view class="action-item" @click="removeConversation">删除聊天</view>
+				<view class="action-item" @click="topConversation">{{actionPopup.conversation.top ? '取消置顶' : '置顶聊天'}}</view>
+				<view class="action-item" @click="deleteConversation">删除聊天</view>
 			</view>
 		</view>
 	</scroll-view>
 </template>
 
 <script>
-	import IMService from "../../lib/imservice";
+	import restApi from '../../lib/restapi';
 	export default {
-		name: "contacts",
+		name: 'conversation',
 		data () {
 			return {
 				unreadTotal : 0,
 				conversations : [],
-				action : {
+
+				actionPopup : {
 					conversation : null,
-					show : false
-				}
+					visible : false
+				},
+				currentUser: null
 			}
 		},
 		onShow () {
 			let currentUser = uni.getStorageSync('currentUser');
 			if(!currentUser){
 				uni.navigateTo({
-					url: "../login/login"
+					url: '../login/login'
 				})
 				return;
 			}
+			this.currentUser = currentUser;
+
 			if(this.goEasy.getConnectionStatus() === 'disconnected') {
-				getApp().globalData.imService= new IMService(this.goEasy,this.GoEasy);
-				getApp().globalData.imService.connect(currentUser);
+				this.connectGoEasy();  //连接goeasy
+				this.subscribeGroup(); //建立连接后，就应该订阅群聊消息，避免漏掉
 			}
-			uni.showLoading();
-			//监听会话列表变化
-			let self = this;
-			this.goEasy.im.on(this.GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, (content) => {
-				self.renderConversations(content);
-			});
-			//加载会话列表
-			this.goEasy.im.latestConversations({
-				onSuccess: function (result) {
-					let content = result.content;
-					self.renderConversations(content);
-					uni.hideLoading();
-				},
-				onFailed: function (error) {
-					//获取失败
-					uni.hideLoading()
-					console.log("失败获取最新会话列表, code:" + error.code + " content:" + error.content);
-				}
-			});
+			this.listenConversationUpdate(); //监听会话列表变化
+			this.loadConversations(); //加载会话列表
 		},
 		methods : {
-			topConversation() {
+			connectGoEasy() {
+				uni.showLoading();
+				this.goEasy.connect({
+					id: this.currentUser.uuid,
+					data: {
+						name: this.currentUser.name,
+						avatar: this.currentUser.avatar
+					},
+					onSuccess: () => {
+						console.log('GoEasy connect successfully.')
+					},
+					onFailed: (error) => {
+						console.log('Failed to connect GoEasy, code:'+error.code+ ',error:'+error.content);
+					},
+					onProgress: (attempts) => {
+						console.log('GoEasy is connecting', attempts);
+					}
+				});
+			},
+
+			// 加载最新的会话列表
+			loadConversations() {
+				this.goEasy.im.latestConversations({
+					onSuccess: (result) => {
+						let content = result.content;
+						this.renderConversations(content);
+						uni.hideLoading();
+					},
+					onFailed: (error) => {
+						uni.hideLoading();
+						console.log('获取最新会话列表失败, code:' + error.code + 'content:' + error.content);
+					}
+				});
+			},
+			listenConversationUpdate() {
+				// 监听会话列表变化
+				this.goEasy.im.on(this.GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, (content) => {
+					this.renderConversations(content);
+				});
+			},
+			subscribeGroup() {
+				let groups = restApi.findGroups(this.currentUser);
+				let groupIds = groups.map(item => item.uuid);
+				this.goEasy.im.subscribeGroup({
+					groupIds: groupIds,
+					onSuccess: function () {
+						console.log('订阅群消息成功');
+					},
+					onFailed: function (error) {
+						console.log('订阅群消息失败:', error);
+					}
+				});
+			},
+			topConversation() {  //会话置顶
 				uni.showLoading({
-					title:"加载中...",
+					title:'加载中...',
 					mask: true
 				});
-				let conversation = this.action.conversation;
+				let actionPopup = this.actionPopup;
+				actionPopup.visible = false;
+
+				let conversation = actionPopup.conversation;
 				let failedDescription = conversation.top ? '取消置顶失败' : '置顶失败';
-				this.action.show = false;
+
 				if(conversation.type === this.GoEasy.IM_SCENE.PRIVATE){
 					this.goEasy.im.topPrivateConversation({
 						userId: conversation.userId,
@@ -105,7 +153,7 @@
 							uni.hideLoading();
 							uni.showToast({
 								title: failedDescription,
-								icon: "none"
+								icon: 'none'
 							});
 							console.log(error);
 						}
@@ -121,21 +169,22 @@
 							uni.hideLoading();
 							uni.showToast({
 								title: failedDescription,
-								icon: "none"
+								icon: 'none'
 							});
 							console.log(error);
 						}
 					});
 				}
 			},
-			removeConversation() {
+			deleteConversation() {
 				uni.showLoading({
-					title:"加载中...",
+					title:'加载中...',
 					mask: true
 				});
-				let failedDescription = "删除失败";
-				let conversation = this.action.conversation;
-				this.action.show = false;
+				let failedDescription = '删除失败';
+				let conversation = this.actionPopup.conversation;
+				this.actionPopup.visible = false;
+
 				if(conversation.type === this.GoEasy.IM_SCENE.PRIVATE){
 					this.goEasy.im.removePrivateConversation({
 						userId: conversation.userId,
@@ -146,7 +195,7 @@
 							uni.hideLoading();
 							uni.showToast({
 								title: failedDescription,
-								icon: "none"
+								icon: 'none'
 							});
 							console.log(error);
 						}
@@ -161,7 +210,7 @@
 							uni.hideLoading();
 							uni.showToast({
 								title: failedDescription,
-								icon: "none"
+								icon: 'none'
 							});
 							console.log(error);
 						}
@@ -169,7 +218,7 @@
 				}
 			},
 			renderConversations(content){
-				this.conversations = content.conversations || [];
+				this.conversations = content.conversations;
 				let unreadTotal = content.unreadTotal;
 				this.setUnreadAmount(unreadTotal);
 			},
@@ -195,8 +244,8 @@
 				});
 			},
 			showAction (conversation) {
-				this.action.conversation = conversation;
-				this.action.show = true;
+				this.actionPopup.conversation = conversation;
+				this.actionPopup.visible = true;
 			}
 		}
 	}
@@ -237,7 +286,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		
+
 	}
 	.conversations .item-info-top_name{
 		font-size: 34rpx;
@@ -263,7 +312,7 @@
 		overflow: hidden;
 		text-overflow:ellipsis;
 		white-space: nowrap;
-		
+
 	}
 
 	.item-info-bottom .item-info-bottom_action{
@@ -301,7 +350,7 @@
 	.action-container{
 		width: 100%;
 		height: 100%;
-		position: absolute;
+		position: fixed;
 		top: 0;
 		left: 0;
 		display: flex;
@@ -332,6 +381,9 @@
 		font-size: 34rpx;
 		color: #262628;
 		border-bottom: 1px solid #EFEFEF;
+	}
 
+	.unread-text {
+		color: #618DFF;
 	}
 </style>

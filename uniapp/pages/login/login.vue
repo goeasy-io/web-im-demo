@@ -13,9 +13,9 @@
 </template>
 
 <script>
-	import restApi from "../../lib/restapi";
+	import restApi from '../../lib/restapi';
 	export default {
-	        name: "Login",
+	        name: 'Login',
 	        data () {
 	            return {
 	                username : '',
@@ -25,7 +25,7 @@
 	        },
 	        methods : {
 	        	login () {
-					if (this.username.trim() !== "" && this.password.trim() !== "") {
+					if (this.username.trim() !== '' && this.password.trim() !== '') {
 						let user = restApi.findUser(this.username, this.password);
 						if(user){
 							uni.setStorageSync('currentUser', user);

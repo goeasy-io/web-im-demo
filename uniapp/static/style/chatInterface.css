@@ -18,13 +18,23 @@
 	}
 
 	.chatInterface .scroll-view .message-item{
+		display: flex;
+	}
+	.chatInterface .scroll-view .message-item .message-item-checkbox {
+		height: 100rpx;
+		margin: 30rpx 0;
+		display: flex;
+		align-items: center;
+	}
+	.chatInterface .scroll-view .message-item .message-item-content {
+		flex: 1;
 		max-height: 400rpx;
 		margin-top: 30rpx;
 		margin-bottom: 30rpx;
 		overflow: hidden;
 		display: flex;
 	}
-	.chatInterface .scroll-view .message-item.self{
+	.chatInterface .scroll-view .message-item .message-item-content.self{
 		overflow: hidden;
 		display: flex;
 		justify-content: flex-start;
@@ -33,7 +43,7 @@
 	.chatInterface .scroll-view .message-item .avatar{
 		width: 80rpx;
 		height: 80rpx;
-		margin-right:20rpx ;
+		margin: 10rpx 20rpx;
 		flex-shrink: 0;
 		flex-grow: 0;
 	}
@@ -52,6 +62,7 @@
 	.chatInterface .scroll-view .content{
 		font-size: 34rpx;
 		line-height: 44rpx;
+		padding-top: 10rpx;
 		max-height: 400rpx;
 		display: flex;
 		align-items: center;
@@ -223,12 +234,93 @@
 		box-sizing: border-box;
 		display: flex;
 	}
+
+	.chatInterface .action-bottom-emoji{
+		justify-content: space-around;
+	}
+
 	.chatInterface .action-bottom image{
 		width:100rpx;
 		height: 100rpx;
 	}
 
+	.chatInterface .messageSelector-box{
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		backdrop-filter: blur(0.27rpx);
+		width: 100%;
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		border-radius: 12rpx;
+		background: #EFEFEF;
+		height: 80rpx;
+		padding: 20rpx 0;
+		font-size: 32rpx;
+	}
 
+	.chatInterface .messageSelector-box .messageSelector-btn {
+		width: 80rpx;
+		height: 80rpx;
+	}
+
+	uni-checkbox:not([disabled]) .uni-checkbox-input:hover {
+	    border-color: #d1d1d1 !important;
+	}
+
+	uni-checkbox .uni-checkbox-input {
+		border-radius: 50% !important;
+	}
+	
+	/* #ifdef MP-WEIXIN */
+	checkbox .wx-checkbox-input {
+		border-radius: 50% !important;
+	}
+	checkbox .wx-checkbox-input.wx-checkbox-input-checked {
+		color: #007aff !important;
+	}
+	/* #endif */
+
+	.chatInterface .action-popup {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.chatInterface .action-popup .layer {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: rgba(51, 51, 51, 0.5);
+		z-index: 999;
+	}
+	.chatInterface .action-popup .action-box {
+		width: 350rpx;
+		background: #434343;
+		position: relative;
+		z-index: 1000;
+		border-radius: 20rpx;
+		overflow: hidden;
+	}
+	.chatInterface .action-popup .action-item {
+		text-align: center;
+		height: 100rpx;
+		line-height: 100rpx;
+		font-size: 34rpx;
+		color: #ffffff;
+		border-bottom: 1px solid #EFEFEF;
+	}
+	.chatInterface .action-popup .action-item:last-child {
+		border: none;
+	}
 	.chatInterface .record-loading{
 		position: fixed;
 		top:50%;
@@ -370,5 +462,32 @@
 		width: 100%;
 		text-overflow:ellipsis;
 		white-space: nowrap;
+	}
+
+	.message-read {
+		color: grey;
+		font-size: 12px;
+		text-align: end;
+		margin: 0 10rpx;
+	}
+
+	.message-unread {
+		color: #618DFF;
+		font-size: 12px;
+		text-align: end;
+		margin: 0 10rpx;
+	}
+
+	.message-content {
+		flex-direction: column;
+		align-items: flex-end;
+	}
+
+	.message-recalled {
+		height: 40px;
+		line-height: 40px;
+		font-size: 20rpx;
+		text-align: center;
+		color: grey;
 	}
 

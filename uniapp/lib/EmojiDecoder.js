@@ -1,10 +1,3 @@
-/*
-* @Author: jack.lu
-* @Date: 2020/9/11
-* @Last Modified by: jack.lu
-* @Last Modified time: 2020/9/11 4:35 下午
-*/
-
 class EmojiDecoder {
     emojiMap = null;
     url = "";

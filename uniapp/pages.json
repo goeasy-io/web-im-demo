@@ -60,13 +60,6 @@
 				"navigationBarTitleText": "群成员",
 				"navigationBarBackgroundColor" : "#F3F4F7"
 			}			
-		},
-		{
-			"path": "pages/chat/customMessage/customMessage",
-			"style": {
-				"navigationBarTitleText": "自定义消息示例",
-				"navigationBarBackgroundColor" : "#F3F4F7"
-			}
 		}
 	],
 	"globalStyle": {
