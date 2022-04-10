@@ -24,7 +24,7 @@
 
 <script>
 import restapi from '../../lib/restapi';
-import ConversationList from '../../components/ConversationList/conversation-list';
+import ConversationList from '../../components/ConversationList/ConversationList';
 import PrivateChat from '../Chat/PrivateChat';
 import GroupChat from '../Chat/GroupChat';
 export default {
@@ -59,7 +59,7 @@ export default {
     mounted() {
         this.listenConversationUpdate(); //监听会话列表变化
         this.loadConversations(); //加载会话列表
-        this.subscribeGroup();
+        this.subscribeGroup();  //订阅群消息
     },
     methods: {
         loadConversations() {
@@ -101,7 +101,6 @@ export default {
             });
         },
         showAction(conversation) {
-            console.log('show', conversation);
             this.actionPopup.conversation = conversation;
             this.actionPopup.visible = true;
         },

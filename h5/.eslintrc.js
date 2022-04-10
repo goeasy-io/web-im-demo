@@ -3,9 +3,6 @@ module.exports = {
 	env: {
 		node: true,
 	},
-	extends: [
-		'@vue/prettier',
-	],
 	parserOptions: {
 		ecmaVersion: 2020,
 		sourceType: 'module'

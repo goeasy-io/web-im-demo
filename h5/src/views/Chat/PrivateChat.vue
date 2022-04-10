@@ -78,8 +78,7 @@
             </div>
             <MessagePanel
                 v-else
-                @sendTextMessage="sendTextMessage"
-                @sendOtherMessage="sendOtherMessage"
+                @onSendMessage="onSendMessage"
                 @click="scrollToBottom"
                 :receiver="friend"
             />
@@ -89,9 +88,9 @@
 
 <script>
 import restApi from '../../lib/restapi';
-import MessagePanel from '../../components/Chat/message-panel';
+import MessagePanel from '../../components/Chat/MessagePanel';
 import EmojiDecoder from '../../lib/EmojiDecoder';
-import VideoPlayer from '../../components/VideoPlayer/video-player';
+import VideoPlayer from '../../components/VideoPlayer/VideoPlayer';
 export default {
     name: 'PrivateChat',
     components: {
@@ -152,32 +151,12 @@ export default {
     methods: {
         renderTextMessage(message) {
             return (
-                '<span class="text-content">' +
+                '<span class="content-text">' +
                 this.emoji.decoder.decode(message.payload.text) +
                 '</span>'
             );
         },
-        sendMessage(message) {
-            this.goEasy.im.sendMessage({
-                message: message,
-                onSuccess: (message) => {
-                    this.messages.push(message);
-                    this.scrollToBottom();
-                },
-            });
-        },
-        sendTextMessage(message) {
-            const textMessage = this.goEasy.im.createTextMessage({
-                text: message,
-                to: {
-                    id: this.friend.uuid,
-                    data: this.friend,
-                    type: this.GoEasy.IM_SCENE.PRIVATE,
-                },
-            });
-            this.sendMessage(textMessage);
-        },
-        sendOtherMessage(message) {
+        onSendMessage(message) {
             this.messages.push(message);
             if (message.type === 'image') {
                 const img = new Image();
@@ -286,7 +265,6 @@ export default {
             });
         },
         scrollToBottom() {
-            console.log('scrollToBottom');
             this.$nextTick(() => {
                 if (this.$refs.chatView) {
                     this.$refs.scrollView.scrollTop = this.$refs.chatView.scrollHeight;

@@ -81,8 +81,7 @@
             </div>
             <MessagePanel
                 v-else
-                @sendTextMessage="sendTextMessage"
-                @sendOtherMessage="sendOtherMessage"
+                @onSendMessage="onSendMessage"
                 @click="scrollToBottom"
                 :receiver="group"
             />
@@ -92,9 +91,9 @@
 
 <script>
 import restApi from '../../lib/restapi';
-import MessagePanel from '../../components/Chat/message-panel';
+import MessagePanel from '../../components/Chat/MessagePanel';
 import EmojiDecoder from '../../lib/EmojiDecoder';
-import VideoPlayer from '../../components/VideoPlayer/video-player';
+import VideoPlayer from '../../components/VideoPlayer/VideoPlayer';
 export default {
     name: 'GroupChat',
     components: {
@@ -144,7 +143,6 @@ export default {
         this.loadHistoryMessage(true);
 
         this.goEasy.im.on(this.GoEasy.IM_EVENT.GROUP_MESSAGE_RECEIVED, (message) => {
-            console.log('GROUP_MESSAGE_RECEIVED 收到消息：', message);
             let groupId = message.groupId;
             if (groupId === this.group.uuid) {
                 this.messages.push(message);
@@ -156,32 +154,12 @@ export default {
     methods: {
         renderTextMessage(message) {
             return (
-                '<span class="text-content">' +
+                '<span class="content-text">' +
                 this.emoji.decoder.decode(message.payload.text) +
                 '</span>'
             );
         },
-        sendMessage(message) {
-            this.goEasy.im.sendMessage({
-                message: message,
-                onSuccess: (message) => {
-                    this.messages.push(message);
-                    this.scrollToBottom();
-                },
-            });
-        },
-        sendTextMessage(message) {
-            const textMessage = this.goEasy.im.createTextMessage({
-                text: message,
-                to: {
-                    id: this.group.uuid,
-                    data: this.group,
-                    type: this.GoEasy.IM_SCENE.GROUP,
-                },
-            });
-            this.sendMessage(textMessage);
-        },
-        sendOtherMessage (message) {
+        onSendMessage (message) {
             this.messages.push(message);
             if (message.type === 'image') {
                 const img = new Image();

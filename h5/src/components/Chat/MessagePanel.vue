@@ -90,7 +90,7 @@
             </div>
 
             <div class="send-message" v-if="!audio.visible">
-                <el-button class="send-button" size="small" @click="sendTextMessage">发送</el-button>
+                <el-button class="send-button" size="small" @click="createTextMessage">发送</el-button>
             </div>
 
             <GoEasyRecorder @onComplete="createAudioMessage" v-if="audio.visible" />
@@ -155,13 +155,21 @@ export default {
             });
             this.sendMessage(audioMessage);
         },
-        sendTextMessage() {
+        createTextMessage() {
             if (!this.content.trim()) {
                 console.log('输入为空');
-            } else {
-                this.$emit('sendTextMessage', this.content);
-                this.content = '';
+                return
             }
+            const textMessage = this.goEasy.im.createTextMessage({
+                text: this.content,
+                to: {
+                    type: this.scene,
+                    id: this.receiver.uuid,
+                    data: this.receiver,
+                },
+            });
+            this.sendMessage(textMessage);
+            this.content = '';
             this.$nextTick(() => {
                 this.$refs.input.focus();
             });
@@ -211,7 +219,7 @@ export default {
             this.goEasy.im.sendMessage({
                 message: message,
                 onSuccess: (message) => {
-                    this.$emit('sendOtherMessage', message);
+                    this.$emit('onSendMessage', message);
                 },
             });
         },

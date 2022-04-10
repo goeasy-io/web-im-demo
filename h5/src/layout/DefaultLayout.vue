@@ -59,10 +59,17 @@ export default {
     },
     methods: {
         logout() {
-            // this.goEasy.disconnect(); // todo:断开连接
-            localStorage.removeItem('currentUser');
-            const { to = '../login' } = this.$route.params;
-            this.$router.push(to);
+            this.goEasy.disconnect({
+                onSuccess: () => {
+                    localStorage.removeItem('currentUser');
+                    const { to = '../login' } = this.$route.params;
+                    this.$router.push(to);
+                },
+                onFailed: (error) => {
+                    console.log("Failed to disconnect GoEasy, code:"+error.code+ ",error:"+error.content);
+                }
+            });
+
         },
     },
 };

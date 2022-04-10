@@ -25,9 +25,9 @@
 
 <script>
 import restapi from "../../lib/restapi";
-import FriendList from "../../components/Contact/friend-list";
-import FriendInfo from "../../components/Contact/friend-info";
-import GroupInfo from "../../components/Contact/group-info";
+import FriendList from "../../components/Contact/FriendList";
+import FriendInfo from "../../components/Contact/FriendInfo";
+import GroupInfo from "../../components/Contact/GroupInfo";
 
 export default {
   components: {FriendList, FriendInfo, GroupInfo},
