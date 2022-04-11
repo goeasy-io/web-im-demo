@@ -468,9 +468,7 @@
 			},
 			onRecordStart () {
 				try{
-					recorderManager.start({
-						format: 'wav'
-					});
+					recorderManager.start();
 				}catch(e){
 					uni.showModal({
 						title: '录音错误',
