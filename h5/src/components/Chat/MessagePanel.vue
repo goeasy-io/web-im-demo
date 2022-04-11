@@ -4,7 +4,7 @@
             <div class="actions">
                 <!-- 语音 -->
                 <div class="chat-option">
-                    <el-tooltip class="item" effect="dark" content="语音" placement="top-start">
+                    <el-tooltip effect="dark" content="语音" placement="top-start">
                         <label for="audio-input" @click="startAudioMessage">
                             <i class="iconfont el-icon-microphone"></i>
                         </label>
@@ -27,25 +27,23 @@
                 </div>
                 <!-- 图片 -->
                 <div class="chat-option">
-                    <div>
-                        <el-tooltip class="item" effect="dark" content="图片" placement="top-start">
-                            <label for="img-input">
-                                <i class="iconfont icon-picture"></i>
-                            </label>
-                        </el-tooltip>
-                        <input
-                            accept="image/*"
-                            type="file"
-                            @change="createImageMessage"
-                            id="img-input"
-                            ref="img-input"
-                            v-show="false"
-                        />
-                    </div>
+                    <el-tooltip effect="dark" content="图片" placement="top-start">
+                        <label for="img-input">
+                            <i class="iconfont icon-picture"></i>
+                        </label>
+                    </el-tooltip>
+                    <input
+                        accept="image/*"
+                        type="file"
+                        @change="createImageMessage"
+                        id="img-input"
+                        ref="img-input"
+                        v-show="false"
+                    />
                 </div>
                 <!-- 视频 -->
                 <div class="chat-option">
-                    <el-tooltip class="item" effect="dark" content="视频" placement="top-start">
+                    <el-tooltip effect="dark" content="视频" placement="top-start">
                         <label for="video-input">
                             <i class="iconfont icon-film"></i>
                         </label>
@@ -61,7 +59,7 @@
                 </div>
                 <!-- 文件 -->
                 <div class="chat-option">
-                    <el-tooltip class="item" effect="dark" content="文件" placement="top-start">
+                    <el-tooltip effect="dark" content="文件" placement="top-start">
                         <label for="file-input">
                             <i class="iconfont icon-folder-open"></i>
                         </label>
@@ -76,7 +74,7 @@
                 </div>
                 <!-- 自定义 -->
                 <div class="chat-option">
-                    <el-tooltip class="item" effect="dark" content="订单" placement="top-start">
+                    <el-tooltip effect="dark" content="订单" placement="top-start">
                         <el-popover placement="top" width="250" trigger="manual" v-model="customMessageForm.visible">
                             <el-form label-position="left" label-width="50px" size="small">
                                 <el-form-item label="编号">
@@ -88,9 +86,8 @@
                                 <el-form-item label="金额">
                                     <el-input v-model="customMessageForm.price"></el-input>
                                 </el-form-item>
-                                <el-form-item>
-                                    <el-button type="primary" @click="createCustomMessage">创建</el-button>
-                                </el-form-item>
+                                <el-button class="cancel-button" size="small" @click="customMessageForm.visible = false">取消</el-button>
+                                <el-button class="primary-button" size="small" @click="createCustomMessage">创建</el-button>
                             </el-form>
                             <i class="iconfont el-icon-edit-outline" slot="reference" @click="showCustomMessageForm"></i>
                         </el-popover>
@@ -108,7 +105,7 @@
             </div>
 
             <div class="send-message" v-if="!audio.visible">
-                <el-button class="send-button" size="small" @click="createTextMessage">发送</el-button>
+                <el-button class="primary-button" size="small" @click="createTextMessage">发送</el-button>
             </div>
 
             <GoEasyRecorder @onComplete="createAudioMessage" v-if="audio.visible" />
@@ -238,7 +235,12 @@ export default {
             this.sendMessage(fileMessage);
         },
         showCustomMessageForm () {
-            this.customMessageForm.visible = true;
+            this.customMessageForm = {
+                visible: true,
+                number: null,
+                goods: null,
+                price: null
+            }
         },
         createCustomMessage () {
             this.customMessageForm.visible = false;
@@ -270,9 +272,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.el-main {
-    padding: 0;
-}
 .message-sender {
     display: flex;
     flex-direction: column;
@@ -320,7 +319,13 @@ export default {
         text-align: right;
     }
 }
-.el-button {
+.cancel-button {
+    &:hover {
+        background: #FFFFFF;
+        color: #8c8c91;
+    }
+}
+.primary-button {
     background: #af4e4e;
     color: white;
     border: none;
