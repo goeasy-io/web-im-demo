@@ -17,7 +17,6 @@
         <el-main>
             <private-chat :key="$route.params.id" v-if="$route.name === 'private'" />
             <group-chat :key="$route.params.id" v-if="$route.name === 'group'" />
-            <div class="no-chat" v-if="$route.name === ''">暂时没有会话</div>
         </el-main>
     </el-container>
 </template>
@@ -120,7 +119,7 @@ export default {
                         console.log(failedDescription,error);
                     },
                 });
-            } else {
+            } else if (conversation.type === this.GoEasy.IM_SCENE.GROUP) {
                 this.goEasy.im.topGroupConversation({
                     groupId: conversation.groupId,
                     top: !conversation.top,
@@ -146,7 +145,7 @@ export default {
                         console.log(error);
                     },
                 });
-            } else {
+            } else if (conversation.type === this.GoEasy.IM_SCENE.GROUP) {
                 this.goEasy.im.removeGroupConversation({
                     groupId: conversation.groupId,
                     onSuccess: function () {
@@ -167,38 +166,35 @@ export default {
     width: 100%;
     height: 100%;
     position: relative;
-}
-.no-chat {
-
+    .layer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: rgba(51, 51, 51, 0.5);
+        width: 300px;
+        height: 100%;
+        z-index: 99;
+    }
+    .action-box {
+        width: 150px;
+        height: 80px;
+        background: #ffffff;
+        position: absolute;
+        top: 260px;
+        left: 75px;
+        z-index: 100;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    .action-item {
+        text-align: center;
+        line-height: 40px;
+        font-size: 15px;
+        color: #262628;
+        border-bottom: 1px solid #efefef;
+    }
 }
 .el-main {
     padding: 0;
-}
-.layer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    background: rgba(51, 51, 51, 0.5);
-    width: 300px;
-    height: 100%;
-    z-index: 99;
-}
-.action-box {
-    width: 150px;
-    height: 80px;
-    background: #ffffff;
-    position: absolute;
-    top: 260px;
-    left: 75px;
-    z-index: 100;
-    border-radius: 10px;
-    overflow: hidden;
-}
-.action-item {
-    text-align: center;
-    line-height: 40px;
-    font-size: 15px;
-    color: #262628;
-    border-bottom: 1px solid #efefef;
 }
 </style>

@@ -4,13 +4,11 @@
             <div class="actions">
                 <!-- 语音 -->
                 <div class="chat-option">
-                    <div>
-                        <el-tooltip class="item" effect="dark" content="语音" placement="top-start">
-                            <label for="audio-input" @click="startAudioMessage">
-                                <i class="iconfont el-icon-microphone"></i>
-                            </label>
-                        </el-tooltip>
-                    </div>
+                    <el-tooltip class="item" effect="dark" content="语音" placement="top-start">
+                        <label for="audio-input" @click="startAudioMessage">
+                            <i class="iconfont el-icon-microphone"></i>
+                        </label>
+                    </el-tooltip>
                 </div>
                 <!-- 表情 -->
                 <div class="chat-option">
@@ -76,16 +74,36 @@
                         v-show="false"
                     />
                 </div>
+                <!-- 自定义 -->
+                <div class="chat-option">
+                    <el-tooltip class="item" effect="dark" content="订单" placement="top-start">
+                        <el-popover placement="top" width="250" trigger="manual" v-model="customMessageForm.visible">
+                            <el-form label-position="left" label-width="50px" size="small">
+                                <el-form-item label="编号">
+                                    <el-input v-model="customMessageForm.number"></el-input>
+                                </el-form-item>
+                                <el-form-item label="商品">
+                                    <el-input v-model="customMessageForm.goods"></el-input>
+                                </el-form-item>
+                                <el-form-item label="金额">
+                                    <el-input v-model="customMessageForm.price"></el-input>
+                                </el-form-item>
+                                <el-form-item>
+                                    <el-button type="primary" @click="createCustomMessage">创建</el-button>
+                                </el-form-item>
+                            </el-form>
+                            <i class="iconfont el-icon-edit-outline" slot="reference" @click="showCustomMessageForm"></i>
+                        </el-popover>
+                    </el-tooltip>
+                </div>
             </div>
 
             <div class="content-send" v-if="!audio.visible">
                 <el-input
                     rows="3"
                     type="textarea"
-                    class="message-input"
                     v-model="content"
                     ref="input"
-                    @paste.native="userPaste"
                 ></el-input>
             </div>
 
@@ -127,7 +145,13 @@ export default {
                 //录音按钮展示
                 visible : false
             },
-            scene: null
+            scene: null,
+            customMessageForm: {
+                visible: false,
+                number: null,
+                goods: null,
+                price: null
+            }
         };
     },
     created() {
@@ -179,7 +203,7 @@ export default {
         },
         createImageMessage(e) {
             const file = e.target.files[0];
-            let imageMessage = this.goEasy.im.createImageMessage({
+            const imageMessage = this.goEasy.im.createImageMessage({
                 file: file,
                 to: {
                     type: this.scene,
@@ -191,8 +215,7 @@ export default {
         },
         createVideoMessage(e) {
             const file = e.target.files[0];
-            let videoMessage = null;
-            videoMessage = this.goEasy.im.createVideoMessage({
+            const videoMessage = this.goEasy.im.createVideoMessage({
                 file: file,
                 to: {
                     type: this.scene,
@@ -204,8 +227,7 @@ export default {
         },
         createFileMessage(e) {
             const file = e.target.files[0];
-            let fileMessage = null;
-            fileMessage = this.goEasy.im.createFileMessage({
+            const fileMessage = this.goEasy.im.createFileMessage({
                 file: file,
                 to: {
                     type: this.scene,
@@ -215,6 +237,26 @@ export default {
             });
             this.sendMessage(fileMessage);
         },
+        showCustomMessageForm () {
+            this.customMessageForm.visible = true;
+        },
+        createCustomMessage () {
+            this.customMessageForm.visible = false;
+            const customMessage = this.goEasy.im.createCustomMessage({
+                type : 'order',
+                payload : {
+                    number : this.customMessageForm.number,
+                    goods : this.customMessageForm.goods,
+                    price : this.customMessageForm.price
+                },
+                to: {
+                    type: this.scene,
+                    id: this.receiver.uuid,
+                    data: this.receiver,
+                }
+            });
+            this.sendMessage(customMessage);
+        },
         sendMessage(message) {
             this.goEasy.im.sendMessage({
                 message: message,
@@ -222,34 +264,6 @@ export default {
                     this.$emit('onSendMessage', message);
                 },
             });
-        },
-        userPaste(e) {
-            const file = e.clipboardData.files[0];
-            if (file && file.type === 'image/png') {
-                this.uploadImg(file);
-            }
-        },
-        uploadImg(file) {
-            let imageMessage = null;
-            imageMessage = this.goEasy.im.createImageMessage({
-                file: file,
-                to: {
-                    type: this.scene,
-                    id: this.receiver.uuid,
-                    data: this.receiver,
-                },
-            });
-            this.$alert(
-                '<img src="' +
-                    imageMessage.payload.url +
-                    '" style="width:300px;display:block;margin:0 auto;" ></img>',
-                '确认发送',
-                {
-                    dangerouslyUseHTMLString: true,
-                },
-            ).then(() => {
-                this.sendMessage(imageMessage);
-            })
         },
     },
 };
@@ -296,17 +310,15 @@ export default {
     .content-send {
         padding: 0 10px;
     }
+    .content-send/deep/.el-textarea__inner {
+        border: none;
+        resize: none;
+        max-height: 73px;
+    }
     .send-message {
         padding: 5px 10px;
         text-align: right;
     }
-}
-.el-textarea__inner {
-  border: 0px !important;
-  resize: none;
-  padding: 0;
-  font-size: 14px;
-  font-weight: 500;
 }
 .el-button {
     background: #af4e4e;

@@ -26,7 +26,7 @@
                             >
                                 <div class="user-avatar">
                                     <img v-if="currentUser.uuid === message.senderId" :src="currentUser.avatar"/>
-                                    <img v-else :src="message.senderData.avatar" alt="" />
+                                    <img v-else :src="message.senderData.avatar" />
                                 </div>
                                 <div class="message-content" @click.right="showActionPopup(message)">
                                     <div class="content-text" v-if="message.type === 'text'">
@@ -54,12 +54,21 @@
                                     <div class="content-audio" v-if="message.type === 'audio'">
                                         <audio controls :src="message.payload.url"></audio>
                                     </div>
-                                    <VideoPlayer
+                                    <GoEasyVideoPlayer
                                         v-if="message.type === 'video'"
                                         :video="message.payload.video"
                                         :thumbnail="message.payload.thumbnail"
                                         class="content-video"
                                     />
+                                    <div class="content-custom" v-if="message.type === 'order'">
+                                        <div class="title">
+                                            <img src="../../assets/img/order.png" />
+                                            <div>自定义消息</div>
+                                        </div>
+                                        <div>编号：{{message.payload.number}}</div>
+                                        <div>商品: {{message.payload.goods}}</div>
+                                        <div>金额: {{message.payload.price}}</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -93,12 +102,12 @@
 import restApi from '../../lib/restapi';
 import MessagePanel from '../../components/Chat/MessagePanel';
 import EmojiDecoder from '../../lib/EmojiDecoder';
-import VideoPlayer from '../../components/VideoPlayer/VideoPlayer';
+import GoEasyVideoPlayer from '../../components/GoEasyVideoPlayer/GoEasyVideoPlayer';
 export default {
     name: 'GroupChat',
     components: {
         MessagePanel,
-        VideoPlayer,
+        GoEasyVideoPlayer,
     },
     data() {
         const emojiUrl = 'https://imgcache.qq.com/open/qcloud/tim/assets/emoji/';
@@ -486,5 +495,29 @@ export default {
 }
 audio:focus {
     outline: none;
+}
+.content-custom {
+    width: 150px;
+    height: 110px;
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+    background: #ffffff;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 0 10px;
+    margin: 0 10px;
+    text-align: left;
+    line-height: 25px;
+    .title {
+        display: flex;
+        align-items: center;
+        font-size: 15px;
+        img {
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+        }
+    }
 }
 </style>

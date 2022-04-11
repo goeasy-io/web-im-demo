@@ -3,22 +3,20 @@
         <el-card class="group-card">
             <div class="group-item">
                 <ul>
-                    <li v-for="(item, index) in list" :key="index">
-                        <img class="item-avatar" :src="item.avatar" />
-                        <span>{{ item.name }}</span>
+                    <li v-for="(member, index) in groupMembers" :key="index">
+                        <img class="item-avatar" :src="member.avatar" />
+                        <span>{{ member.name }}</span>
                     </li>
                 </ul>
             </div>
-            <el-button style="padding: 3px 0" type="text" @click="goChatPage(currentFriend)"
-                >发消息</el-button
-            >
+            <el-button style="padding: 3px 0" type="text" @click="goChatPage(currentFriend)">发消息</el-button>
         </el-card>
     </div>
 </template>
 
 <script>
 export default {
-    props: ['list', 'currentFriend', 'goChatPage'],
+    props: ['groupMembers', 'currentFriend', 'goChatPage'],
     methods: {},
 };
 </script>

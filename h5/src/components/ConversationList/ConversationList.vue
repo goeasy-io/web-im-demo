@@ -11,7 +11,7 @@
                         @click.native="goChatPage(conversation)"
                         type="flex"
                         :class="{
-                            addclass:
+                            current:
                                 conversation.userId === currentConversationId ||
                                 conversation.groupId === currentConversationId,
                         }"
@@ -45,11 +45,15 @@
                             </div>
                             <div class="conversation-bottom">
                                 <div>
+                                    <span class="unread-text">{{conversation.lastMessage.read === false && conversation.lastMessage.senderId === currentUser.uuid?'[未读]':''}}</span>
+                                    <span v-if="conversation.type === 'private'">{{conversation.lastMessage.senderId === currentUser.uuid? '我': conversation.data.name}}:</span>
+                                    <span v-else>{{conversation.lastMessage.senderId === currentUser.uuid? '我': conversation.lastMessage.senderData.name}}:</span>
                                     <span v-if="conversation.lastMessage.type === 'text'">{{ conversation.lastMessage.payload.text }}</span>
                                     <span v-else-if="conversation.lastMessage.type === 'video'">[视频消息]</span>
                                     <span v-else-if="conversation.lastMessage.type === 'audio'">[语音消息]</span>
                                     <span v-else-if="conversation.lastMessage.type === 'image'">[图片消息]</span>
                                     <span v-else-if="conversation.lastMessage.type === 'file'">[文件消息]</span>
+                                    <span v-else-if="conversation.lastMessage.type === 'order'">[订单消息]</span>
                                 </div>
                                 <div
                                     class="conversation-bottom-action"
@@ -133,6 +137,11 @@ export default {
     }
     .conversation-list-content {
         flex: 1;
+        &::-webkit-scrollbar {
+            display: none; /* Chrome Safari */
+        }
+        scrollbar-width: none; /* firefox */
+        -ms-overflow-style: none; /* IE 10+ */
         .no-conversation {
             text-align: center;
             color: #666666;
@@ -185,6 +194,9 @@ export default {
             justify-content: space-between;
             margin-top: 10px;
             color: #666666;
+            .unread-text {
+                color: #618DFF;
+            }
             .conversation-bottom-action {
                 width: 20px;
                 height: 20px;
@@ -226,7 +238,7 @@ export default {
         }
     }
 }
-.addclass {
+.current {
     background: rgb(241, 237, 237);
 }
 </style>

@@ -1,13 +1,13 @@
 <template>
   <el-container className="contacts-container">
-    <el-aside width="600" className="friedslist">
+    <el-aside width="600" className="friendList">
       <FriendList
-          :frienditem="frienditem"
+          :friends="friends"
           :groups="groups"
           @currentFriend="getCurrentFriend"
       />
     </el-aside>
-    <el-main className="friedsinfo">
+    <el-main className="friendInfo">
       <FriendInfo
           v-if="currentFriend.phone"
           :currentFriend="currentFriend"
@@ -15,7 +15,7 @@
       />
       <GroupInfo
           v-else-if="currentFriend.userList"
-          :list="list"
+          :groupMembers="groupMembers"
           :currentFriend="currentFriend"
           :goChatPage="goChatPage"
       />
@@ -36,8 +36,8 @@ export default {
       friends: [],
       groups: [],
       currentFriend: {},
-      list: [],
-      frienditem: {},
+      groupMembers: [],
+      friendInfo: {},
     };
   },
   mounted() {
@@ -47,58 +47,18 @@ export default {
     initList() {
       const currentUser = JSON.parse(localStorage.getItem("currentUser"));
       this.friends = restapi.findFriends(currentUser);
-      this.friends.map((friend) => {
-        this.frienditem[friend.uuid] = friend;
-        this.$set(this.frienditem[friend.uuid], "online", false);
-      });
       this.groups = restapi.findGroups(currentUser);
-
-      this.subscribeUserPresence();
-      this.hereNow();
-
-      this.goEasy.im.on(this.GoEasy.IM_EVENT.USER_PRESENCE, (user) => {
-        this.frienditem[user.id].online =
-            user.action == "online" || user.action == "join";
-        this.$forceUpdate();
-      });
-    },
-    subscribeUserPresence() {
-      const friendIds = Object.keys(this.frienditem);
-      this.goEasy.im.subscribeUserPresence({
-        userIds: friendIds,
-        onSuccess: () => {
-          console.log("订阅上下线成功");
-        },
-        onFailed: (e) => {
-          console.log("订阅好友上下线失败", e);
-        },
-      });
-    },
-    hereNow() {
-      const friendIds = Object.keys(this.frienditem);
-      this.goEasy.im.hereNow({
-        userIds: friendIds,
-        onSuccess: (res) => {
-          res.content.map((friend) => {
-            this.frienditem[friend.id].online = true;
-          });
-          this.$forceUpdate();
-        },
-        onFailed: (e) => {
-          console.log("获取好友在线状态失败", e);
-        },
-      });
     },
     getCurrentFriend(e) {
       this.currentFriend = e;
       this.getUserInfo();
     },
     getUserInfo() {
-      this.list = [];
+      this.groupMembers = [];
       if (this.currentFriend.userList) {
         this.currentFriend.userList.map((item) => {
           const info = restapi.findUserById(item);
-          this.list.push(info);
+          this.groupMembers.push(info);
         });
       }
     },
@@ -123,12 +83,12 @@ export default {
   padding: 0;
 }
 
-.friedslist {
+.friendList {
   background-color: white;
   border-right: rgb(219, 214, 214) 1px solid;
 }
 
-.friedsinfo {
+.friendInfo {
   background-color: #f9f8ff;
 }
 </style>

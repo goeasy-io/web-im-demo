@@ -6,36 +6,36 @@
         </el-header>
         <el-tabs :stretch="true" v-model="activeName">
             <el-tab-pane label="好友" name="first">
-                <el-row class="friend-items" v-for="(item, key) in frienditem || []" :key="key">
-                    <div @click="getData(item)">
+                <el-row class="friend-items" v-for="(friend, key) in friends || []" :key="key">
+                    <div @click="getData(friend)">
                         <el-col :span="5" class="friend-avatar">
-                            <img :src="item.avatar" />
+                            <img :src="friend.avatar" />
                         </el-col>
                         <el-col class="friend">
                             <el-col :span="5">
-                                <p class="friend-name">{{ item.name }}</p>
+                                <p class="friend-name">{{ friend.name }}</p>
                             </el-col>
                             <el-col :span="9">
-                                <span class="friend-mail">{{ item.email }}</span>
+                                <span class="friend-mail">{{ friend.email }}</span>
                             </el-col>
                         </el-col>
                     </div>
                 </el-row>
             </el-tab-pane>
             <el-tab-pane label="群组" name="second">
-                <el-row class="group-items" v-for="(item, key) in groups || []" :key="key">
-                    <div @click="getData(item)">
+                <el-row class="group-items" v-for="(group, key) in groups || []" :key="key">
+                    <div @click="getData(group)">
                         <el-col :span="5" class="group-avatar">
                             <img
-                                v-for="(avatar, index) in getGroupAvatar(item.uuid)"
+                                v-for="(avatar, index) in getGroupAvatar(group.uuid)"
                                 :src="avatar"
-                                :class="computedAvatar(getGroupAvatar(item.uuid))"
+                                :class="computedAvatar(getGroupAvatar(group.uuid))"
                                 :key="index"
                             />
                         </el-col>
                         <el-col class="group">
                             <el-col :span="5">
-                                <p class="group-title"> {{ item.name }}<span>({{ item.userList.length }})</span></p>
+                                <p class="group-title"> {{ group.name }}<span>({{ group.userList.length }})</span></p>
                             </el-col>
                         </el-col>
                     </div>
@@ -49,7 +49,7 @@
 import restapi from '../../lib/restapi';
 export default {
     name: 'FriendList',
-    props: ['frienditem', 'groups'],
+    props: ['friends', 'groups'],
     data() {
         return {
             activeName: 'first',
