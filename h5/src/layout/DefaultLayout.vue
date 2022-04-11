@@ -17,6 +17,7 @@
                             :class="{ current: currentPage !== 'Contacts' }"
                         ></i>
                     </router-link>
+                    <span v-if="unreadTotal" class="unread-total">{{ unreadTotal }}</span>
                 </el-menu-item>
                 <el-menu-item class="menu-item" index="3">
                     <router-link to="/contacts">
@@ -43,6 +44,7 @@ export default {
         return {
             currentUser: null,
             currentPage: this.$route.name,
+            unreadTotal: null
         };
     },
     created() {
@@ -51,6 +53,9 @@ export default {
             const { to = '../login' } = this.$route.params;
             this.$router.push(to);
         }
+        this.$EventBus.$on('setUnreadAmount', (unreadTotal)=>{
+            this.unreadTotal = unreadTotal;
+        })
     },
     watch: {
         $route() {
@@ -69,9 +74,11 @@ export default {
                     console.log("Failed to disconnect GoEasy, code:"+error.code+ ",error:"+error.content);
                 }
             });
-
         },
     },
+    beforeDestroy(){
+        this.$EventBus.$off('setUnreadAmount');
+    }
 };
 </script>
 
@@ -93,7 +100,7 @@ export default {
     align-items: center;
     .user-avatar {
         margin: 10px;
-        border-radius: 5px;
+        border-radius: 50%;
     }
     .aside-menu {
         border: none;
@@ -104,6 +111,18 @@ export default {
             padding: 15px;
             font-size: 28px;
             color: #e9e8ee;
+        }
+        .unread-total {
+            position: absolute;
+            top: 10px;
+            right: 26px;
+            width: 16px;
+            height: 16px;
+            line-height: 16px;
+            text-align: center;
+            border-radius: 50%;
+            background-color: #AF4E4E;
+            color: #ffffff;
         }
     }
     .exit {

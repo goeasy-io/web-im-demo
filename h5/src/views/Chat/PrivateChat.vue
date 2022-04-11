@@ -35,11 +35,12 @@
                                         </viewer>
                                     </div>
                                     <a
+                                        v-if="message.type === 'file'"
                                         :href="message.payload.url"
                                         target="_blank"
                                         download="download"
                                     >
-                                        <div class="content-file" v-if="message.type === 'file'">
+                                        <div class="content-file">
                                             <div class="file-info">
                                                 <span class="file-name">{{ message.payload.name }}</span>
                                                 <span class="file-size">{{ (message.payload.size / 1024).toFixed(2) }}KB</span>
@@ -47,9 +48,11 @@
                                             <img class="file-img" src="../../assets/img/file.png" />
                                         </div>
                                     </a>
-                                    <div class="content-audio" v-if="message.type === 'audio'">
-                                        <audio controls :src="message.payload.url"></audio>
-                                    </div>
+                                    <GoEasyAudioPlayer
+                                        v-if="message.type ==='audio'"
+                                        :src="message.payload.url"
+                                        :duration="message.payload.duration"
+                                    />
                                     <GoEasyVideoPlayer
                                         v-if="message.type === 'video'"
                                         :video="message.payload.video"
@@ -99,11 +102,13 @@ import restApi from '../../lib/restapi';
 import MessagePanel from '../../components/Chat/MessagePanel';
 import EmojiDecoder from '../../lib/EmojiDecoder';
 import GoEasyVideoPlayer from '../../components/GoEasyVideoPlayer/GoEasyVideoPlayer';
+import GoEasyAudioPlayer from '../../components/GoEasyAudioPlayer/GoEasyAudioPlayer'
 export default {
     name: 'PrivateChat',
     components: {
         MessagePanel,
         GoEasyVideoPlayer,
+        GoEasyAudioPlayer,
     },
     data() {
         const emojiUrl = 'https://imgcache.qq.com/open/qcloud/tim/assets/emoji/';
@@ -498,14 +503,6 @@ export default {
     margin: 5px 10px;
     border-radius: 5px;
     cursor: pointer;
-}
-.content-audio audio {
-    width: 220px;
-    height: 40px;
-    margin: 5px;
-}
-audio:focus {
-    outline: none;
 }
 .content-custom {
     width: 150px;

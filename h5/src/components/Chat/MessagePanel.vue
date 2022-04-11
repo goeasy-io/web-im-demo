@@ -292,9 +292,9 @@ export default {
                 &:focus {
                     outline: none;
                 }
-            }
-            .iconfont:hover {
-                color: #af4e4e;
+                &:hover {
+                    color: #af4e4e;
+                }
             }
             .emojiList {
                 display: flex;
@@ -320,6 +320,7 @@ export default {
     }
 }
 .cancel-button {
+    margin: 0 35px 0 50px;
     &:hover {
         background: #FFFFFF;
         color: #8c8c91;

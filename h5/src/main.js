@@ -63,3 +63,5 @@ Vue.prototype.formatDate = function (t) {
     str += time.getMinutes() < 10 ? '0' + time.getMinutes() : time.getMinutes();
     return str;
 };
+
+Vue.prototype.$EventBus = new Vue();

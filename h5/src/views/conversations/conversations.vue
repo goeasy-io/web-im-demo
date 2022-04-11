@@ -23,7 +23,7 @@
 
 <script>
 import restapi from '../../lib/restapi';
-import ConversationList from '../../components/ConversationList/ConversationList';
+import ConversationList from '../../components/Conversation/ConversationList';
 import PrivateChat from '../Chat/PrivateChat';
 import GroupChat from '../Chat/GroupChat';
 export default {
@@ -76,15 +76,15 @@ export default {
             // 监听会话列表变化
             this.goEasy.im.on(this.GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, (content) => {
                 this.renderConversations(content);
+
             });
         },
         renderConversations(content) {
             this.conversations = content.conversations;
-            let unreadTotal = content.unreadTotal;
-            this.setUnreadAmount(unreadTotal);
+            this.setUnreadAmount(content.unreadTotal);
         },
         setUnreadAmount(unreadTotal) {
-            this.unreadTotal = unreadTotal;
+            this.$EventBus.$emit('setUnreadAmount', unreadTotal);
         },
         subscribeGroup() {
             let groups = restapi.findGroups(this.currentUser);
