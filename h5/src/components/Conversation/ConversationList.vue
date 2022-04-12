@@ -195,12 +195,13 @@ export default {
             margin-top: 10px;
             color: #666666;
             .unread-text {
-                color: #618DFF;
+                color: #af4e4e;
             }
             .conversation-bottom-action {
                 width: 20px;
                 height: 20px;
                 background: url('../../assets/img/action.png') no-repeat center;
+                background-size: 70%;
             }
         }
     }

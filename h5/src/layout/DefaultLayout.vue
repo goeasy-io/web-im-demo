@@ -1,29 +1,28 @@
 <template>
     <el-container class="layout-container">
         <el-aside class="layout-aside" width="100px">
-            <div class="user-avatar">
-                <el-avatar
-                    class="user-avatar"
-                    shape="square"
-                    :size="50"
-                    :src="currentUser.avatar"
-                ></el-avatar>
-            </div>
+            <el-avatar
+                v-if="currentUser"
+                class="user-avatar"
+                shape="square"
+                :size="50"
+                :src="currentUser.avatar"
+            ></el-avatar>
             <el-menu class="aside-menu">
-                <el-menu-item class="menu-item" index="2">
+                <el-menu-item index="2">
                     <router-link to="/conversations">
                         <i
                             class="iconfont icon-message"
-                            :class="{ current: currentPage !== 'Contacts' }"
+                            :class="{ selected: currentPage !== 'Contacts' }"
                         ></i>
                     </router-link>
                     <span v-if="unreadTotal" class="unread-total">{{ unreadTotal }}</span>
                 </el-menu-item>
-                <el-menu-item class="menu-item" index="3">
+                <el-menu-item index="3">
                     <router-link to="/contacts">
                         <i
                             class="iconfont icon-deleteuser"
-                            :class="{ current: currentPage === 'Contacts' }"
+                            :class="{ selected: currentPage === 'Contacts' }"
                         ></i>
                     </router-link>
                 </el-menu-item>
@@ -90,67 +89,60 @@ export default {
     border-radius: 4px;
     overflow: hidden;
     box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
-}
-
-.layout-aside {
-    width: 100px;
-    background-color: #4f4242;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    .user-avatar {
-        margin: 10px;
-        border-radius: 50%;
-    }
-    .aside-menu {
-        border: none;
-        .menu-item {
+    .layout-aside {
+        width: 100px;
+        background-color: #4f4242;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        .user-avatar {
+            margin: 20px auto;
+            border-radius: 50%;
+        }
+        .aside-menu {
+            border: none;
+            background-color: #4f4242;
+            height: 430px;
+            .iconfont {
+                padding: 15px;
+                font-size: 28px;
+                color: #e9e8ee;
+            }
+            .unread-total {
+                position: absolute;
+                top: 10px;
+                right: 26px;
+                width: 16px;
+                height: 16px;
+                line-height: 16px;
+                text-align: center;
+                border-radius: 50%;
+                background-color: #AF4E4E;
+                color: #ffffff;
+            }
+            .selected {
+                color: #af4e4e !important;
+            }
+        }
+        .aside-menu/deep/.el-menu-item:focus, .el-menu-item:hover {
             background-color: #4f4242;
         }
-        .iconfont {
-            padding: 15px;
-            font-size: 28px;
-            color: #e9e8ee;
-        }
-        .unread-total {
-            position: absolute;
-            top: 10px;
-            right: 26px;
-            width: 16px;
-            height: 16px;
-            line-height: 16px;
-            text-align: center;
-            border-radius: 50%;
-            background-color: #AF4E4E;
-            color: #ffffff;
-        }
-    }
-    .exit {
-        margin-top: 320px;
-        .icon-ico-exit {
-            padding: 15px;
-            font-size: 22px;
-            color: #e9e8ee;
-            &:active {
-                color: #af4e4e;
+        .exit {
+            .icon-ico-exit {
+                padding: 15px;
+                font-size: 22px;
+                color: #e9e8ee;
+                cursor: pointer;
+                &:active {
+                    color: #af4e4e;
+                }
             }
         }
     }
-    .version-tag {
-        color: #fff;
-        font-size: 12px;
-        text-align: center;
-        margin: 10px 0;
+    .layout-main {
+        color: #333;
+        background-color: #e9e8ee;
+        padding: 0;
     }
-}
-
-.layout-main {
-    color: #333;
-    background-color: #e9e8ee;
-    padding: 0;
-}
-
-.current {
-    color: #af4e4e !important;
 }
 </style>

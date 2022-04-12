@@ -68,6 +68,9 @@
                                         <div>商品: {{message.payload.goods}}</div>
                                         <div>金额: {{message.payload.price}}</div>
                                     </div>
+                                    <div :class="message.read ?'message-read':'message-unread'" v-if="message.senderId === currentUser.uuid">
+                                        {{message.read?'已读':'未读'}}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -127,9 +130,6 @@ export default {
             allHistoryLoaded: false,
             //定义表情列表
             emoji: {
-                url: emojiUrl,
-                map: emojiMap,
-                visible: false,
                 decoder: new EmojiDecoder(emojiUrl, emojiMap),
             },
             // 展示消息删除弹出框
@@ -208,7 +208,7 @@ export default {
         deleteMessage() {
             this.goEasy.im.deleteMessage({
                 messages: this.messageSelector.messages,
-                onSuccess: (result) => {
+                onSuccess: () => {
                     this.messageSelector.messages.forEach((message) => {
                         let index = this.messages.indexOf(message);
                         if (index > -1) {
@@ -305,14 +305,14 @@ export default {
     position: relative;
     .chat-name {
         position: relative;
-        height: 42px;
+        height: 43px;
         font-size: 20px;
         font-weight: bold;
         padding: 5px 10px;
         text-align: left;
         display: flex;
         align-items: center;
-        border-bottom: rgb(219, 214, 214) 2px solid;
+        border-bottom: rgb(219, 214, 214) 1px solid;
     }
     .chat-content {
         display: flex;
@@ -347,9 +347,8 @@ export default {
             }
             .message-item-content {
                 flex: 1;
-                max-height: 200px;
-                margin-top: 15px;
-                margin-bottom: 15px;
+                max-height: 230px;
+                margin: 10px 0;
                 overflow: hidden;
                 display: flex;
             }
@@ -364,7 +363,7 @@ export default {
             }
             .content-text {
                 text-align: left;
-                background: #d1bfb6ec;
+                background: #d1bfb6;
                 font-size: 14px;
                 font-weight: 500;
                 padding: 10px 8px;
@@ -447,6 +446,18 @@ export default {
 }
 .message-content {
     max-width: 80%;
+    .message-read {
+        color: gray;
+        font-size: 12px;
+        text-align: end;
+        margin: 0 10px;
+    }
+    .message-unread {
+        color: #af4e4e;
+        font-size: 12px;
+        text-align: end;
+        margin: 0 10px;
+    }
 }
 .user-avatar img {
     width: 50px;
@@ -454,12 +465,11 @@ export default {
 }
 .content-image {
     display: block;
-    width: 200px;
-    height: 100%;
     margin: 5px 10px;
     cursor: pointer;
-    .content-image img {
-        width: 200px;
+    img {
+        max-width: 200px;
+        max-height: 200px;
     }
 }
 .content-file {
@@ -468,7 +478,7 @@ export default {
     font-size: 15px;
     background: white;
     display: flex;
-    margin: auto 10px;
+    margin: 5px 10px;
     border-radius: 5px;
     justify-content: space-around;
     cursor: pointer;
@@ -514,13 +524,14 @@ export default {
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     padding: 0 10px;
-    margin: 0 10px;
+    margin: 5px 10px;
     text-align: left;
     line-height: 25px;
     .title {
         display: flex;
         align-items: center;
         font-size: 15px;
+        flex: 1;
         img {
             width: 20px;
             height: 20px;

@@ -130,9 +130,6 @@ export default {
             allHistoryLoaded: false,
             //定义表情列表
             emoji: {
-                url: emojiUrl,
-                map: emojiMap,
-                visible: false,
                 decoder: new EmojiDecoder(emojiUrl, emojiMap),
             },
             // 展示消息删除弹出框
@@ -211,7 +208,7 @@ export default {
         deleteMessage() {
             this.goEasy.im.deleteMessage({
                 messages: this.messageSelector.messages,
-                onSuccess: (result) => {
+                onSuccess: () => {
                     this.messageSelector.messages.forEach((message) => {
                         let index = this.messages.indexOf(message);
                         if (index > -1) {
@@ -308,14 +305,14 @@ export default {
     position: relative;
     .chat-name {
         position: relative;
-        height: 42px;
+        height: 43px;
         font-size: 20px;
         font-weight: bold;
         padding: 5px 10px;
         text-align: left;
         display: flex;
         align-items: center;
-        border-bottom: rgb(219, 214, 214) 2px solid;
+        border-bottom: rgb(219, 214, 214) 1px solid;
     }
     .chat-content {
         display: flex;
@@ -351,8 +348,7 @@ export default {
             .message-item-content {
                 flex: 1;
                 max-height: 200px;
-                margin-top: 15px;
-                margin-bottom: 15px;
+                margin: 10px 0;
                 display: flex;
             }
             .self{
@@ -365,7 +361,7 @@ export default {
             }
             .content-text {
                 text-align: left;
-                background: #d1bfb6ec;
+                background: #d1bfb6;
                 font-size: 14px;
                 font-weight: 500;
                 padding: 10px 8px;
@@ -418,6 +414,7 @@ export default {
             background: #ffffff;
             z-index: 100;
             border-radius: 10px;
+            overflow: hidden;
         }
         .action-item {
             text-align: center;
@@ -509,6 +506,7 @@ export default {
         display: flex;
         align-items: center;
         font-size: 15px;
+        flex: 1;
         img {
             width: 20px;
             height: 20px;

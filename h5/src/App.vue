@@ -11,7 +11,7 @@ body {
     background-color: #f5f5f5;
 }
 #app {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
+    font-family: sans-serif, Avenir, Helvetica, Arial;
     color: #2c3e50;
     height: 100%;
 }
