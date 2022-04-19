@@ -1,6 +1,6 @@
 <template>
     <div class="goeasy-audio-player" @click="playAudio">
-        <div class="audio-facade" :style="{width:Math.ceil(duration)*7 + 80 + 'px'}">
+        <div class="audio-facade" :style="{width:Math.ceil(duration)*7 + 60 + 'px'}">
             <div class="audio-facade-bg" :class="{'play-icon':play}"> </div>
             <div>{{Math.ceil(duration) || 0}}"</div>
         </div>
@@ -38,12 +38,10 @@ export default {
 }
 .audio-facade{
     min-width: 12px;
-    background: #618DFF;
+    background: #FFFFFF;
     border-radius: 7px;
-    color: #ffffff;
     display: flex;
     font-size: 14px;
-    font-weight: 500;
     padding: 8px;
     margin: 5px 10px;
     line-height: 25px;
@@ -56,10 +54,6 @@ export default {
 }
 .audio-facade-bg.play-icon{
     background: url("../../assets/img/play.gif") no-repeat center;
-    background-size: 15px;
-    -moz-transform:rotate(180deg);
-    -webkit-transform:rotate(180deg);
-    -o-transform:rotate(180deg);
-    transform:rotate(180deg);
+    background-size: 20px;
 }
 </style>

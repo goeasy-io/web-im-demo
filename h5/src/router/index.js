@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-const DefaultLayout = () => import('@/layout/DefaultLayout');
+const DefaultLayout = () => import('@/components/DefaultLayout/DefaultLayout');
 const Login = () => import('@/views/Login/Login');
 const Conversations = () => import('@/views/Conversations/Conversations');
 const Contacts = () => import('@/views/Contacts/Contacts');
@@ -16,7 +16,6 @@ VueRouter.prototype.push = function push(location) {
 const routes = [
     {
         path: '/',
-        name: 'DefaultLayout',
         component: DefaultLayout,
         children: [
             {

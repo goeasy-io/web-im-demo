@@ -59,6 +59,10 @@ export default {
             this.recorder.stop((blob, duration) => {
                 this.recording = false;
                 this.open = false;
+                if (duration < 1000) {
+                    this.$alert('录音时间太短');
+                    return
+                }
                 let file = new File([blob], 'audio.mp3', {type: blob.type, lastModified: Date.now()});
                 this.$emit('onComplete', file);
             }, (msg) => {

@@ -25,14 +25,14 @@
                 <el-form-item>
                     <el-button class="login-form-btn" type="primary" @click="login">登录</el-button>
                 </el-form-item>
-                <div v-show="errorVisible">账号或密码错误</div>
+                <div class="login-error" v-show="errorVisible">账号或密码错误!</div>
             </el-form>
         </div>
     </div>
 </template>
 
 <script>
-import restApi from '../../lib/restapi';
+import restApi from '../../api/restapi';
 export default {
     name: 'Login',
     data() {
@@ -106,10 +106,17 @@ export default {
                 background-size: contain;
             }
         }
+        .login-form-body/deep/.el-input__inner:focus {
+            border-color: #DCDFE6;
+        }
         .login-form-btn {
             width: 100%;
             background-color: #af4e4e;
             border-color: #af4e4e;
+        }
+        .login-error {
+            color: #D02129;
+            margin-bottom: 22px;
         }
     }
 }

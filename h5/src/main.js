@@ -1,21 +1,20 @@
 import Vue from 'vue';
 import App from './App.vue';
 import router from './router/index';
-import GoEasy from './lib/goeasy.dev.js';
+import GoEasy from './utils/goeasy-2.3.1.min';
+
+// 加载全局样式文件
+import './style/index.scss';
 
 // 加载 element 组件库
 import ElementUI from 'element-ui';
-// 加载 element 组件库的样式
 import 'element-ui/lib/theme-chalk/index.css';
-// 加载全局样式文件
-import './static/styles/index.scss';
-
-// 全屏组件
+Vue.use(ElementUI);
+// 加载全屏组件
 import Viewer from 'v-viewer';
 import 'viewerjs/dist/viewer.css';
 Vue.use(Viewer);
 
-Vue.use(ElementUI);
 Vue.config.productionTip = false;
 
 new Vue({

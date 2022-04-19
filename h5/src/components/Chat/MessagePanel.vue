@@ -35,6 +35,7 @@
                     <input
                         accept="image/*"
                         type="file"
+                        multiple
                         @change="createImageMessage"
                         id="img-input"
                         ref="img-input"
@@ -123,10 +124,7 @@ export default {
     data() {
         return {
             content: '',
-            emojiContent: '',
-            dropActive: false,
             type: this.$route.name,
-            currentSession: this.$route.params.id,
             emojiUrl: 'https://imgcache.qq.com/open/qcloud/tim/assets/emoji/',
             emojiMap: {
                 '[么么哒]': 'emoji_3@2x.png',
@@ -199,16 +197,18 @@ export default {
             this.content += emojiKey;
         },
         createImageMessage(e) {
-            const file = e.target.files[0];
-            const imageMessage = this.goEasy.im.createImageMessage({
-                file: file,
-                to: {
-                    type: this.scene,
-                    id: this.receiver.uuid,
-                    data: this.receiver,
-                },
-            });
-            this.sendMessage(imageMessage);
+            let fileList = [...e.target.files];
+            fileList.forEach((file) => {
+                const imageMessage = this.goEasy.im.createImageMessage({
+                    file: file,
+                    to: {
+                        type: this.scene,
+                        id: this.receiver.uuid,
+                        data: this.receiver,
+                    },
+                });
+                this.sendMessage(imageMessage);
+            })
         },
         createVideoMessage(e) {
             const file = e.target.files[0];

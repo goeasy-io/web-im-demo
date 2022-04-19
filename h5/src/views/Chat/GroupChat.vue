@@ -32,9 +32,9 @@
                                     <div class="content-text" v-if="message.type === 'text'">
                                         <div v-html="renderTextMessage(message)"></div>
                                     </div>
-                                    <div class="content-image" v-if="message.type === 'image'">
+                                    <div class="content-image" v-if="message.type === 'image'" :style="{height: message.payload.height+'px'}">
                                         <viewer>
-                                            <img :src="message.payload.url" alt="图片" />
+                                            <img :src="message.payload.url" alt="图片"/>
                                         </viewer>
                                     </div>
                                     <a
@@ -101,9 +101,9 @@
 </template>
 
 <script>
-import restApi from '../../lib/restapi';
+import restApi from '../../api/restapi';
 import MessagePanel from '../../components/Chat/MessagePanel';
-import EmojiDecoder from '../../lib/EmojiDecoder';
+import EmojiDecoder from '../../utils/EmojiDecoder';
 import GoEasyVideoPlayer from '../../components/GoEasyVideoPlayer/GoEasyVideoPlayer';
 import GoEasyAudioPlayer from '../../components/GoEasyAudioPlayer/GoEasyAudioPlayer'
 export default {
@@ -318,7 +318,7 @@ export default {
         display: flex;
         flex-direction: column;
         text-align: center;
-        padding: 0 20px;
+        padding: 0 15px;
         max-height: 386px;
         min-height: 386px;
         overflow: auto;
@@ -347,29 +347,151 @@ export default {
             }
             .message-item-content {
                 flex: 1;
-                max-height: 200px;
+                max-height: 230px;
                 margin: 10px 0;
+                overflow: hidden;
                 display: flex;
+                .user-avatar > img {
+                    width: 50px;
+                    height: 50px;
+                }
+                .message-content {
+                    max-width: 460px;
+                    .content-text {
+                        text-align: left;
+                        background: #FFFFFF;
+                        font-size: 14px;
+                        font-weight: 500;
+                        padding: 10px 8px;
+                        margin: 5px 10px;
+                        line-height: 25px;
+                        white-space: pre-line;
+                        overflow-wrap: anywhere;
+                        border-radius: 0 10px 10px 10px;
+                    }
+                    .content-image {
+                        display: block;
+                        margin: 5px 10px;
+                        cursor: pointer;
+                        max-height: 200px;
+                        img {
+                            max-width: 200px;
+                            max-height: 200px;
+                            overflow: hidden;
+                        }
+                    }
+                    .content-file {
+                        width: 250px;
+                        height: 80px;
+                        font-size: 15px;
+                        background: white;
+                        display: flex;
+                        margin: 5px 10px;
+                        border-radius: 5px;
+                        justify-content: space-around;
+                        cursor: pointer;
+                        .file-info {
+                            width: 180px;
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: space-around;
+                            text-align: left;
+                            line-height: 40px;
+                            .file-name {
+                                width: 180px;
+                                line-height: 30px;
+                                text-overflow: ellipsis;
+                                white-space: nowrap;
+                                overflow: hidden;
+                            }
+                            .file-size {
+                                width: 100px;
+                                font-size: 12px;
+                                color: #ccc;
+                            }
+                        }
+                        .file-img {
+                            width: 30px;
+                            height: 30px;
+                            margin: auto 5px;
+                        }
+                    }
+                    .content-video {
+                        max-height: 240px;
+                        margin: 5px 10px;
+                        border-radius: 5px;
+                        cursor: pointer;
+                    }
+                    .content-custom {
+                        width: 150px;
+                        height: 110px;
+                        display: flex;
+                        flex-direction: column;
+                        font-size: 14px;
+                        background: #ffffff;
+                        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+                        border-radius: 10px;
+                        padding: 0 10px;
+                        margin: 5px 10px;
+                        text-align: left;
+                        line-height: 25px;
+                        .title {
+                            display: flex;
+                            align-items: center;
+                            font-size: 15px;
+                            flex: 1;
+                            img {
+                                width: 20px;
+                                height: 20px;
+                                margin-right: 5px;
+                            }
+                        }
+                    }
+                }
             }
-            .self{
+            .self {
+                overflow: hidden;
                 display: flex;
                 justify-content: flex-start;
                 flex-direction: row-reverse;
                 .content-text {
+                    background: #d1bfb6 !important;
                     border-radius: 10px 0 10px 10px !important;
                 }
             }
-            .content-text {
-                text-align: left;
-                background: #d1bfb6;
-                font-size: 14px;
-                font-weight: 500;
-                padding: 10px 8px;
-                margin: 5px 10px;
-                line-height: 25px;
-                white-space: pre-line;
-                border-radius: 0 10px 10px 10px;
+            .self/deep/.audio-facade {
+                flex-direction: row-reverse;
+                background: #d1bfb6 !important;
             }
+            .self/deep/.audio-facade-bg {
+                background: url("../../assets/img/voice.png") no-repeat center;
+                background-size: 15px;
+                width: 20px;
+                -moz-transform:rotate(180deg);
+                -webkit-transform:rotate(180deg);
+                -o-transform:rotate(180deg);
+                transform:rotate(180deg);
+            }
+            .self/deep/.play-icon {
+                background: url("../../assets/img/play.gif") no-repeat center;
+                background-size: 20px;
+                -moz-transform:rotate(180deg);
+                -webkit-transform:rotate(180deg);
+                -o-transform:rotate(180deg);
+                transform:rotate(180deg);
+            }
+        }
+        .message-item/deep/.el-checkbox__label {
+            display: none;
+        }
+        .message-item/deep/.el-checkbox__inner {
+            border-radius: 8px;
+            width: 16px;
+            height: 16px;
+        }
+        .message-item/deep/.el-checkbox__input.is-checked .el-checkbox__inner, .el-checkbox__input.is-indeterminate .el-checkbox__inner {
+            background-color: #AC4E4E;
+            border-color: #AC4E4E;
         }
     }
     .chat-content::-webkit-scrollbar {
@@ -422,95 +544,6 @@ export default {
             font-size: 15px;
             color: #262628;
             border-bottom: 1px solid #efefef;
-        }
-    }
-}
-
-.content-emoji {
-    margin: 0;
-    padding: 0;
-}
-.message-content {
-    max-width: 80%;
-}
-.user-avatar img {
-    width: 50px;
-    height: 50px;
-}
-.content-image {
-    display: block;
-    width: 200px;
-    height: 100%;
-    margin: 5px 10px;
-    cursor: pointer;
-    .content-image img {
-        width: 200px;
-    }
-}
-.content-file {
-    width: 250px;
-    height: 80px;
-    font-size: 15px;
-    background: white;
-    display: flex;
-    margin: auto 10px;
-    border-radius: 5px;
-    justify-content: space-around;
-    cursor: pointer;
-    .file-info {
-        width: 180px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-around;
-        text-align: left;
-        line-height: 40px;
-        .file-name {
-            width: 180px;
-            line-height: 30px;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            overflow: hidden;
-        }
-        .file-size {
-            width: 100px;
-            font-size: 12px;
-            color: #ccc;
-        }
-    }
-    .file-img {
-        width: 30px;
-        height: 30px;
-        margin: auto 5px;
-    }
-}
-.content-video {
-    max-height: 200px;
-    margin: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-}
-.content-custom {
-    width: 150px;
-    height: 110px;
-    display: flex;
-    flex-direction: column;
-    font-size: 14px;
-    background: #ffffff;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    padding: 0 10px;
-    margin: 0 10px;
-    text-align: left;
-    line-height: 25px;
-    .title {
-        display: flex;
-        align-items: center;
-        font-size: 15px;
-        flex: 1;
-        img {
-            width: 20px;
-            height: 20px;
-            margin-right: 5px;
         }
     }
 }
