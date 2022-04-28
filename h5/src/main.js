@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import App from './App.vue';
 import router from './router/index';
-import GoEasy from './utils/goeasy-2.3.1.min';
+import GoEasy from 'goeasy'
 
 // 加载全局样式文件
 import './style/index.scss';

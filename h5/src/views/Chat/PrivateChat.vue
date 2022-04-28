@@ -10,10 +10,17 @@
                 </div>
                 <el-checkbox-group @change="selectMessages" v-model="messageSelector.ids">
                     <div v-for="(message, index) in messages" :key="index">
-                        <div class="time-tips" v-if="renderMessageDate(message, index)">
+                        <div class="time-tips">
                             {{ renderMessageDate(message, index) }}
                         </div>
-                        <div class="message-item">
+                        <div class="message-recalled" v-if="message.recalled">
+                            <div v-if="message.senderId !== currentUser.uuid">{{friend.name}}撤回了一条消息</div>
+                            <div v-else class="message-recalled-self">
+                                <div>你撤回了一条消息</div>
+                                <span v-if="message.type === 'text' && Date.now()-message.timestamp< 60 * 1000 " @click="editRecalledMessage(message.payload.text)">重新编辑</span>
+                            </div>
+                        </div>
+                        <div class="message-item" v-else>
                             <div class="message-item-checkbox" v-show="messageSelector.visible && message.status !== 'sending'">
                                 <el-checkbox
                                     :label="message.messageId"
@@ -26,47 +33,51 @@
                                     <img v-else :src="friend.avatar"/>
                                 </div>
                                 <div class="message-content" @click.right="showActionPopup(message)">
-                                    <div class="content-text" v-if="message.type === 'text'">
-                                        <div v-html="renderTextMessage(message)"></div>
-                                    </div>
-                                    <div class="content-image" v-if="message.type === 'image'" :style="{height: message.payload.height+'px'}">
-                                        <viewer>
-                                            <img :src="message.payload.url" alt="图片" />
-                                        </viewer>
-                                    </div>
-                                    <a
-                                        v-if="message.type === 'file'"
-                                        :href="message.payload.url"
-                                        target="_blank"
-                                        download="download"
-                                    >
-                                        <div class="content-file">
-                                            <div class="file-info">
-                                                <span class="file-name">{{ message.payload.name }}</span>
-                                                <span class="file-size">{{ (message.payload.size / 1024).toFixed(2) }}KB</span>
+                                    <div class="message-payload">
+                                        <div class="pending" v-if="message.status === 'sending'"></div>
+                                        <div class="send-fail" v-if="message.status === 'fail'"></div>
+                                        <div class="content-text" v-if="message.type === 'text'">
+                                            <div v-html="renderTextMessage(message)"></div>
+                                        </div>
+                                        <div class="content-image" v-if="message.type === 'image'">
+                                            <viewer>
+                                                <img :src="message.payload.url" alt="图片" />
+                                            </viewer>
+                                        </div>
+                                        <a
+                                            v-if="message.type === 'file'"
+                                            :href="message.payload.url"
+                                            target="_blank"
+                                            download="download"
+                                        >
+                                            <div class="content-file">
+                                                <div class="file-info">
+                                                    <span class="file-name">{{ message.payload.name }}</span>
+                                                    <span class="file-size">{{ (message.payload.size / 1024).toFixed(2) }}KB</span>
+                                                </div>
+                                                <img class="file-img" src="../../assets/img/file.png" />
                                             </div>
-                                            <img class="file-img" src="../../assets/img/file.png" />
+                                        </a>
+                                        <GoEasyAudioPlayer
+                                            v-if="message.type ==='audio'"
+                                            :src="message.payload.url"
+                                            :duration="message.payload.duration"
+                                        />
+                                        <GoEasyVideoPlayer
+                                            v-if="message.type === 'video'"
+                                            :video="message.payload.video"
+                                            :thumbnail="message.payload.thumbnail"
+                                            class="content-video"
+                                        />
+                                        <div class="content-custom" v-if="message.type === 'order'">
+                                            <div class="title">
+                                                <img src="../../assets/img/order.png" />
+                                                <div>自定义消息</div>
+                                            </div>
+                                            <div>编号：{{message.payload.number}}</div>
+                                            <div>商品: {{message.payload.goods}}</div>
+                                            <div>金额: {{message.payload.price}}</div>
                                         </div>
-                                    </a>
-                                    <GoEasyAudioPlayer
-                                        v-if="message.type ==='audio'"
-                                        :src="message.payload.url"
-                                        :duration="message.payload.duration"
-                                    />
-                                    <GoEasyVideoPlayer
-                                        v-if="message.type === 'video'"
-                                        :video="message.payload.video"
-                                        :thumbnail="message.payload.thumbnail"
-                                        class="content-video"
-                                    />
-                                    <div class="content-custom" v-if="message.type === 'order'">
-                                        <div class="title">
-                                            <img src="../../assets/img/order.png" />
-                                            <div>自定义消息</div>
-                                        </div>
-                                        <div>编号：{{message.payload.number}}</div>
-                                        <div>商品: {{message.payload.goods}}</div>
-                                        <div>金额: {{message.payload.price}}</div>
                                     </div>
                                     <div :class="message.read ?'message-read':'message-unread'">
                                         <div v-if="message.senderId === currentUser.uuid">{{message.read?'已读':'未读'}}</div>
@@ -81,6 +92,7 @@
         <div class="action-popup" v-if="actionPopup.visible" @click="actionPopup.visible = false">
             <div class="action-box">
                 <div class="action-item" @click="deleteSingleMessage">删除</div>
+                <div class="action-item" v-if="actionPopup.recallable" @click="recallMessage">撤回</div>
                 <div class="action-item" @click="showCheckBox">多选</div>
                 <div class="action-item" @click="actionPopup.visible = false">取消</div>
             </div>
@@ -94,6 +106,7 @@
                 v-else
                 @onSendMessage="onSendMessage"
                 @click="scrollToBottom"
+                :message="content"
                 :receiver="friend"
             />
         </div>
@@ -124,6 +137,7 @@ export default {
             '[傲慢]': 'emoji_8@2x.png',
         };
         return {
+            content: '',
             friend: null,
             currentUser: null,
             messages: [],
@@ -136,6 +150,7 @@ export default {
             actionPopup: {
                 visible: false,
                 message: null,
+                recallable: false,
             },
             // 消息选择
             messageSelector: {
@@ -180,8 +195,14 @@ export default {
             }
         },
         showActionPopup(message) {
-            this.actionPopup.visible = true;
+            const MAX_RECALLABLE_TIME = 3 * 60 * 1000; //3分钟以内的消息才可以撤回
             this.messageSelector.messages = [message];
+            if ((Date.now() - message.timestamp) < MAX_RECALLABLE_TIME && message.senderId === this.currentUser.uuid && message.status === 'success') {
+                this.actionPopup.recallable = true;
+            } else {
+                this.actionPopup.recallable = false;
+            }
+            this.actionPopup.visible = true;
         },
         deleteSingleMessage() {
             this.$alert('确认删除？')
@@ -221,6 +242,24 @@ export default {
                     console.log('error:', error);
                 },
             });
+        },
+        recallMessage() {
+            this.actionPopup.visible = false;
+            this.goEasy.im.recallMessage({
+                messages: this.messageSelector.messages,
+                onSuccess: ()=>{
+                    console.log('撤回成功');
+                },
+                onFailed: (error) => {
+                    console.log('撤回失败,error:', error);
+                }
+            });
+        },
+        editRecalledMessage (content) {
+            if (this.audio.visible) {
+                this.audio.visible = false;
+            }
+            this.content = content;
         },
         showCheckBox() {
             this.messageSelector.messages = [];
@@ -280,8 +319,6 @@ export default {
         scrollToBottom() {
             this.$nextTick(() => {
                 if (this.$refs.chatView) {
-                    console.log('scrollTop', this.$refs.chatView.scrollTop);
-                    console.log('scrollHeight', this.$refs.chatView.scrollHeight);
                     this.$refs.scrollView.scrollTop = this.$refs.chatView.scrollHeight;
                 }
             });
@@ -338,6 +375,7 @@ export default {
         .time-tips {
             color: #999;
             text-align: center;
+            font-size: 12px;
         }
         .message-item {
             display: flex;
@@ -359,6 +397,22 @@ export default {
                 }
                 .message-content {
                     max-width: 460px;
+                    .message-payload{
+                        display: flex;
+                        align-items: center;
+                    }
+                    .pending{
+                        background: url("../../assets/img/pending.gif") no-repeat center;
+                        background-size: 13px;
+                        width: 15px;
+                        height: 15px;
+                    }
+                    .send-fail{
+                        background: url("../../assets/img/failed.png") no-repeat center;
+                        background-size: 13px;
+                        width: 15px;
+                        height: 15px;
+                    }
                     .message-read {
                         color: gray;
                         font-size: 12px;
@@ -396,31 +450,30 @@ export default {
                         }
                     }
                     .content-file {
-                        width: 250px;
-                        height: 80px;
+                        width: 240px;
+                        height: 65px;
                         font-size: 15px;
                         background: white;
                         display: flex;
                         margin: 5px 10px;
+                        padding: 10px;
                         border-radius: 5px;
-                        justify-content: space-around;
                         cursor: pointer;
+                        &:hover {
+                            background: #f6f2f2;
+                        }
                         .file-info {
-                            width: 180px;
-                            display: flex;
-                            flex-direction: column;
-                            justify-content: space-around;
+                            width: 194px;
                             text-align: left;
-                            line-height: 40px;
                             .file-name {
-                                width: 180px;
-                                line-height: 30px;
                                 text-overflow: ellipsis;
-                                white-space: nowrap;
                                 overflow: hidden;
+                                display: -webkit-box;
+                                word-break: break-all;
+                                -webkit-line-clamp: 2;
+                                -webkit-box-orient: vertical;
                             }
                             .file-size {
-                                width: 100px;
                                 font-size: 12px;
                                 color: #ccc;
                             }
@@ -428,7 +481,7 @@ export default {
                         .file-img {
                             width: 30px;
                             height: 30px;
-                            margin: auto 5px;
+                            margin: auto 8px;
                         }
                     }
                     .content-video {
@@ -507,6 +560,23 @@ export default {
         .message-item/deep/.el-checkbox__input.is-checked .el-checkbox__inner, .el-checkbox__input.is-indeterminate .el-checkbox__inner {
             background-color: #AC4E4E;
             border-color: #AC4E4E;
+        }
+        .message-recalled {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 28px;
+            font-size: 13px;
+            text-align: center;
+            color: grey;
+            .message-recalled-self {
+                display: flex;
+                span {
+                    margin-left: 5px;
+                    color: #AC4E4E;
+                    cursor: pointer;
+                }
+            }
         }
     }
     .chat-content::-webkit-scrollbar {

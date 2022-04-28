@@ -40,7 +40,11 @@
                                         </div>
                                     </div>
                                     <div class="conversation-bottom">
-                                        <div>
+                                        <div v-if="conversation.lastMessage.recalled">
+                                          <div v-if="conversation.type === 'private'">{{conversation.lastMessage.senderId === currentUser.uuid? '你': `"${conversation.data.name}"`}}撤回了一条消息</div>
+                                          <div v-if="conversation.type === 'group'">{{conversation.lastMessage.senderId === currentUser.uuid? '你': `"${conversation.lastMessage.senderData.name}"`}}撤回了一条消息</div>
+                                        </div>
+                                        <div v-else>
                                             <span class="unread-text">{{conversation.lastMessage.read === false && conversation.lastMessage.senderId === currentUser.uuid?'[未读]':''}}</span>
                                             <span v-if="conversation.type === 'private'">{{conversation.lastMessage.senderId === currentUser.uuid? '我': conversation.data.name}}:</span>
                                             <span v-else>{{conversation.lastMessage.senderId === currentUser.uuid? '我': conversation.lastMessage.senderData.name}}:</span>
@@ -178,16 +182,16 @@ export default {
             let actionPopup = this.actionPopup;
             actionPopup.visible = false;
             let conversation = actionPopup.conversation;
-            let failedDescription = conversation.top ? '取消置顶失败' : '置顶失败';
+            let description = conversation.top ? '取消置顶' : '置顶';
             if (conversation.type === this.GoEasy.IM_SCENE.PRIVATE) {
                 this.goEasy.im.topPrivateConversation({
                     userId: conversation.userId,
                     top: !conversation.top,
                     onSuccess: function () {
-                        console.log('置顶成功');
+                        console.log(description,'成功');
                     },
                     onFailed: function (error) {
-                        console.log(failedDescription,error);
+                        console.log(description,'失败：',error);
                     },
                 });
             } else if (conversation.type === this.GoEasy.IM_SCENE.GROUP) {
@@ -195,10 +199,10 @@ export default {
                     groupId: conversation.groupId,
                     top: !conversation.top,
                     onSuccess: function () {
-                        console.log('置顶成功');
+                        console.log(description,'成功');
                     },
                     onFailed: function (error) {
-                        console.log(failedDescription,error);
+                      console.log(description,'失败：',error);
                     },
                 });
             }

@@ -117,9 +117,14 @@
 <script>
 import GoEasyRecorder from "../GoEasyRecorder/GoEasyRecorder";
 export default {
-    props: ['receiver'],
+    props: ['receiver', 'message'],
     components: {
         GoEasyRecorder,
+    },
+    watch: {
+        message: function (newVal, oldVal) {
+            this.content = newVal;
+        }
     },
     data() {
         return {
