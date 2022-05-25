@@ -11,7 +11,14 @@
 					<view class="time-lag">
 						{{renderMessageDate(message, index)}}
 					</view>
-					<view class = "message-item">
+					<view class="message-recalled" v-if="message.recalled">
+						<view v-if="message.senderId !== currentUser.uuid">{{message.senderData.name}}撤回了一条消息</view>
+						<view v-else class="message-recalled-self">
+							<view>你撤回了一条消息</view>
+							<span v-if="message.type === 'text' && Date.now()-message.timestamp< 60 * 1000 " @click="editRecalledMessage(message.payload.text)">重新编辑</span>
+						</view>
+					</view>
+					<view class = "message-item" v-else>
 						<view class="message-item-checkbox">
 							<checkbox v-show="messageSelector.visible && message.status !== 'sending'" :value="message.messageId" :checked="messageSelector.messages.includes(message)" />
 						</view>
@@ -20,23 +27,25 @@
 								<image :src="message.senderData.avatar"></image>
 							</view>
 							<view @longpress="showActionPopup(message,index)" class="content">
-								<b class="pending" v-if="message.status === 'sending'"></b>
-								<b class="send-fail" v-if="message.status === 'fail'"></b>
-								<view v-if="message.type === 'text'" v-html="renderTextMessage(message)"></view>
-								<image class="image-content" v-if="message.type === 'image'" :src="message.payload.url" :data-url="message.payload.url" @click="showImageFullScreen" mode="widthFix"></image>
-								<view class="video-snapshot"  v-if="message.type === 'video'" :data-url="message.payload.video.url" @click="playVideo">
-									<image :src="message.payload.thumbnail.url" mode="aspectFit"></image>
-									<view class="video-play-icon"></view>
-								</view>
-								<GoEasyAudioPlayer v-if="message.type ==='audio'" :src="message.payload.url" :duration="message.payload.duration" />
-								<view class="custom-message" v-if="message.type === 'order'">
-									<view class="title">
-										<image src="../../../static/images/order.png"></image>
-										<text>自定义消息</text>
+								<view class="message-payload">
+									<b class="pending" v-if="message.status === 'sending'"></b>
+									<b class="send-fail" v-if="message.status === 'fail'"></b>
+									<view v-if="message.type === 'text'" v-html="renderTextMessage(message)"></view>
+									<image class="image-content" v-if="message.type === 'image'" :src="message.payload.url" :data-url="message.payload.url" @click="showImageFullScreen" mode="widthFix"></image>
+									<view class="video-snapshot"  v-if="message.type === 'video'" :data-url="message.payload.video.url" @click="playVideo">
+										<image :src="message.payload.thumbnail.url" mode="aspectFit"></image>
+										<view class="video-play-icon"></view>
 									</view>
-									<view class="custom-message-item">编号：{{message.payload.number}}</view>
-									<view class="custom-message-item">商品: {{message.payload.goods}}</view>
-									<view class="custom-message-item">金额: {{message.payload.price}}</view>
+									<GoEasyAudioPlayer v-if="message.type ==='audio'" :src="message.payload.url" :duration="message.payload.duration" />
+									<view class="custom-message" v-if="message.type === 'order'">
+										<view class="title">
+											<image src="../../../static/images/order.png"></image>
+											<text>自定义消息</text>
+										</view>
+										<view class="custom-message-item">编号：{{message.payload.number}}</view>
+										<view class="custom-message-item">商品: {{message.payload.goods}}</view>
+										<view class="custom-message-item">金额: {{message.payload.price}}</view>
+									</view>
 								</view>
 							</view>
 						</view>
@@ -79,6 +88,7 @@
 			<view class="layer"></view>
 			<view class="action-box">
 				<view class="action-item" @click="deleteSingleMessage">删除</view>
+				<view class="action-item" v-if="actionPopup.recallable" @click="recallMessage">撤回</view>
 				<view class="action-item" @click="showCheckBox">多选</view>
 				<view class="action-item" @click="actionPopup.visible = false">取消</view>
 			</view>
@@ -152,8 +162,9 @@
 
 				// 展示消息删除弹出框
 				actionPopup:{
-					visible:false,
-					message: null
+					visible: false,
+					message: null,
+					recallable: false,
 				},
 				// 消息选择
 				messageSelector: {
@@ -247,7 +258,8 @@
 				recorderManager.onStop((res) => {
 					let endTime = Date.now();
 					this.audio.recording = false;
-					if ((endTime - this.audio.startTime) < 1000) {
+					let duration = endTime - this.audio.startTime;
+					if (duration < 1000) {
 						uni.showToast({
 							icon: 'error',
 							title: '录音时间太短',
@@ -255,6 +267,7 @@
 						});
 						return;
 					}
+					res.duration = duration;
 					let audioMessage = this.goEasy.im.createAudioMessage({
 						to : {
 							id : this.group.uuid,
@@ -276,9 +289,14 @@
 					this.sendMessage(audioMessage);
 				});
 				// 监听录音报错
-				recorderManager.onError(function(res){
+				recorderManager.onError((res) =>{
 					this.audio.recording = false;
-					console.log('录音报错：',res);
+					recorderManager.stop();
+					uni.showToast({
+						icon: 'none',
+						title: '录音失败,请检查麦克风权限',
+						duration: 1000
+					});
 				})
 			},
 			sendMessage(message){
@@ -290,7 +308,11 @@
 						console.log('发送成功.', message);
 					},
 					onFailed: function (error) {
-						console.log('发送失败:',error);
+						if(error.code === 507){
+							console.log('发送语音/图片/视频/文件失败，没有配置OSS存储，详情参考：https://www.goeasy.io/cn/docs/goeasy-2.x/im/message/media/send-media-message.html');
+						}else{
+							console.log('发送失败:',error);
+						}
 					}
 				});
 			},
@@ -346,33 +368,41 @@
 			},
 			createImageMessage() {
 				uni.chooseImage({
-					count :1,
+					count : 9,
 					success :(res) => {
-						let imageMessage = this.goEasy.im.createImageMessage({
-							to : {
-								id : this.group.uuid,
-								type : this.GoEasy.IM_SCENE.GROUP,
-								data : {
-									name : this.group.name,
-									avatar : this.group.avatar
+						res.tempFiles.forEach(file => {
+							let imageMessage = this.goEasy.im.createImageMessage({
+								to : {
+									id : this.group.uuid,
+									type : this.GoEasy.IM_SCENE.GROUP,
+									data : {
+										name : this.group.name,
+										avatar : this.group.avatar
+									}
+								},
+								file: file,
+								onProgress :function (progress) {
+									console.log(progress)
+								},
+								notification : {
+									title : this.currentUser.name + '发来一张图片',
+									body : '[图片消息]'		// 字段最长 50 字符
 								}
-							},
-							file: res,
-							onProgress :function (progress) {
-								console.log(progress)
-							},
-							notification : {
-								title : this.currentUser.name + '发来一张图片',
-								body : '[图片消息]'		// 字段最长 50 字符
-							}
-						});
-						this.sendMessage(imageMessage);
+							});
+							this.sendMessage(imageMessage);
+						})
 					}
 				});
 			},
 			showActionPopup(message) {
-				this.actionPopup.visible = true;
+				const MAX_RECALLABLE_TIME = 3 * 60 * 1000; //3分钟以内的消息才可以撤回
 				this.messageSelector.messages = [message];
+				if ((Date.now() - message.timestamp) < MAX_RECALLABLE_TIME && message.senderId === this.currentUser.uuid && message.status === 'success') {
+					this.actionPopup.recallable = true;
+				} else {
+					this.actionPopup.recallable = false;
+				}
+				this.actionPopup.visible = true;
 			},
 			deleteSingleMessage(){
 				uni.showModal({
@@ -415,6 +445,24 @@
 					}
 				});
 			},
+			recallMessage() {
+				this.actionPopup.visible = false;
+				this.goEasy.im.recallMessage({
+					messages: this.messageSelector.messages,
+					onSuccess: ()=>{
+						console.log('撤回成功');
+					},
+					onFailed: (error) => {
+						console.log('撤回失败,error:', error);
+					}
+				});
+			},
+			editRecalledMessage (content) {
+				if (this.audio.visible) {
+					this.audio.visible = false;
+				}
+				this.content = content;
+			},
 			showCheckBox () {
 				this.messageSelector.messages = [];
 				this.messageSelector.visible = true;
@@ -456,7 +504,7 @@
 					},
 					onFailed: (error) => {
 						//获取失败
-						console.log('获取历史消息失败, code:' + error.code + ',错误信息:' + error.content);
+						console.log('获取历史消息失败:',error);
 						uni.stopPullDownRefresh();
 					}
 				});
@@ -567,12 +615,12 @@
 				this.customMessageFormVisible = false;
 			},
 			scrollToBottom () {
-				this.$nextTick(function(){
+				setTimeout(() => {
 					uni.pageScrollTo({
 						scrollTop: 2000000,
-						duration : 10
+						duration: 0
 					})
-				});
+				},500);
 			},
 			markGroupMessageAsRead (groupId) {
 				this.goEasy.im.markGroupMessageAsRead({

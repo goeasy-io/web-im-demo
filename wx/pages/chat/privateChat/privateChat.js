@@ -1,5 +1,6 @@
 /* privateChat.js */
-import EmojiDecoder from "../../../static/lib/EmojiDecoder";
+import EmojiDecoder from '../../../static/lib/EmojiDecoder';
+import restApi from '../../../static/lib/restapi';
 let emojiUrl = 'https://imgcache.qq.com/open/qcloud/tim/assets/emoji/';
 let emojiMap = {
 	'[么么哒]': 'emoji_3@2x.png',
@@ -26,51 +27,93 @@ Page({
 		emoji : {
 			url : emojiUrl,
 			map : emojiMap,
-			show: false,
+			visible: false,
 			decoder:  new EmojiDecoder(emojiUrl, emojiMap),
 		},
-		more : {//更多按钮
-			show : false
-		}
+		//是否展示‘其他消息类型面板’
+		otherTypesMessagePanelVisible: false,
+		// 展示消息删除弹出框
+		actionPopup:{
+			visible: false,
+			message: null,
+			recallable: false
+		},
+		// 消息选择
+		messageSelector: {
+			visible: false,
+			messages: []
+        },
 	},
 	onPullDownRefresh () {
-		this.loadMoreHistoryMessage();
+		this.loadHistoryMessage(false);
 	},
 	onLoad: function(options) {
 		// 获取初始数据并加载
 		let friendId = options.to;
-		let service = app.globalData.service;
-		let currentUser = service.currentUser;
-		let friend = service.findFriendById(friendId);
+        let currentUser = wx.getStorageSync('currentUser');
+		let friend = restApi.findUserById(friendId);
 		this.setData({
 			friend: friend,
 			currentUser: currentUser
 		});
-		// 获取消息
-		let messages = service.getPrivateMessages(friendId);
-		// 渲染表情与消息间隔5分钟显示时间
-		this.renderMessages(messages);
-		this.scrollToBottom();
-		// 收到的消息设置为已读
-		if(this.data.messages.length !==0){
-			this.markPrivateMessageAsRead(friendId);
-		}
-        //传入监听器，收到一条私聊消息总是滚到到页面底部
-        service.onNewPrivateMessageReceive =  (friendId, message)=> {
-            if (friendId === this.data.friend.uuid) {
-                this.renderMessages(this.data.messages);
-				this.scrollToBottom();
-				// 如果是好友发送则清除未读消息
-                this.markPrivateMessageAsRead(friendId);
-            }
-        };
+
+		this.initialGoEasyListeners();
+		this.loadHistoryMessage(true);
 	},
 	onUnload () {
-		// 退出聊天页面之前，清空页面传入的监听器
-		let service = app.globalData.service;
-		if(service){
-			service.onNewPrivateMessageReceive = function () {};
-		}
+		//退出聊天页面之前，清空监听器
+		wx.goEasy.im.on(wx.GoEasy.IM_EVENT.MESSAGE_READ, () => {});
+		wx.goEasy.im.on(wx.GoEasy.IM_EVENT.PRIVATE_MESSAGE_RECEIVED, ()=>{});
+        wx.goEasy.im.on(wx.GoEasy.IM_EVENT.MESSAGE_DELETED, ()=>{});
+        wx.goEasy.im.on(wx.GoEasy.IM_EVENT.MESSAGE_RECALLED, ()=>{});
+	},
+	initialGoEasyListeners() {
+		// 监听私聊消息
+		wx.goEasy.im.on(wx.GoEasy.IM_EVENT.PRIVATE_MESSAGE_RECEIVED, (message) => {
+			console.log('PRIVATE_MESSAGE_RECEIVED:', message);
+			let senderId = message.senderId;
+			let receiverId = message.receiverId;
+			let friendId = this.data.currentUser.uuid === senderId?receiverId:senderId;
+			if (friendId === this.data.friend.uuid) {
+				this.data.messages.push(message);
+				this.renderMessages(this.data.messages);
+				//聊天时，收到消息标记为已读
+				this.markPrivateMessageAsRead();
+				//收到新消息，是滚动到最底部
+				this.scrollToBottom();
+			}
+		});
+        //监听消息删除
+		wx.goEasy.im.on(wx.GoEasy.IM_EVENT.MESSAGE_DELETED,(deletedMessages) => {
+            let needRender = false;
+			deletedMessages.forEach(message => {
+				let senderId = message.senderId;
+				let receiverId = message.receiverId;
+				let friendId = this.data.currentUser.uuid === senderId?receiverId:senderId;
+				if (friendId === this.data.friend.uuid) {
+                    needRender = true;
+					let index = this.data.messages.indexOf(message);
+					if (index > -1) {
+						this.data.messages.splice(index, 1);
+                    }
+				}
+            });
+            needRender && this.renderMessages(this.data.messages);
+		})
+		// 监听消息已读
+		wx.goEasy.im.on(wx.GoEasy.IM_EVENT.MESSAGE_READ,(readMessages) => {
+            let needRender = false;
+			readMessages.forEach(message => {
+				if (message.receiverId === this.data.friend.uuid) {
+					needRender = true;
+				}
+            })
+            needRender && this.renderMessages(this.data.messages);
+        })
+        // 监听消息撤回
+		wx.goEasy.im.on(wx.GoEasy.IM_EVENT.MESSAGE_RECALLED,(recalledMessages) => {
+            this.renderMessages(this.data.messages);
+        })
 	},
 	onRecordStop(res) {
 		// 发送语音
@@ -85,12 +128,136 @@ Page({
 			},
 			file: res.detail,
 			onProgress :function (progress) {
-				console.log(progress)
+				console.log(progress);
 			}
 		});
 		this.sendMessage(audioMessage);
 	},
-	sendTextMessage() {
+	showActionPopup(e) {
+		const selectedMessageId = e.currentTarget.dataset.messageid;
+		let selectedMessage;
+		this.data.messages.forEach(message => {
+			if(message.messageId === selectedMessageId){
+				selectedMessage = message;
+			}
+		});
+		const MAX_RECALLABLE_TIME = 3 * 60 * 1000; //3分钟以内的消息才可以撤回
+        let recallable = false;
+		if ((Date.now() - selectedMessage.timestamp) < MAX_RECALLABLE_TIME && selectedMessage.senderId === this.data.currentUser.uuid && selectedMessage.status === 'success') {
+			recallable = true;
+		}
+		this.setData({
+			['actionPopup.recallable']: recallable,
+            ['messageSelector.messages']: [selectedMessage],
+			['actionPopup.visible']: true,
+        });
+	},
+	hideActionPopup () {
+		this.setData({
+			['actionPopup.recallable']: false,
+			['actionPopup.visible']: false,
+			['messageSelector.messages']: [],
+		});
+	},
+	deleteSingleMessage(){
+		wx.showModal({
+			content: '确认删除？',
+			success: (res) => {
+				this.setData({
+					['actionPopup.visible']: false,
+				});
+				if (res.confirm) {
+					this.deleteMessage();
+				}
+			},
+		});
+	},
+	deleteMultipleMessages(){
+		if (this.data.messageSelector.messages.length > 0) {
+			wx.showModal({
+				content: '确认删除？',
+				success: (res) => {
+					this.setData({
+						['actionPopup.visible']: false,
+					});
+					if (res.confirm) {
+						this.deleteMessage();
+					}
+				},
+			});
+		}
+	},
+	deleteMessage() {
+		wx.goEasy.im.deleteMessage({
+			messages: this.data.messageSelector.messages,
+			onSuccess: ()=>{
+				this.data.messageSelector.messages.forEach(message => {
+					let index = this.data.messages.indexOf(message);
+					if (index > -1) {
+						this.data.messages.splice(index, 1);
+					}
+                });
+				this.renderMessages(this.data.messages);
+				this.setData({
+					['messageSelector.messages']: [],
+					['messageSelector.visible']: false,
+				});
+			},
+			onFailed: (error) => {
+				console.log('error:', error);
+			}
+		});
+    },
+    recallMessage() {
+        this.setData({
+            ['actionPopup.visible']: false,
+        });
+        wx.goEasy.im.recallMessage({
+            messages: this.data.messageSelector.messages,
+            onSuccess: ()=>{
+                console.log('撤回成功');
+                this.renderMessages(this.data.messages);
+            },
+            onFailed: (error) => {
+                console.log('撤回失败,error:', error);
+            }
+        });
+    },
+    editRecalledMessage (e) {
+	    if (this.data.recordVisible) {
+		    this.setData({
+			    ['recordVisible']: false,
+		    });
+	    }
+        this.setData({
+            ['content']: e.currentTarget.dataset.content,
+        });
+    },
+	showCheckBox () {
+		this.setData({
+			['messageSelector.messages']: [],
+			['messageSelector.visible']: true,
+			['actionPopup.visible']: false,
+        });
+        this.data.messages.forEach(message => {
+            message.checked = false;
+        })
+        this.renderMessages(this.data.messages);
+	},
+	selectMessages (e) {
+		const selectedMessageIds = e.detail.value;
+		let selectedMessages = [];
+		this.data.messages.forEach(message => {
+			if(selectedMessageIds.includes(message.messageId)){
+				selectedMessages.push(message);
+                message.checked = true;
+			}
+		})
+		this.setData({
+			['messageSelector.messages']: selectedMessages
+		});
+	},
+	createTextMessage() {
 		// 发送文本与表情
 		if (this.data.content.trim() !== '') {
 			let textMessage = wx.goEasy.im.createTextMessage({
@@ -107,135 +274,163 @@ Page({
 			this.sendMessage(textMessage);
 		}
 		this.setData({
-			content: ""
+			content: ''
 		});
 	},
-	sendImage(){
+	createImageMessage(){
 		// 发送图片
 		let self = this;
 		wx.chooseImage({
-			count: 1,
 			sizeType: ['original', 'compressed'],
 			sourceType: ['album', 'camera'],
 			success (res) {
-				let imageMessage = wx.goEasy.im.createImageMessage({
-					to : {
-						id : self.data.friend.uuid,
-						type : wx.GoEasy.IM_SCENE.PRIVATE,
-						data : {
-							name: self.data.friend.name,
-							avatar: self.data.friend.avatar
-						}
-					},
-					file: res,
-					onProgress :function (progress) {
-						console.log(progress)
-					}
-				});
-				self.sendMessage(imageMessage);
+                res.tempFiles.forEach((file) => {
+                    let imageMessage = wx.goEasy.im.createImageMessage({
+                        to : {
+                            id : self.data.friend.uuid,
+                            type : wx.GoEasy.IM_SCENE.PRIVATE,
+                            data : {
+                                name: self.data.friend.name,
+                                avatar: self.data.friend.avatar
+                            }
+                        },
+                        file: file,
+                        onProgress :function (progress) {
+                            console.log(progress)
+                        }
+                    });
+                    self.sendMessage(imageMessage);
+                })
 			}
 		});
 	},
-	sendVideo(){
+	createVideoMessage(){
 		// 发送视频
 		let self = this;
-		wx.chooseVideo({
-			sourceType: ['album','camera'],
-			maxDuration: 60,
-			camera: 'back',
-			success(res) {
-				let videoMessage = wx.goEasy.im.createVideoMessage({
-					to : {
-						id : self.data.friend.uuid,
-						type : wx.GoEasy.IM_SCENE.PRIVATE,
-						data : {
-							name: self.data.friend.name,
-							avatar: self.data.friend.avatar
-						}
-					},
-					file: res,
-					onProgress :function (progress) {
-						console.log(progress)
-					}
-				});
-				self.sendMessage(videoMessage);
-			}
-		})
-	},
+        wx.chooseMedia({
+            count: 9,
+            mediaType: ['video'],
+            sourceType: ['album', 'camera'],
+            maxDuration: 30,
+            camera: 'back',
+            success(res) {
+                res.tempFiles.forEach((file) => {
+                    let videoMessage = wx.goEasy.im.createVideoMessage({
+                        to : {
+                            id : self.data.friend.uuid,
+                            type : wx.GoEasy.IM_SCENE.PRIVATE,
+                            data : {
+                                name: self.data.friend.name,
+                                avatar: self.data.friend.avatar
+                            }
+                        },
+                        file: file,
+                        onProgress :function (progress) {
+                            console.log(progress)
+                        }
+                    });
+                    self.sendMessage(videoMessage);
+                })
+            }
+        })
+    },
+    createFileMessage(){
+        let self = this;
+        wx.chooseMessageFile({
+            type: 'file',
+            success (res) {
+                res.tempFiles.forEach((file) => {
+                    let fileMessage = wx.goEasy.im.createFileMessage({
+                        to : {
+                            id : self.data.friend.uuid,
+                            type : wx.GoEasy.IM_SCENE.PRIVATE,
+                            data : {
+                                name:self.data.friend.name,
+                                avatar:self.data.friend.avatar
+                            }
+                        },
+                        file: file,
+                        onProgress :function (progress) {
+                            console.log(progress)
+                        }
+                    });
+                    self.sendMessage(fileMessage);
+                })
+            }
+        });
+    },
 	sendMessage(message){
 		let self = this;
-		let toId = message.to.id;
-		let localHistory = app.globalData.service.getPrivateMessages(toId);
-		localHistory.push(message);
-		this.renderMessages(this.data.messages);
+		let messages = this.data.messages;
+		messages.push(message);
+		this.renderMessages(messages);
 		this.scrollToBottom();
 		wx.goEasy.im.sendMessage({
 			message: message,
 			onSuccess: function (message) {
-				console.log("发送成功.", message);
+				console.log('发送成功.', message);
 				self.renderMessages(self.data.messages);
 			},
 			onFailed: function (error) {
-				console.log("发送失败:",error);
+				if(error.code === 507){
+					console.log('发送语音/图片/视频/文件失败，没有配置OSS存储，详情参考：https://www.goeasy.io/cn/docs/goeasy-2.x/im/message/media/send-media-message.html');
+				}else{
+					console.log('发送失败:',error);
+				}
 				self.renderMessages(self.data.messages);
 			}
 		});
 	},
 	showCustomMessageForm(){
 		let self = this;
-		let customMessage = this.selectComponent("#customMessage");
+		let customMessage = this.selectComponent('#customMessage');
 		customMessage.setData({
 			show: true,
 			to: self.data.friend,
 			type: wx.GoEasy.IM_SCENE.PRIVATE
 		});
 	},
-	sendCustomMessage(event){
+	createCustomMessage(event){
 		let customerMessage = event.detail;
 		this.sendMessage(customerMessage);
 		// 发送自定义消息关闭更多菜单栏
 		this.setData({
-			["more.show"]: false,
-			["emoji.show"]: false,
+			otherTypesMessagePanelVisible: false,
+			['emoji.visible']: false,
 		});
 	},
-	loadMoreHistoryMessage() {
+	loadHistoryMessage(scrollToBottom) {
 		//历史消息
 		let self = this;
 		let friendId = this.data.friend.uuid;
-		let lastMessageTimeStamp = Date.now();
+		let lastMessageTimeStamp;
 		let lastMessage = this.data.messages[0];
 		if (lastMessage) {
 			lastMessageTimeStamp = lastMessage.timestamp;
 		}
-		let currentLength = this.data.messages.length;
 		wx.goEasy.im.history({
 			userId: friendId,
 			lastTimestamp: lastMessageTimeStamp,
 			onSuccess: function (result) {
-				//获取本地记录
-				let localHistory = app.globalData.service.getPrivateMessages(friendId);
-				//添加加载的记录到本地记录尾部
+				wx.stopPullDownRefresh();
 				let messages = result.content;
-				for (let i = messages.length - 1; i >= 0; i--) {
-					localHistory.unshift(messages[i]);
-				}
-				if (localHistory.length === currentLength) {
+				if (messages.length === 0) {
 					self.setData({
 						allHistoryLoaded: true
 					});
+				} else {
+					let messageList = messages.concat(self.data.messages);
+					self.renderMessages(messageList);
+					if (scrollToBottom) {
+						self.scrollToBottom();
+						//收到的消息设置为已读
+						self.markPrivateMessageAsRead();
+					}
 				}
-				self.data.messages = localHistory;
-				self.renderMessages(self.data.messages);
-				wx.stopPullDownRefresh();
 			},
 			onFailed: function (error) {
 				//获取失败
-				if(error.code === 401){
-					console.log("获取历史消息失败,默认不开通，付费应用，可以在我的应用->查看详情，高级功能里自助开通");
-				}else{
-					console.log("获取历史消息失败, code:" + error.code + ",错误信息:" + error.content);
-				}
+				console.log('获取历史消息失败, code:' + error.code + ',错误信息:' + error.content);
 				wx.stopPullDownRefresh();
 			}
 		});
@@ -255,15 +450,20 @@ Page({
 				// 渲染表情与文本消息
                 let text = this.data.emoji.decoder.decode(message.payload.text);
                 message.node= text;
+                message.editable = message.type === 'text' && Date.now() - message.timestamp < 60 * 1000;
             }
+            if(message.type === 'file'){
+				// 渲染文件消息
+                message.size = (message.payload.size / 1024).toFixed(2);
+			}
         });
         this.setData({
             messages: messages
         });
     },
-	markPrivateMessageAsRead (friendId) {
+	markPrivateMessageAsRead () {
 		wx.goEasy.im.markPrivateMessageAsRead({
-			userId: friendId,
+			userId: this.data.friend.uuid,
 			onSuccess: function () {
 				console.log('标记为已读成功')
 			},
@@ -284,10 +484,10 @@ Page({
 		this.setData({
 			recordVisible: !this.data.recordVisible
 		});
-		if(this.data.more.show || this.data.emoji.show){
+		if(this.data.otherTypesMessagePanelVisible || this.data.emoji.visible){
 			this.setData({
-				["more.show"]: false,
-				["emoji.show"]: false
+				otherTypesMessagePanelVisible: false,
+				['emoji.visible']: false
 			});
 		}
 		if(this.data.recordVisible){
@@ -300,17 +500,17 @@ Page({
 	},
 	playVideo (e) {
 		//播放视频
-		this.selectComponent("#videoPlayer").play({
+		this.selectComponent('#videoPlayer').play({
 			url : e.currentTarget.dataset.url,
 			duration : e.currentTarget.dataset.duration
-		})
+		});
 	},
 	previewImage(event) {
 		// 预览图片
 		let imagesUrl = [event.currentTarget.dataset.src];
 		wx.previewImage({
 			urls: imagesUrl // 需要预览的图片http链接列表
-		})
+		});
 	},
     selectEmoji(e){
 		// 选择表情
@@ -322,14 +522,14 @@ Page({
     },
 	messageInputFocusin(){
 		this.setData({
-			["more.show"]: false,
-			["emoji.show"]: false
+			otherTypesMessagePanelVisible: false,
+			['emoji.visible']: false
 		});
 	},
 	showEmoji(){
 		this.setData({
-			["emoji.show"]: true,
-			["more.show"]: false,
+			['emoji.visible']: true,
+			otherTypesMessagePanelVisible: false,
 			recordVisible: false
 		});
 		// 关闭手机键盘
@@ -337,16 +537,68 @@ Page({
 	},
 	showMore(){
 		this.setData({
-			["more.show"]: true,
-			["emoji.show"]: false
+			otherTypesMessagePanelVisible: !this.data.otherTypesMessagePanelVisible,
+			['emoji.visible']: false
 		});
 		// 关闭手机键盘
 		wx.hideKeyboard().then(console.log).catch(console.log);
 	},
-	scrollToBottom() { // 滑动到最底部
-		wx.pageScrollTo({
-			scrollTop : 200000,
-			duration :10
-		})
-	}
+    scrollToBottom() { // 滑动到最底部
+        setTimeout(() => {
+            wx.pageScrollTo({
+                scrollTop : 200000,
+                duration :10
+            });
+        },600)
+    },
+    downLoadFile (e) {
+        const message = e.currentTarget.dataset.message;
+        if (message.status !== 'success') {
+			return
+        }
+	    const file = message.payload;
+        wx.showModal({
+            title: "点击下载文件",
+            showCancel: true,
+            success: (res) => {
+                if (res.confirm) {
+                    wx.showLoading({
+                        title: "正在下载文件...",
+                        mask: true
+                    });
+                    const downloadTask = wx.downloadFile({
+                        url: file.url,
+                        success: (res) => {
+                            if (res.statusCode === 200) {
+                                wx.hideLoading();
+                                const filePath = res.tempFilePath
+                                wx.openDocument({
+                                    filePath: filePath,
+                                    success: function(res) {
+                                    },
+                                    fail(error) {
+                                        wx.showToast({
+                                            title: "打开文档失败",
+                                            icon: "none",
+                                            duration: 3000
+                                        });
+                                    }
+                                })
+                            }
+                        },
+                        fail: (error) => {
+                            wx.showToast({
+                                title: "下载文件失败",
+                                icon: "none"
+                            });
+                            console.log('error',error);
+                        }
+                    });
+                    downloadTask.onProgressUpdate((res) => {
+                        console.log('下载进度' + res.progress);
+                    });
+                }
+            }
+        });
+    }
 })

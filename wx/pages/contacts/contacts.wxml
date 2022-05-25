@@ -19,7 +19,6 @@
 				</view>
 				<view class="user-item-info">
 					<text class="user-item-info__name">{{friend.name}}</text>
-					<text class="online-tips">{{friend.online ? '在线' :'离线'}}</text>
 				</view>
 			</view>
 		</view>

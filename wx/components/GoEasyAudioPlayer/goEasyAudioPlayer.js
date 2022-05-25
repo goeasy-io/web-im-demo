@@ -10,7 +10,11 @@ Component({
 		duration: {
 			type: Number,
 			value: 0
-		}
+        },
+        selfSent: {
+            type: Boolean,
+            value: false
+        }
 	},
 	data: {
 		width: "",

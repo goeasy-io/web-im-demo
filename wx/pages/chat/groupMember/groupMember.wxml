@@ -2,7 +2,7 @@
 <page-meta>
 	<navigation-bar
 		front-color="#FFFFFF"
-		background-color="#D02129"
+		background-color="#7484ad"
 		title="群成员({{groupMemberNum}})"
 	/>
 </page-meta>

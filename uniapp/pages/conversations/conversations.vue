@@ -6,14 +6,14 @@
 					<image :src="conversation.data.avatar" class="head-icon"></image>
 					<view class="item-head_unread" v-if="conversation.unread">{{conversation.unread}}</view>
 				</view>
-				<view class="scroll-item_info">
+				<view class="scroll-item_info" @click="navigateToChat(conversation)">
 					<view class="item-info-top">
 						<text class="item-info-top_name">{{conversation.data.name}}</text>
 						<view class="item-info-top_time">{{formatDate(conversation.lastMessage.timestamp)}}</view>
 					</view>
 					<view class="item-info-bottom">
-						<view class="item-info-bottom-item" @click="navigateToChat(conversation)">
-							<view class="item-info-top_content">
+						<view class="item-info-bottom-item">
+							<view class="item-info-top_content" v-if="!conversation.lastMessage.recalled">
 								<text class="unread-text">{{conversation.lastMessage.read === false && conversation.lastMessage.senderId === currentUser.uuid?'[未读]':''}}</text>
 								<text v-if="conversation.type === 'private'">{{conversation.lastMessage.senderId === currentUser.uuid? '我': conversation.data.name}}:</text>
 								<text v-else>{{conversation.lastMessage.senderId === currentUser.uuid? '我': conversation.lastMessage.senderData.name}}:</text>
@@ -24,6 +24,10 @@
 								<text v-else-if="conversation.lastMessage.type === 'file'">[文件消息]</text>
 								<text v-else-if="conversation.lastMessage.type === 'order'">[自定义消息:订单]</text>
 								<text v-else>[[未识别内容]]</text>
+							</view>
+							<view class="item-info-top_content" v-else>
+								<text v-if="conversation.type === 'private'">{{conversation.lastMessage.senderId === currentUser.uuid? '你': `"${conversation.data.name}"`}}撤回了一条消息</text>
+								<text v-if="conversation.type === 'group'">{{conversation.lastMessage.senderId === currentUser.uuid? '你': `"${conversation.lastMessage.senderData.name}"`}}撤回了一条消息</text>
 							</view>
 							<view class="item-info-bottom_action" @click.stop="showAction(conversation)"></view>
 						</view>
@@ -108,7 +112,7 @@
 					},
 					onFailed: (error) => {
 						uni.hideLoading();
-						console.log('获取最新会话列表失败, code:' + error.code + 'content:' + error.content);
+						console.log('获取最新会话列表失败, error:',error);
 					}
 				});
 			},

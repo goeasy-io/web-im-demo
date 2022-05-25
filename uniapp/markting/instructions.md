@@ -1,5 +1,34 @@
 
 
+##打造开发者最喜爱的Web IM聊天产品
+
+[开源Demo Git地址和使用说明](https://gitee.com/goeasy-io/GoEasyDemo-Uniapp-IM-Chat)
+
+###功能完善：
+* 私聊、群聊、会话列表，文字、表情，图片，语音，视频消息
+* 支持发送自定义业务消息，比如处方，订单等
+* 手机通知栏提醒，厂商通道集成（iOS, 谷哥FCM, 华为，小米，VIVO,OPPO，魅族）
+* 已读未读，历史查询，消息删除
+* 完美支持消息多端同步, 断网自动重连，消息自动补发
+* 支持服务端Rest接口
+* 消息撤回和音视频实时通话：正在快速推进，敬请期待
+
+###我们的优势
+* 简单易用，参考demo源码和文档，小白也能快速集成
+* 专为Web程序员打造， 一个SDK完美兼容Uniapp，H5和各种小程序
+* 性能强悍，安全可靠，成熟稳定，服务众多知名企业：一加手机，爱尔眼科，清华大学出版社，格林豪泰连锁酒店
+* 技术人员在线技术支持
+
+###咨询和技术支持：
+* [官方开发文档](https://www.goeasy.io/cn/developers/2.x.html)
+* [访问官网，在线咨询技术专员或拨打技术支持电话](https://www.goeasy.io/)
+
+
+
+
+
+
+
 ##关于直播间和聊天室
 goeasy.im实现聊天室不够简单，不建议用于聊天室的实现。[点击这里获取](https://gitee.com/goeasy-io/GoEasyDemo-Uniapp-LiveChatRoom) GoEasy在Uniapp插件市场上传了另一个聊天室模板。 
 
@@ -30,7 +59,7 @@ goeasy.im作为GoEasy的一个子功能，旨在帮助开发者简单、快速�
 
 
 ### 示例说明
-*  示例为方便演示，做了本地化的数据处理，在restapi.js 里可以找到用户名和密码
+* 示例为方便演示，做了本地化的数据处理，在restapi.js 里可以找到用户名和密码
 * 需[注册GoEasy](https://www.goeasy.io/cn/signup.html)平台获得appkey才可以使用相关功能
 
 ### 运行步骤

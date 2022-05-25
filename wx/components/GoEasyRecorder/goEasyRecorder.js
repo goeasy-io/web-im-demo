@@ -18,10 +18,10 @@ Component({
 		},
 		stopRecord: function() {
 			console.log('end');
-			
+
 			if (!this.data.recording && this.data.clickLongPress) {
 				console.log('in1', this.data.clickLongPress);
-				
+
 				this.setData({
 					stopSignaled: true,
 					clickLongPress: false
@@ -49,14 +49,20 @@ Component({
 			}
 		});
 		recorderManager.onStop(function(res) {
-			
+
 			self.setData({
 				recording: false
 			});
-			if(res.duration < 100) {
+			if(res.duration < 1000) {
+                wx.showToast({
+                    icon: 'none',
+                    title: '录音时间太短',
+                    duration: 500
+                });
 				return;
-			}
-			self.triggerEvent('onStop', res);
+			} else {
+                self.triggerEvent('onStop', res);
+            }
 		});
 		recorderManager.onError(function() {
 			self.setData({

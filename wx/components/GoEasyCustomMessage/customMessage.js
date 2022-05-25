@@ -40,7 +40,7 @@ Component({
 					}
 				}
 			});
-			this.triggerEvent("sendCustomMessage",customMessage);
+			this.triggerEvent("createCustomMessage",customMessage);
 			this.close();
 		},
 		close () {

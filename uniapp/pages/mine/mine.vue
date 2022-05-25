@@ -23,18 +23,28 @@
         },
         methods : {
             logout () {
+                uni.showLoading({
+                  title: '注销中',
+                  mask: true,
+                });
                 this.goEasy.disconnect({
                     onSuccess: function(){
-                        console.log('断连成功')
+                        uni.hideLoading();
+                        console.log('注销成功')
                         uni.removeStorageSync('currentUser');
                         uni.navigateTo({
                             url : '../login/login'
                         })
                     },
                     onFailed: function(error){
+                        uni.hideLoading();
                         uni.showToast({
-                            title:'断连失败'
-                        })
+                            icon: 'none',
+                            title:'注销超时，请检查网络！（务必确保注销成功才允许客户退出应用，否则有可能会收到上个用户的消息。）',
+                            duration: 6000
+                        });
+                        console.log('注销失败', error);
+
                     }
                 });
             }

@@ -78,10 +78,3 @@ page {
 	font-family: Cabin;
 	text-align: center;
 }
-.contacts .online-dot{
-	position: absolute;
-	width: 32rpx!important;
-	height: 32rpx!important;
-	right: 0;
-	bottom: 0;
-}

@@ -1,12 +1,12 @@
 //app.js
-import GoEasy from './static/lib/goeasy-2.2.7.min';
+import GoEasy from './static/lib/goeasy-2.4.7.min';
 
 App({
     onLaunch: function () {
         wx.goEasy = GoEasy.getInstance({
             host:'hangzhou.goeasy.io',//应用所在的区域地址: [hangzhou.goeasy.io, 新加坡暂不支持IM，敬请期待]
             appkey: 'BC-xxxx',// common key
-            modules:["im"]
+            modules:['im']
         });
         wx.GoEasy = GoEasy;
     },
@@ -21,8 +21,5 @@ App({
     formatNumber:function(n) {
         n = n.toString();
         return n[1] ? n : '0' + n;
-    },
-    globalData: {
-        service: null,
     }
 })

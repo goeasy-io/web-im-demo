@@ -53,47 +53,58 @@ function RestApi() {
 
 }
 
+function User(uuid, name, avatar) {
+	this.uuid = uuid;
+	this.name = name;
+	this.avatar = avatar;
+}
+
+function Group(uuid, name, avatar) {
+	this.uuid = uuid;
+	this.name = name;
+	this.avatar = avatar;
+}
+
 RestApi.prototype.findFriends = function (user) {
-    var friendList = users.filter(v => v.uuid != user.uuid);
-    return friendList;
+	let friendList = users.filter(v => v.uuid !== user.uuid);
+	return friendList;
 }
 
 RestApi.prototype.findGroups = function (user) {
-    var groupList = groups.filter(v => v.userList.find(id => id == user.uuid));
-    return groupList;
+	let groupList = groups.filter(v => v.userList.find(id => id === user.uuid));
+	return groupList;
 }
 
 RestApi.prototype.findUser = function (username, password) {
-    let user = users.find(user => (user.name == username && user.password == password))
-    return {
-        uuid : user.uuid,
-        avatar : user.avatar,
-        name : user.name
-    };
+	let user = users.find(user => (user.name === username && user.password === password));
+	if(user) {
+		return new User(user.uuid, user.name, user.avatar);
+	}
+	return user;
 }
 
 RestApi.prototype.findGroupById = function (groupId) {
-    var group = groups.find(group => (group.uuid == groupId));
-    return group;
+	let group = groups.find(group => (group.uuid === groupId));
+	return new Group(group.uuid, group.name, group.avatar);
 };
-
 
 RestApi.prototype.findUserById = function (userId) {
-    var user = users.find(user => (user.uuid == userId))
-    return user;
+	let user = users.find(user => (user.uuid === userId))
+	return new User(user.uuid, user.name, user.avatar)
 };
 
-
-
 RestApi.prototype.findGroupMembers = function (groupId) {
-    let members = [];
-    let group = groups.find(v => v.uuid == groupId);
-    users.map(user => {
-        if (group.userList.find(v => v == user.uuid)) {
-            members.push(user)
-        }
-    });
-    return members;
+	let members = {};
+	let group = groups.find(v => v.uuid === groupId);
+	users.map(user => {
+		let groupUserUuid = group.userList.find((uuid)=>{
+			return uuid === user.uuid;
+		});
+		if (groupUserUuid) {
+			members[groupUserUuid] = new User(user.uuid, user.name, user.avatar);
+		}
+	});
+	return members;
 }
 
 export default new RestApi();

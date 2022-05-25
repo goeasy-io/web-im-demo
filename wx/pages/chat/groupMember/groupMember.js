@@ -1,6 +1,5 @@
 /* groupMember.js */
-const app = getApp()
-
+import restApi from '../../../static/lib/restapi';
 Page({
 	data: {
 		groupMemberNum: 0,
@@ -8,8 +7,8 @@ Page({
 		groupMembersMap : {}
 	},
 	onLoad(options){
-		let group = JSON.parse(options.group);
-		let groupMemberMap = app.globalData.service.getGroupMembers(group.uuid);
+        let group = JSON.parse(options.group);
+        let groupMemberMap = restApi.findGroupMembers(group.uuid);
 		let groupMemberNum = Object.keys(groupMemberMap).length;
 		this.setData({
 			groupMemberNum: groupMemberNum,
