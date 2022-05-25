@@ -162,6 +162,11 @@ export default {
         }
     },
     methods: {
+        onEditMessage () {
+          if (this.audio.visible) {
+            this.audio.visible = false;
+          }
+        },
         startAudioMessage() {
             this.audio.visible = !this.audio.visible;
         },
@@ -265,10 +270,11 @@ export default {
             this.sendMessage(customMessage);
         },
         sendMessage(message) {
+            this.$emit('onSendMessage', message);
             this.goEasy.im.sendMessage({
                 message: message,
                 onSuccess: (message) => {
-                    this.$emit('onSendMessage', message);
+                    console.log('发送成功',message);
                 },
             });
         },

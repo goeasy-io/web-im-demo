@@ -101,6 +101,7 @@
             </div>
             <MessagePanel
                 v-else
+                ref="messagePanel"
                 @onSendMessage="onSendMessage"
                 @click="scrollToBottom"
                 :message="content"
@@ -253,9 +254,7 @@ export default {
             });
         },
         editRecalledMessage (content) {
-            if (this.audio.visible) {
-                this.audio.visible = false;
-            }
+            this.$refs.messagePanel.onEditMessage();
             this.content = content;
         },
         showCheckBox() {
@@ -553,11 +552,12 @@ export default {
             font-size: 13px;
             text-align: center;
             color: grey;
+            margin-top: 10px;
             .message-recalled-self {
                 display: flex;
                 span {
                     margin-left: 5px;
-                    color: #618DFF;
+                    color: #AC4E4E;
                     cursor: pointer;
                 }
             }

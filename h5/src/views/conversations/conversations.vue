@@ -116,6 +116,15 @@ export default {
                 this.goEasy.connect({
                     id: this.currentUser.uuid,
                     data: this.currentUser,
+                    onSuccess: function () {  //连接成功
+                      console.log("GoEasy connect successfully.") //连接成功
+                    },
+                    onFailed: function (error) { //连接失败
+                      console.log("Failed to connect GoEasy, code:"+error.code+ ",error:"+error.content);
+                    },
+                    onProgress:function(attempts) { //连接或自动重连中
+                      console.log("GoEasy is connecting", attempts);
+                    }
                 });
             }
         }
