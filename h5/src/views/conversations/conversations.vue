@@ -6,62 +6,60 @@
                     <el-input placeholder="" size="small"> </el-input>
                 </el-header>
                 <el-aside class="conversation-list-content" v-loading="isLoading">
-                    <div v-if="conversations.length > 0">
-                        <div v-for="(conversation, key) in conversations" :key="key">
-                            <el-row
-                                class="conversation"
-                                @click.native="goChatPage(conversation)"
-                                type="flex"
-                                :class="{
-                                    current:
-                                        conversation.userId === currentConversationId ||
-                                        conversation.groupId === currentConversationId,
-                                }"
-                            >
-                                <el-col :span="5" class="avatar">
-                                    <img v-if="conversation.userId" :src="conversation.data.avatar" />
-                                    <div class="group-avatar" v-if="conversation.groupId">
-                                        <img
-                                            v-for="(avatar, index) in getGroupAvatar(conversation.groupId)"
-                                            :src="avatar"
-                                            :class="computedAvatar(getGroupAvatar(conversation.groupId))"
-                                            :key="index"
-                                        />
+                    <div v-if="conversations.length">
+                        <div
+                            v-for="(conversation, key) in conversations" :key="key"
+                            class="conversation"
+                            @click="goChatPage(conversation)"
+                            :class="{
+                                current:
+                                    conversation.userId === currentConversationId ||
+                                    conversation.groupId === currentConversationId,
+                            }"
+                        >
+                            <div class="avatar">
+                                <img v-if="conversation.userId" :src="conversation.data.avatar" />
+                                <div class="group-avatar" v-if="conversation.groupId">
+                                    <img
+                                        v-for="(avatar, index) in getGroupAvatar(conversation.groupId)"
+                                        :src="avatar"
+                                        :class="computedAvatar(getGroupAvatar(conversation.groupId))"
+                                        :key="index"
+                                    />
+                                </div>
+                                <div v-if="conversation.unread && currentUser.uuid !== conversation.lastMessage.senderId" class="mark">
+                                    <span class="unread">{{ conversation.unread }}</span>
+                                </div>
+                            </div>
+                            <div class="conversation-mes">
+                                <div class="conversation-top">
+                                    <span class="conversation-name">{{ conversation.data.name }}</span>
+                                    <div class="conversation-time">
+                                        <div>{{ formatDate(conversation.lastMessage.timestamp) }}</div>
                                     </div>
-                                    <div v-if="conversation.unread && currentUser.uuid !== conversation.lastMessage.senderId" class="mark">
-                                        <span class="unread">{{ conversation.unread }}</span>
+                                </div>
+                                <div class="conversation-bottom">
+                                    <div class="conversation-content" v-if="conversation.lastMessage.recalled">
+                                      <div v-if="conversation.type === 'private'">{{conversation.lastMessage.senderId === currentUser.uuid? '你': `"${conversation.data.name}"`}}撤回了一条消息</div>
+                                      <div v-if="conversation.type === 'group'">{{conversation.lastMessage.senderId === currentUser.uuid? '你': `"${conversation.lastMessage.senderData.name}"`}}撤回了一条消息</div>
                                     </div>
-                                </el-col>
-                                <el-col class="conversation-mes" :span="6">
-                                    <div class="conversation-top">
-                                        <span class="conversation-name">{{ conversation.data.name }}</span>
-                                        <div class="conversation-time">
-                                            <div>{{ formatDate(conversation.lastMessage.timestamp) }}</div>
-                                        </div>
+                                    <div class="conversation-content" v-else>
+                                        <div class="unread-text" v-if="conversation.lastMessage.read === false && conversation.lastMessage.senderId === currentUser.uuid">[未读]</div>
+                                        <div v-if="conversation.type === 'private'">{{conversation.lastMessage.senderId === currentUser.uuid? '我': conversation.data.name}}:</div>
+                                        <div v-else>{{conversation.lastMessage.senderId === currentUser.uuid? '我': conversation.lastMessage.senderData.name}}:</div>
+                                        <span v-if="conversation.lastMessage.type === 'text'">{{ conversation.lastMessage.payload.text }}</span>
+                                        <span v-else-if="conversation.lastMessage.type === 'video'">[视频消息]</span>
+                                        <span v-else-if="conversation.lastMessage.type === 'audio'">[语音消息]</span>
+                                        <span v-else-if="conversation.lastMessage.type === 'image'">[图片消息]</span>
+                                        <span v-else-if="conversation.lastMessage.type === 'file'">[文件消息]</span>
+                                        <span v-else-if="conversation.lastMessage.type === 'order'">[订单消息]</span>
                                     </div>
-                                    <div class="conversation-bottom">
-                                        <div v-if="conversation.lastMessage.recalled">
-                                          <div v-if="conversation.type === 'private'">{{conversation.lastMessage.senderId === currentUser.uuid? '你': `"${conversation.data.name}"`}}撤回了一条消息</div>
-                                          <div v-if="conversation.type === 'group'">{{conversation.lastMessage.senderId === currentUser.uuid? '你': `"${conversation.lastMessage.senderData.name}"`}}撤回了一条消息</div>
-                                        </div>
-                                        <div v-else>
-                                            <span class="unread-text">{{conversation.lastMessage.read === false && conversation.lastMessage.senderId === currentUser.uuid?'[未读]':''}}</span>
-                                            <span v-if="conversation.type === 'private'">{{conversation.lastMessage.senderId === currentUser.uuid? '我': conversation.data.name}}:</span>
-                                            <span v-else>{{conversation.lastMessage.senderId === currentUser.uuid? '我': conversation.lastMessage.senderData.name}}:</span>
-                                            <span v-if="conversation.lastMessage.type === 'text'">{{ conversation.lastMessage.payload.text }}</span>
-                                            <span v-else-if="conversation.lastMessage.type === 'video'">[视频消息]</span>
-                                            <span v-else-if="conversation.lastMessage.type === 'audio'">[语音消息]</span>
-                                            <span v-else-if="conversation.lastMessage.type === 'image'">[图片消息]</span>
-                                            <span v-else-if="conversation.lastMessage.type === 'file'">[文件消息]</span>
-                                            <span v-else-if="conversation.lastMessage.type === 'order'">[订单消息]</span>
-                                        </div>
-                                        <div
-                                            class="conversation-bottom-action"
-                                            @click.stop="showAction(conversation)"
-                                        ></div>
-                                    </div>
-                                </el-col>
-                            </el-row>
+                                    <div
+                                        class="conversation-bottom-action"
+                                        @click.stop="showAction(conversation)"
+                                    ></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div v-else class="no-conversation">- 当前没有会话 -</div>
@@ -322,8 +320,8 @@ export default {
                 padding: 5px 10px;
                 .mark {
                     position: absolute;
-                    top: 5px;
-                    left: 55px;
+                    top: -5px;
+                    left: 45px;
                     width: 16px;
                     height: 16px;
                     border-radius: 50%;
@@ -362,8 +360,21 @@ export default {
                         justify-content: space-between;
                         margin-top: 10px;
                         color: #666666;
+                        .conversation-content {
+                            display: flex;
+                            width: 190px;
+                            color: #b3b3b3;
+                            span {
+                                overflow:hidden;
+                                text-overflow: ellipsis;
+                                width: 100%;
+                                display: block;
+                                white-space: nowrap;
+                            }
+                        }
                         .unread-text {
                             color: #af4e4e;
+                            width: 45px !important;
                         }
                         .conversation-bottom-action {
                             width: 20px;
@@ -377,6 +388,7 @@ export default {
                     width: 50px;
                     height: 50px;
                     margin: auto 5px;
+                    position: relative;
                     img {
                         width: 100%;
                         border-radius: 10%;

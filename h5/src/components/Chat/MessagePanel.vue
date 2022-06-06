@@ -4,9 +4,10 @@
             <div class="actions">
                 <!-- 语音 -->
                 <div class="chat-option">
-                    <el-tooltip effect="dark" content="语音" placement="top-start">
-                        <label for="audio-input" @click="startAudioMessage">
-                            <i class="iconfont el-icon-microphone"></i>
+                    <el-tooltip effect="dark" :content="audio.visible ?'输入':'语音'" placement="top-start">
+                        <label for="audio-input" @click="showAudioRecorder">
+                            <i v-if="!audio.visible" class="iconfont el-icon-microphone"></i>
+                            <i v-else class="iconfont el-icon-edit"></i>
                         </label>
                     </el-tooltip>
                 </div>
@@ -62,7 +63,7 @@
                 <div class="chat-option">
                     <el-tooltip effect="dark" content="文件" placement="top-start">
                         <label for="file-input">
-                            <i class="iconfont icon-folder-open"></i>
+                            <i class="iconfont el-icon-folder"></i>
                         </label>
                     </el-tooltip>
                     <input
@@ -162,12 +163,12 @@ export default {
         }
     },
     methods: {
-        onEditMessage () {
+        handleMessage () {
           if (this.audio.visible) {
             this.audio.visible = false;
           }
         },
-        startAudioMessage() {
+        showAudioRecorder() {
             this.audio.visible = !this.audio.visible;
         },
         createAudioMessage (file) {

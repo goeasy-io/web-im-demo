@@ -1,10 +1,10 @@
 <template>
     <el-container class="chat-box">
-        <div class="chat-name">
+        <div class="chat-header">
             <div>{{ friend.name }}</div>
         </div>
-        <div class="chat-content" ref="scrollView">
-            <div class="chat-body" ref="chatView">
+        <div class="chat-main" ref="scrollView">
+            <div class="message-list" ref="chatView">
                 <div class="history-loaded" @click="loadHistoryMessage(false)">
                     {{ allHistoryLoaded ? '已经没有更多的历史消息' : '获取历史消息' }}
                 </div>
@@ -97,9 +97,9 @@
                 <div class="action-item" @click="actionPopup.visible = false">取消</div>
             </div>
         </div>
-        <div class="chat-input">
-            <div class="messageSelector-box" v-if="messageSelector.visible">
-                <div class="messageSelector-btn" @click="deleteMultipleMessages"></div>
+        <div class="action-box">
+            <div class="action-delete" v-if="messageSelector.visible">
+                <div class="delete-btn" @click="deleteMultipleMessages"></div>
                 <div>删除</div>
             </div>
             <MessagePanel
@@ -257,7 +257,7 @@ export default {
             });
         },
         editRecalledMessage (content) {
-            this.$refs.messagePanel.onEditMessage();
+            this.$refs.messagePanel.handleMessage();
             this.content = content;
         },
         showCheckBox() {
@@ -341,24 +341,21 @@ export default {
     display: flex;
     flex-direction: column;
     position: relative;
-    .chat-name {
+    .chat-header {
         position: relative;
-        height: 43px;
         font-size: 20px;
         font-weight: bold;
-        padding: 5px 10px;
+        padding: 15px 10px;
         text-align: left;
         display: flex;
         align-items: center;
         border-bottom: rgb(219, 214, 214) 1px solid;
     }
-    .chat-content {
+    .chat-main {
         display: flex;
         flex-direction: column;
         text-align: center;
-        padding: 0 15px;
-        max-height: 386px;
-        min-height: 386px;
+        padding: 0 15px 160px 15px;
         overflow: auto;
         overflow-y: scroll;
         scrollbar-color: transparent transparent;
@@ -395,7 +392,7 @@ export default {
                     height: 50px;
                 }
                 .message-content {
-                    max-width: 460px;
+                    max-width: calc(100% - 100px);
                     .message-payload{
                         display: flex;
                         align-items: center;
@@ -579,15 +576,19 @@ export default {
             }
         }
     }
-    .chat-content::-webkit-scrollbar {
+    .chat-main::-webkit-scrollbar {
         width: 1px;
     }
-    .chat-content::-webkit-scrollbar-thumb {
+    .chat-main::-webkit-scrollbar-thumb {
         background-color: #99565600;
     }
-    .chat-input {
+    .action-box {
         height: 160px;
-        .messageSelector-box {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        z-index: 999;
+        .action-delete {
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -595,7 +596,7 @@ export default {
             width: 100%;
             height: 100%;
             background-color: white;
-            .messageSelector-btn {
+            .delete-btn {
                 width: 50px;
                 height: 50px;
                 border-radius: 50%;
@@ -606,8 +607,8 @@ export default {
         }
     }
     .action-popup {
-        width: 599px;
-        height: 386px;
+        width: 100%;
+        height: calc(100% - 160px);
         position: absolute;
         top: 54px;
         left: 0;

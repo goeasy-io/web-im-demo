@@ -67,10 +67,12 @@ let groups = [
 
 function RestApi() {}
 
-function User(uuid, name, avatar) {
+function User(uuid, name, avatar, email, phone) {
     this.uuid = uuid;
     this.name = name;
     this.avatar = avatar;
+    this.email = email;
+    this.phone = phone;
 }
 
 function Group(uuid, name, avatar) {
@@ -92,7 +94,7 @@ RestApi.prototype.findGroups = function (user) {
 RestApi.prototype.findUser = function (username, password) {
     let user = users.find((user) => user.name === username && user.password === password);
     if (user) {
-        return new User(user.uuid, user.name, user.avatar);
+        return new User(user.uuid, user.name, user.avatar, user.email, user.phone);
     }
     return user;
 };
@@ -104,7 +106,7 @@ RestApi.prototype.findGroupById = function (groupId) {
 
 RestApi.prototype.findUserById = function (userId) {
     let user = users.find((user) => user.uuid === userId);
-    return new User(user.uuid, user.name, user.avatar);
+    return new User(user.uuid, user.name, user.avatar, user.email, user.phone);
 };
 
 RestApi.prototype.findGroupMembers = function (groupId) {

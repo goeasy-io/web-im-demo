@@ -1,10 +1,10 @@
 <template>
-    <div class="login-container">
+    <div class="login">
         <div class="login-form">
-            <div class="login-form-head">
+            <div class="login-header">
                 <div class="logo"></div>
             </div>
-            <el-form class="login-form-body" ref="form">
+            <el-form class="login-body" ref="form">
                 <el-form-item>
                     <el-input
                         v-model="username"
@@ -82,7 +82,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.login-container {
+.login {
     width: 1000px;
     height: 600px;
     margin: 50px auto;
@@ -96,7 +96,7 @@ export default {
         margin: 100px auto;
         padding: 30px 50px 10px;
         background-color: rgba($color: #ccc, $alpha: 0.5);
-        .login-form-head {
+        .login-header {
             margin: 20px auto;
             .logo {
                 width: 80px;
@@ -106,7 +106,7 @@ export default {
                 background-size: contain;
             }
         }
-        .login-form-body/deep/.el-input__inner:focus {
+        .login-body/deep/.el-input__inner:focus {
             border-color: #DCDFE6;
         }
         .login-form-btn {
