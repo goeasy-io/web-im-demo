@@ -1,32 +1,31 @@
 <template>
     <div class="login">
-        <div class="login-form">
+        <div class="login-main">
             <div class="login-header">
                 <div class="logo"></div>
             </div>
-            <el-form class="login-body" ref="form">
-                <el-form-item>
-                    <el-input
+            <div class="login-form" ref="form">
+                <div class="form-item">
+                    <input
+                        class="form-item-input"
                         v-model="username"
                         placeholder="请输入账号"
                         ref="username"
-                        @keyup.enter.native="confirmInput($event, false)"
-                    ></el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-input
+                    />
+                </div>
+                <div class="form-item">
+                    <input
+                        class="form-item-input"
                         v-model="password"
                         placeholder="请输入密码"
                         ref="password"
-                        show-password
-                        @keyup.enter.native="confirmInput($event, true)"
-                    ></el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-button class="login-form-btn" type="primary" @click="login">登录</el-button>
-                </el-form-item>
-                <div class="login-error" v-show="errorVisible">账号或密码错误!</div>
-            </el-form>
+                    />
+                </div>
+                <div class="form-item">
+                    <el-button class="form-item-btn" type="primary" @click="login">登录</el-button>
+                </div>
+                <div class="form-error" v-show="errorVisible">账号或密码错误!</div>
+            </div>
         </div>
     </div>
 </template>
@@ -60,16 +59,6 @@ export default {
             }
             this.errorVisible = true;
         },
-        confirmInput(e, isLogin) {
-            // 判断输入框是否有值，有的话失焦让另外一个输入框聚焦；
-            if (e.target.value !== '') {
-                e.target.blur();
-                this.inputFocus(isLogin);
-            } else {
-                e.target.blur();
-                e.target.focus();
-            }
-        },
         inputFocus(isLogin) {
             if (isLogin) {
                 this.login();
@@ -91,7 +80,7 @@ export default {
     box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
     background: url(../../assets/img/login.jpg) no-repeat;
     background-size: cover;
-    .login-form {
+    .login-main {
         width: 300px;
         margin: 100px auto;
         padding: 30px 50px 10px;
@@ -106,15 +95,45 @@ export default {
                 background-size: contain;
             }
         }
-        .login-body/deep/.el-input__inner:focus {
+        .login-form/deep/.el-input__inner:focus {
             border-color: #DCDFE6;
         }
-        .login-form-btn {
-            width: 100%;
-            background-color: #af4e4e;
-            border-color: #af4e4e;
+        .form-item {
+            margin: 30px 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            .form-item-input {
+                background-color: #FFF;
+                background-image: none;
+                border-radius: 4px;
+                border: 1px solid #DCDFE6;
+                box-sizing: border-box;
+                color: #606266;
+                display: inline-block;
+                font-size: inherit;
+                height: 40px;
+                line-height: 40px;
+                outline: 0;
+                padding: 0 15px;
+                width: 100%;
+            }
+            .form-item-btn {
+                width: 100%;
+                color: #FFFFFF;
+                background-color: #af4e4e;
+                border-color: #af4e4e;
+                height: 35px;
+                cursor: pointer;
+                text-align: center;
+                box-sizing: border-box;
+                padding: 12px 20px;
+                font-size: 14px;
+                border-radius: 4px;
+            }
         }
-        .login-error {
+        .form-error {
             color: #D02129;
             margin-bottom: 22px;
         }

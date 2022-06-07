@@ -1,58 +1,54 @@
 <template>
-    <el-container>
-        <el-aside>
-            <el-container class="contacts-list-container">
-                <el-header class="contacts-list-title">
-                    <el-input placeholder="" size="small"></el-input>
-                </el-header>
-                <el-tabs :stretch="true" value="first">
-                    <el-tab-pane label="好友" name="first">
-                        <el-row v-for="(friend, key) in friends || []" :key="key">
-                            <div class="friend-items" @click="getCurrentContact(friend,'friend')">
-                                <el-col :span="5" class="friend-avatar">
-                                    <img :src="friend.avatar" />
-                                </el-col>
-                                <el-col class="friend">
-                                    <el-col :span="5" class="friend-name">{{ friend.name }}</el-col>
-                                    <el-col :span="9" class="friend-mail">{{ friend.email }}</el-col>
-                                </el-col>
-                            </div>
-                        </el-row>
-                    </el-tab-pane>
-                    <el-tab-pane label="群组" name="second">
-                        <el-row v-for="(group, key) in groups || []" :key="key">
-                            <div class="group-items" @click="getCurrentContact(group,'group')">
-                                <el-col :span="5" class="group-avatar" :class="computedAvatar(getGroupAvatar(group.uuid))">
-                                    <img v-for="(avatar, index) in getGroupAvatar(group.uuid)" :src="avatar" :key="index"/>
-                                </el-col>
-                                <el-col class="group">
-                                    <span class="group-name"> {{ group.name }}({{ group.userList.length }}) </span>
-                                </el-col>
-                            </div>
-                        </el-row>
-                    </el-tab-pane>
-                </el-tabs>
-            </el-container>
-        </el-aside>
-        <el-main>
+    <div class="contact">
+        <div class="contact-left">
+            <div class="contact-title">
+                <div class="input"></div>
+            </div>
+            <div class="tab-list">
+                <div :class="currentTab === 'friend'? 'tab-item selected' : 'tab-item'" @click="toggleTab('friend')">好友</div>
+                <div :class="currentTab === 'group'? 'tab-item selected' : 'tab-item'" @click="toggleTab('group')">群组</div>
+            </div>
+            <div class="contact-list" v-if="currentTab === 'friend'">
+                <div class="friend-items" v-for="(friend, key) in friends || []" :key="key" @click="handleListItem(friend,'friend')">
+                    <div class="friend-avatar">
+                        <img :src="friend.avatar" />
+                    </div>
+                    <div class="friend">
+                        <div class="friend-name">{{ friend.name }}</div>
+                        <div class="friend-mail">{{ friend.email }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="contact-list" v-if="currentTab === 'group'">
+                <div class="group-items" v-for="(group, key) in groups || []" :key="key" @click="handleListItem(group,'group')">
+                    <div class="group-avatar" :class="computedAvatar(getGroupAvatar(group.uuid))">
+                        <img v-for="(avatar, index) in getGroupAvatar(group.uuid)" :src="avatar" :key="index"/>
+                    </div>
+                    <div class="group">
+                        <span class="group-name"> {{ group.name }}({{ group.userList.length }}) </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="contact-main">
             <el-card class="friend-card" v-if="currentContact.type === 'friend'">
                 <div slot="header" class="card-title">
                     <div class="friend-name">
                         <i class="iconfont icon-people"></i>
-                        <p>{{ currentContact.data.name }}</p>
+                        <div>{{ currentContact.data.name }}</div>
                     </div>
                     <div class="friend-avatar">
                         <img :src="currentContact.data.avatar" />
                     </div>
                 </div>
-                <div class="info-item">
-                    <p class="info-name">邮 箱:</p>
-                    <p class="info-text">{{ currentContact.data.email }}</p>
-                </div>
-                <div class="info-item">
-                    <p class="info-name">手机号:</p>
-                    <p class="info-text">{{ currentContact.data.phone }}</p>
-                </div>
+                <el-row class="info-item">
+                    <el-col class="info-name">邮 箱</el-col>
+                    <el-col class="info-text">{{ currentContact.data.email }}</el-col>
+                </el-row>
+                <el-row class="info-item">
+                    <el-col class="info-name">手 机</el-col>
+                    <el-col class="info-text">{{ currentContact.data.phone }}</el-col>
+                </el-row>
                 <el-button class="card-button" @click="goChatPage()">发消息</el-button>
             </el-card>
             <el-card class="group-card" v-else-if="currentContact.type === 'group'">
@@ -64,8 +60,8 @@
                 </div>
                 <el-button class="card-button" @click="goChatPage(currentContact)">发消息</el-button>
             </el-card>
-        </el-main>
-    </el-container>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -75,6 +71,7 @@ export default {
         return {
             friends: [],
             groups: [],
+            currentTab: 'friend',
             currentContact: {
                 type: null,
                 data: {}
@@ -88,7 +85,10 @@ export default {
         this.groups = restApi.findGroups(currentUser);
     },
     methods: {
-        getCurrentContact(contact,type) {
+        toggleTab (tab) {
+            this.currentTab = tab;
+        },
+        handleListItem(contact,type) {
             this.currentContact.data = contact;
             this.currentContact.type = type;
             if (this.currentContact.type === 'group') {
@@ -122,95 +122,125 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.el-container {
-  height: 100%;
-}
-.contacts-list-container {
-    width: 300px;
-    background-color: white;
-    border-right: #dbd6d6 1px solid;
-    .contacts-list-title {
-        padding-top: 20px;
-        margin-bottom: 15px;
-    }
-    .friend-items {
-        padding: 5px 10px;
-        .friend-avatar img {
-            width: 50px;
-            height: 50px;
-            border-radius: 10%;
-            margin-left: 10px;
+.contact {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    .contact-left {
+        width: 300px;
+        height: 100%;
+        background-color: white;
+        border-right: #dbd6d6 1px solid;
+        .contact-title {
+            padding: 20px;
+            margin-bottom: 15px;
+            .input {
+                background-color: #FFF;
+                border-radius: 4px;
+                border: 1px solid #DCDFE6;
+                padding: 0 15px;
+                height: 32px;
+            }
         }
-        .friend {
-            width: 65%;
-            margin: 0;
+        .tab-list {
+            width: 100%;
+            display: flex;
+            .tab-item {
+                flex: 1;
+                text-align: center;
+                color: #4f4242;
+                height: 40px;
+                box-sizing: border-box;
+                line-height: 40px;
+                font-size: 14px;
+                font-weight: 500;
+                position: relative;
+                cursor: pointer;
+                margin-bottom: 10px;
+            }
+            .selected {
+                border-bottom: 2px solid #4f4242;
+            }
+        }
+        .contact-list {
             display: flex;
             flex-direction: column;
-            text-align: left;
-            padding-left: 10px;
-            .friend-name {
-                margin: 0;
-                font-size: 16px;
-                font-weight: 400;
-            }
-            .friend-mail {
-                line-height: 30px;
-                color: #888888;
-            }
         }
-    }
-    .group-items {
-        display: flex;
-        padding: 5px 10px;
-        .group-avatar {
-            width: 50px;
-            height: 50px;
-            margin-left: 10px;
-            overflow: hidden;
+        .friend-items {
             display: flex;
-            justify-content: center;
-            align-items: center;
-            align-content: center;
-            flex-wrap: wrap-reverse;
-        }
-        .avatarItem--1 > img {
-            width: 98%;
-            height: 98%;
-        }
-        .avatarItem--2 > img {
-            width: 47%;
-            height: 47%;
-            margin: 1%;
-        }
-        .avatarItem--3 > img {
-            width: 31%;
-            height: 30%;
-            margin: 1%;
-        }
-        .group {
-            width: 65%;
-            margin-left: 10px;
-            .group-name {
-                width: 180px;
+            padding: 5px 10px;
+            .friend-avatar {
+                width: 58px;
+                img {
+                    width: 50px;
+                    height: 50px;
+                    border-radius: 10%;
+                    margin-left: 10px;
+                }
+            }
+            .friend {
+                width: 65%;
+                margin: 0;
+                display: flex;
+                flex-direction: column;
                 text-align: left;
-                font-size: 15px;
-                line-height: 40px;
+                padding-left: 10px;
+                .friend-name {
+                    margin: 0;
+                    font-size: 16px;
+                    font-weight: 400;
+                }
+                .friend-mail {
+                    line-height: 30px;
+                    color: #888888;
+                }
+            }
+        }
+        .group-items {
+            display: flex;
+            padding: 5px 10px;
+            .group-avatar {
+                width: 50px;
+                height: 50px;
+                margin-left: 10px;
+                overflow: hidden;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                align-content: center;
+                flex-wrap: wrap-reverse;
+            }
+            .avatarItem--1 > img {
+                width: 98%;
+                height: 98%;
+            }
+            .avatarItem--2 > img {
+                width: 47%;
+                height: 47%;
+                margin: 1%;
+            }
+            .avatarItem--3 > img {
+                width: 31%;
+                height: 30%;
+                margin: 1%;
+            }
+            .group {
+                width: 65%;
+                margin-left: 10px;
+                .group-name {
+                    width: 180px;
+                    text-align: left;
+                    font-size: 15px;
+                    line-height: 40px;
+                }
             }
         }
     }
-}
-.contacts-list-container/deep/.el-tabs__active-bar {
-    background-color: #4f4242;
-}
-.contacts-list-container/deep/.el-tabs__item {
-    color: #292424;
-    &:hover {
-        color: #4f4242;
+    .contact-main {
+        flex: 1;
     }
 }
-.contacts-list-container/deep/.el-tabs__item.is-active {
-    color: #4f4242;
-}
+
 .friend-card {
     width: 400px;
     margin: 100px auto;

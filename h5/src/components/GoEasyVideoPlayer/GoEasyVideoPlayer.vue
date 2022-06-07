@@ -1,18 +1,13 @@
 <template>
     <div class="goeays-video-player">
-        <div class="video-snapshot" v-if="showSnapshot" @click="callFullScreen">
-            <img :src="thumbnail.url" @load="onLoadEnd" ref="content" />
-            <div class="icon"></div>
-        </div>
-        <el-dialog :visible.sync="dialogVisible" :width="contentWidth" :before-close="handleClose">
-            <video
-                class="video-player"
-                controls=""
-                v-show="show"
-                id="video"
-                :src="video.url"
-            ></video>
-        </el-dialog>
+        <video
+            class="video-player"
+            controls=""
+            id="video"
+            ref="video"
+            :src="video.url"
+        ></video>
+        <span class="close-player" @click="handleClose">x</span>
     </div>
 </template>
 
@@ -22,78 +17,52 @@ export default {
     props: {
         video: {
             type: Object,
-        },
-        showSnapshot: {
-            type: Boolean,
-            default: true,
-        },
-        thumbnail: {
-            type: Object,
-        },
+        }
     },
-    data() {
-        return {
-            show: false,
-            dialogVisible: false,
-            contentWidth: '',
-        };
+    mounted() {
+        this.$refs.video.play();
     },
     methods: {
-        callFullScreen() {
-            this.dialogVisible = true;
-            this.show = true;
-            this.contentWidth = this.$refs.content.width * 3 + 'px';
-        },
-        onLoadEnd() {
-            this.$emit('onLoadEnd');
-        },
         handleClose() {
-            this.dialogVisible = false;
+            this.$emit('closeVideoPlayer');
             // 关闭弹出框时 视频关闭播放
-            const video = document.getElementById('video');
-            video.pause();
+            this.$refs.video.pause();
         },
     },
 };
 </script>
 
 <style lang="scss">
-.video-snapshot {
-    position: relative;
-}
-.video-snapshot img {
-    max-height: 200px;
-    max-width: 200px;
-}
-.video-snapshot .icon {
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    background: url('../../assets/img/play.png') no-repeat center;
-    background-size: 100%;
+.goeays-video-player {
+    max-width: 750px;
+    max-height: 500px;
+    overflow: hidden;
+    padding: 30px 0 5px 0;
+    background: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    margin: auto;
     top: 0;
+    bottom: 0;
     left: 0;
     right: 0;
-    bottom: 0;
-    margin: auto;
-}
-.video-player {
-    width: 100%;
-    height: 100%;
-    display: block;
-}
-#video:focus {
-    outline: none;
-}
-.el-dialog__headerbtn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-}
-.el-dialog__header {
-    padding: 15px;
-}
-.el-dialog__body {
-    padding: 0;
+    z-index: 9999;
+    video {
+        max-width: 750px;
+        max-height: 500px;
+    }
+    .close-player {
+        padding: 0 8px;
+        background: #f6f2f2;
+        border: 1px solid #eeeeee;
+        font-size: 15px;
+        cursor: pointer;
+        color: #333333;
+        position: absolute;
+        top: 4px;
+        right: 10px;
+    }
 }
 </style>

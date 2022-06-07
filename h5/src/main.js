@@ -6,15 +6,6 @@ import GoEasy from 'goeasy'
 // 加载全局样式文件
 import './style/index.scss';
 
-// 加载 element 组件库
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
-Vue.use(ElementUI);
-// 加载全屏组件
-import Viewer from 'v-viewer';
-import 'viewerjs/dist/viewer.css';
-Vue.use(Viewer);
-
 Vue.config.productionTip = false;
 
 new Vue({

@@ -5,7 +5,8 @@
 </template>
 
 <style lang="scss">
-@import url('//at.alicdn.com/t/font_2486466_8s7bs6ei53j.css');
+// 引入阿里字体图标
+@import url('//at.alicdn.com/t/font_2486466_07ioxui71ue9.css');
 
 body {
     background-color: #f5f5f5;

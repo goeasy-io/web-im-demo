@@ -1,5 +1,5 @@
 <template>
-    <el-container class="chat-box">
+    <div class="chat-box">
         <div class="chat-header">
             <div>{{ group.name }}</div>
         </div>
@@ -8,86 +8,77 @@
                 <div class="history-loaded" @click="loadHistoryMessage(false)">
                     {{ allHistoryLoaded ? '已经没有更多的历史消息' : '获取历史消息' }}
                 </div>
-                <el-checkbox-group @change="selectMessages" v-model="messageSelector.ids">
-                    <div v-for="(message, index) in messages" :key="index">
-                        <div class="time-tips">
-                            {{ renderMessageDate(message, index) }}
+                <div v-for="(message, index) in messages" :key="index">
+                    <div class="time-tips">
+                        {{ renderMessageDate(message, index) }}
+                    </div>
+                    <div class="message-recalled" v-if="message.recalled">
+                        <div v-if="message.senderId !== currentUser.uuid">{{message.senderData.name}}撤回了一条消息</div>
+                        <div v-else class="message-recalled-self">
+                            <div>你撤回了一条消息</div>
+                            <span v-if="message.type === 'text' && Date.now()-message.timestamp< 60 * 1000 " @click="editRecalledMessage(message.payload.text)">重新编辑</span>
                         </div>
-                        <div class="message-recalled" v-if="message.recalled">
-                            <div v-if="message.senderId !== currentUser.uuid">{{message.senderData.name}}撤回了一条消息</div>
-                            <div v-else class="message-recalled-self">
-                                <div>你撤回了一条消息</div>
-                                <span v-if="message.type === 'text' && Date.now()-message.timestamp< 60 * 1000 " @click="editRecalledMessage(message.payload.text)">重新编辑</span>
-                            </div>
+                    </div>
+                    <div class="message-item" v-else>
+                        <div class="message-item-checkbox" v-show="messageSelector.visible && message.status !== 'sending'">
+                            <input type="checkbox" :value="message.messageId" v-model="messageSelector.ids" @click="selectMessages">
                         </div>
-                        <div class="message-item" v-else>
-                            <div class="message-item-checkbox" v-show="messageSelector.visible && message.status !== 'sending'">
-                                <el-checkbox
-                                    :label="message.messageId"
-                                    :value="message.messageId"
-                                ></el-checkbox>
+                        <div class="message-item-content" :class="{ self: message.senderId === currentUser.uuid }">
+                            <div class="user-avatar">
+                                <img v-if="currentUser.uuid === message.senderId" :src="currentUser.avatar"/>
+                                <img v-else :src="message.senderData.avatar" />
                             </div>
-                            <div class="message-item-content" :class="{ self: message.senderId === currentUser.uuid }">
-                                <div class="user-avatar">
-                                    <img v-if="currentUser.uuid === message.senderId" :src="currentUser.avatar"/>
-                                    <img v-else :src="message.senderData.avatar" />
-                                </div>
-                                <div class="message-content" @click.right="showActionPopup(message)">
-                                    <div class="message-payload">
-                                        <div class="pending" v-if="message.status === 'sending'"></div>
-                                        <div class="send-fail" v-if="message.status === 'fail'"></div>
-                                        <div class="content-text" v-if="message.type === 'text'">
-                                            <div v-html="renderTextMessage(message)"></div>
-                                        </div>
-                                        <div class="content-image" v-if="message.type === 'image'">
-                                            <viewer>
-                                                <img :src="message.payload.url" alt="图片"/>
-                                            </viewer>
-                                        </div>
-                                        <a
-                                            v-if="message.type === 'file'"
-                                            :href="message.payload.url"
-                                            target="_blank"
-                                            download="download"
-                                        >
-                                            <div class="content-file">
-                                                <div class="file-info">
-                                                    <span class="file-name">{{ message.payload.name }}</span>
-                                                    <span class="file-size">{{ (message.payload.size / 1024).toFixed(2) }} KB</span>
-                                                </div>
-                                                <img class="file-img" src="../../assets/img/file.png" />
+                            <div class="message-content" @click.right="showActionPopup(message)">
+                                <div class="message-payload">
+                                    <div class="pending" v-if="message.status === 'sending'"></div>
+                                    <div class="send-fail" v-if="message.status === 'fail'"></div>
+                                    <div class="content-text" v-if="message.type === 'text'">
+                                        <div v-html="renderTextMessage(message)"></div>
+                                    </div>
+                                    <div class="content-image" v-if="message.type === 'image'" @click="showImagePreview(message.payload.url)">
+                                        <img :src="message.payload.url" alt="图片"/>
+                                    </div>
+                                    <a
+                                        v-if="message.type === 'file'"
+                                        :href="message.payload.url"
+                                        target="_blank"
+                                        download="download"
+                                    >
+                                        <div class="content-file">
+                                            <div class="file-info">
+                                                <span class="file-name">{{ message.payload.name }}</span>
+                                                <span class="file-size">{{ (message.payload.size / 1024).toFixed(2) }} KB</span>
                                             </div>
-                                        </a>
-                                        <GoEasyAudioPlayer
-                                            v-if="message.type ==='audio'"
-                                            :src="message.payload.url"
-                                            :duration="message.payload.duration"
-                                        />
-                                        <GoEasyVideoPlayer
-                                            v-if="message.type === 'video'"
-                                            :video="message.payload.video"
-                                            :thumbnail="message.payload.thumbnail"
-                                            class="content-video"
-                                        />
-                                        <div class="content-custom" v-if="message.type === 'order'">
-                                            <div class="title">
-                                                <img src="../../assets/img/order.png" />
-                                                <div>自定义消息</div>
-                                            </div>
-                                            <div>编号：{{message.payload.number}}</div>
-                                            <div>商品: {{message.payload.goods}}</div>
-                                            <div>金额: {{message.payload.price}}</div>
+                                            <img class="file-img" src="../../assets/img/file.png" />
                                         </div>
+                                    </a>
+                                    <GoEasyAudioPlayer
+                                        v-if="message.type ==='audio'"
+                                        :src="message.payload.url"
+                                        :duration="message.payload.duration"
+                                    />
+                                    <div class="content-video" v-if="message.type === 'video'" @click="showVideoPlayer(message.payload.video)">
+                                        <img :src="message.payload.thumbnail.url" />
+                                        <div class="icon"></div>
+                                    </div>
+                                    <div class="content-custom" v-if="message.type === 'order'">
+                                        <div class="title">
+                                            <img src="../../assets/img/order.png" />
+                                            <div>自定义消息</div>
+                                        </div>
+                                        <div>编号：{{message.payload.number}}</div>
+                                        <div>商品: {{message.payload.goods}}</div>
+                                        <div>金额: {{message.payload.price}}</div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </el-checkbox-group>
+                </div>
             </div>
         </div>
         <div class="action-popup" v-if="actionPopup.visible" @click="actionPopup.visible = false">
-            <div class="action-box">
+            <div class="action-popup-main">
                 <div class="action-item" @click="deleteSingleMessage">删除</div>
                 <div class="action-item" v-if="actionPopup.recallable" @click="recallMessage">撤回</div>
                 <div class="action-item" @click="showCheckBox">多选</div>
@@ -108,7 +99,16 @@
                 :receiver="group"
             />
         </div>
-    </el-container>
+        <div class="image-preview" v-if="imagePreview.visible">
+            <img :src="imagePreview.url" alt="图片" />
+            <span class="close" @click="imagePreview.visible = false">x</span>
+        </div>
+        <GoEasyVideoPlayer
+            v-if="videoPlayer.visible"
+            :video="videoPlayer.video"
+            @closeVideoPlayer="closeVideoPlayer"
+        />
+    </div>
 </template>
 
 <script>
@@ -143,6 +143,14 @@ export default {
             //定义表情列表
             emoji: {
                 decoder: new EmojiDecoder(emojiUrl, emojiMap),
+            },
+            imagePreview: {
+                visible: false,
+                url: ''
+            },
+            videoPlayer: {
+                visible: false,
+                video: {}
             },
             // 展示消息删除弹出框
             actionPopup: {
@@ -203,25 +211,13 @@ export default {
             this.actionPopup.visible = true;
         },
         deleteSingleMessage() {
-            this.$alert('确认删除？')
-                .then(() => {
-                    this.actionPopup.visible = false;
-                    this.deleteMessage();
-                })
-                .catch((e) => {
-                    this.actionPopup.visible = false;
-                });
+            this.actionPopup.visible = false;
+            this.deleteMessage();
         },
         deleteMultipleMessages() {
             if (this.messageSelector.messages.length > 0) {
-                this.$alert('确认删除？')
-                    .then(() => {
-                        this.messageSelector.visible = false;
-                        this.deleteMessage();
-                    })
-                    .catch((e) => {
-                        this.messageSelector.visible = false;
-                    });
+                this.messageSelector.visible = false;
+                this.deleteMessage();
             }
         },
         deleteMessage() {
@@ -257,12 +253,31 @@ export default {
             this.$refs.messagePanel.handleMessage();
             this.content = content;
         },
+        showImagePreview(url) {
+            this.imagePreview.visible = true;
+            this.imagePreview.url = url;
+        },
+        showVideoPlayer(video) {
+            this.videoPlayer.visible = true;
+            this.videoPlayer.video = video;
+        },
+        closeVideoPlayer() {
+            this.videoPlayer.visible = false;
+        },
         showCheckBox() {
             this.messageSelector.messages = [];
             this.messageSelector.visible = true;
             this.actionPopup.visible = false;
         },
-        selectMessages() {
+        selectMessages(e) {
+            if (e.target.checked) {
+                this.messageSelector.ids.push(e.target.value)
+            } else {
+                let index = this.messageSelector.ids.indexOf(e.target.value);
+                if (index > -1) {
+                    this.messageSelector.ids.splice(index, 1);
+                }
+            }
             let selectedMessages = [];
             this.messages.forEach((message) => {
                 if (this.messageSelector.ids.includes(message.messageId)) {
@@ -335,6 +350,8 @@ export default {
 
 <style lang="scss" scoped>
 .chat-box {
+    width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     position: relative;
@@ -465,10 +482,27 @@ export default {
                         }
                     }
                     .content-video {
-                        max-height: 240px;
+                        display: block;
                         margin: 5px 10px;
-                        border-radius: 5px;
                         cursor: pointer;
+                        max-height: 200px;
+                        position: relative;
+                        img {
+                            max-width: 200px;
+                            max-height: 200px;
+                        }
+                        .icon {
+                            position: absolute;
+                            width: 20px;
+                            height: 20px;
+                            background: url('../../assets/img/play.png') no-repeat center;
+                            background-size: 100%;
+                            top: 0;
+                            left: 0;
+                            right: 0;
+                            bottom: 0;
+                            margin: auto;
+                        }
                     }
                     .content-custom {
                         width: 150px;
@@ -592,7 +626,7 @@ export default {
     }
     .action-popup {
         width: 100%;
-        height: calc(100% - 160px);
+        height: 585px;
         position: absolute;
         top: 54px;
         left: 0;
@@ -600,20 +634,50 @@ export default {
         display: flex;
         align-items: center;
         justify-content: center;
-        .action-box {
+        .action-popup-main {
             width: 150px;
             height: 120px;
             background: #ffffff;
             z-index: 100;
             border-radius: 10px;
             overflow: hidden;
+            .action-item {
+                text-align: center;
+                line-height: 40px;
+                font-size: 15px;
+                color: #262628;
+                border-bottom: 1px solid #efefef;
+            }
         }
-        .action-item {
-            text-align: center;
-            line-height: 40px;
+    }
+    .image-preview {
+        max-width: 750px;
+        max-height: 500px;
+        background: #FFFFFF;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        margin: auto;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 9998;
+        img {
+            max-width: 750px;
+            max-height: 500px;
+        }
+        .close {
+            padding: 0 8px;
+            background: #f6f2f2;
+            border: 1px solid #eeeeee;
             font-size: 15px;
-            color: #262628;
-            border-bottom: 1px solid #efefef;
+            cursor: pointer;
+            color: #333333;
+            position: absolute;
+            top: 4px;
+            right: 10px;
         }
     }
 }

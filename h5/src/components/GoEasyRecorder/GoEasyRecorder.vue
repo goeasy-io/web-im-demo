@@ -101,7 +101,7 @@ export default {
 
 .record-loading{
     position: absolute;
-    top:40%;
+    top: -325px;
     left: 50%;
     width: 150px;
     height: 150px;

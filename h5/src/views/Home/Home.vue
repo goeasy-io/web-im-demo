@@ -1,32 +1,30 @@
 <template>
     <div class="home">
-        <el-container class="home-container">
-            <el-aside class="home-menu" width="100px">
-                <el-avatar
+        <div class="home-container">
+            <div class="home-menu">
+                <img
                     v-if="currentUser"
                     class="user-avatar"
-                    shape="square"
-                    :size="50"
                     :src="currentUser.avatar"
-                ></el-avatar>
+                />
                 <div class="user-profile">
-                    <el-card>
-                        <div slot="header" class="user-profile-header">
+                    <div class="user-profile-main">
+                        <div class="user-profile-header">
                             <img :src="currentUser.avatar" />
                             <div>{{ currentUser.name }}</div>
                         </div>
-                        <el-row class="user-profile-info">
-                            <el-col :span="8">邮箱</el-col>
-                            <el-col :span="16">{{ currentUser.email }}</el-col>
-                        </el-row>
-                        <el-row class="user-profile-info">
-                            <el-col :span="8">手机</el-col>
-                            <el-col :span="16">{{ currentUser.phone }}</el-col>
-                        </el-row>
-                    </el-card>
+                        <div class="user-profile-info">
+                            <div class="user-profile-info-title">邮箱</div>
+                            <div>{{ currentUser.email }}</div>
+                        </div>
+                        <div class="user-profile-info">
+                            <div class="user-profile-info-title">手机</div>
+                            <div>{{ currentUser.phone }}</div>
+                        </div>
+                    </div>
                 </div>
-                <el-menu class="menu-list">
-                    <el-menu-item index="2">
+                <div class="menu-list">
+                    <div class="menu-item">
                         <router-link to="/conversations">
                             <i
                                 class="iconfont icon-message"
@@ -34,24 +32,24 @@
                             ></i>
                         </router-link>
                         <span v-if="unreadTotal" class="menu-unread">{{ unreadTotal }}</span>
-                    </el-menu-item>
-                    <el-menu-item index="3">
+                    </div>
+                    <div class="menu-item">
                         <router-link to="/contacts">
                             <i
                                 class="iconfont icon-deleteuser"
                                 :class="{ selected: currentPage === 'Contacts' }"
                             ></i>
                         </router-link>
-                    </el-menu-item>
-                </el-menu>
+                    </div>
+                </div>
                 <div class="exit">
                     <i class="iconfont icon-ico-exit" @click="logout"></i>
                 </div>
-            </el-aside>
-            <el-main class="home-main">
+            </div>
+            <div class="home-main">
                 <router-view />
-            </el-main>
-        </el-container>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -69,6 +67,9 @@ export default {
         if (!this.currentUser) {
             this.$router.push('../login');
         }
+        if(this.goEasy.getConnectionStatus() === 'disconnected') {
+            this.connectGoEasy();  //连接goeasy
+        }
         this.$EventBus.$on('setUnreadAmount', (unreadTotal)=>{
             this.unreadTotal = unreadTotal;
         })
@@ -79,6 +80,21 @@ export default {
         },
     },
     methods: {
+        connectGoEasy () {
+            this.goEasy.connect({
+                id: this.currentUser.uuid,
+                data: this.currentUser,
+                onSuccess: function () {  //连接成功
+                    console.log("GoEasy connect successfully.") //连接成功
+                },
+                onFailed: function (error) { //连接失败
+                    console.log("Failed to connect GoEasy, code:"+error.code+ ",error:"+error.content);
+                },
+                onProgress: function(attempts) { //连接或自动重连中
+                    console.log("GoEasy is connecting", attempts);
+                }
+            });
+        },
         logout() {
             this.goEasy.disconnect({
                 onSuccess: () => {
@@ -101,19 +117,14 @@ export default {
 <style lang="scss" scoped>
 .home {
     box-sizing: border-box;
+    width: 100%;
     height: 100%;
-    min-width: 1150px;
-    padding: 3rem 6rem;
     display: flex;
     justify-content: center;
     align-items: center;
     .home-container {
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        box-sizing: border-box;
-        min-height: 640px;
-        flex: 1;
+        width: 1150px;
+        height: 800px;
         background: #FFFFFF;
         border-radius: 12px;
         box-shadow: 0 11px 20px 0 rgba(0, 0, 0, 0.3);
@@ -125,6 +136,8 @@ export default {
             flex-direction: column;
             align-items: center;
             .user-avatar {
+                width: 50px;
+                height: 50px;
                 margin: 20px auto;
                 border-radius: 50%;
                 &:hover + .user-profile {
@@ -141,31 +154,55 @@ export default {
                 height: 200px;
                 background: #FFFFFF;
                 z-index: 999;
-                .user-profile-header {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    font-size: 15px;
-                    font-weight: bold;
-                    img {
-                        width: 45px;
-                        height: 45px;
+                .user-profile-main {
+                    border: 1px solid #EBEEF5;
+                    background-color: #FFF;
+                    color: #303133;
+                    border-radius: 4px;
+                    .user-profile-header {
+                        padding: 18px 20px;
+                        border-bottom: 1px solid #EBEEF5;
+                        box-sizing: border-box;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        font-size: 15px;
+                        font-weight: bold;
+                        img {
+                            width: 45px;
+                            height: 45px;
+                        }
                     }
-                }
-                .user-profile-info {
-                    font-size: 14px;
-                    color: #666666;
-                    line-height: 28px;
+                    .user-profile-info {
+                        display: flex;
+                        padding: 10px 20px;
+                        font-size: 14px;
+                        color: #666666;
+                        line-height: 28px;
+                        .user-profile-info-title {
+                            width: 70px;
+                        }
+                    }
                 }
             }
             .menu-list {
-                border: none;
+                margin-top: 20px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
                 background-color: #4f4242;
                 height: calc(100% - 160px);
                 .iconfont {
                     padding: 15px;
                     font-size: 28px;
                     color: #e9e8ee;
+                }
+                .menu-item {
+                    color: #303133;
+                    padding: 0 20px;
+                    cursor: pointer;
+                    box-sizing: border-box;
+                    height: 56px;
                 }
                 .menu-unread {
                     position: absolute;
@@ -183,9 +220,6 @@ export default {
                     color: #af4e4e !important;
                 }
             }
-            .menu-list/deep/.el-menu-item:focus, .el-menu-item:hover {
-                background-color: #4f4242;
-            }
             .exit {
                 .icon-ico-exit {
                     padding: 15px;
@@ -200,9 +234,9 @@ export default {
         }
 
         .home-main {
-            color: #333;
             background-color: #e9e8ee;
             padding: 0;
+            flex: 1;
         }
     }
 }

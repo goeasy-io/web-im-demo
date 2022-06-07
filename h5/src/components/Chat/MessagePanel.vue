@@ -1,118 +1,113 @@
 <template>
-    <el-container>
-        <el-main class="message-sender">
-            <div class="actions">
-                <!-- 语音 -->
-                <div class="chat-option">
-                    <el-tooltip effect="dark" :content="audio.visible ?'输入':'语音'" placement="top-start">
-                        <label for="audio-input" @click="showAudioRecorder">
-                            <i v-if="!audio.visible" class="iconfont el-icon-microphone"></i>
-                            <i v-else class="iconfont el-icon-edit"></i>
-                        </label>
-                    </el-tooltip>
+    <div class="message-sender">
+        <div class="actions">
+            <!-- 语音 -->
+            <div class="chat-option">
+                <label for="audio-input" @click="showAudioRecorder" :title="audio.visible ?'键盘':'语音'">
+                    <i v-if="!audio.visible" class="iconfont icon-maikefeng"></i>
+                    <i v-else class="iconfont icon-jianpan"></i>
+                </label>
+            </div>
+            <!-- 表情 -->
+            <div class="chat-option">
+                <div class="emoji-box" v-if="emoji.visible" title="表情">
+                    <div class="emoji-list">
+                        <img
+                            class="emoji-item"
+                            v-for="(emojiItem, emojiKey, index) in emojiMap"
+                            :key="index"
+                            :src="emojiUrl + emojiItem"
+                            @click="chooseEmoji(emojiKey)"
+                        />
+                    </div>
                 </div>
-                <!-- 表情 -->
-                <div class="chat-option">
-                    <el-popover placement="top" width="250" trigger="click">
-                        <div class="emojiList">
-                            <img
-                                class="emoji-item"
-                                v-for="(emojiItem, emojiKey, index) in emojiMap"
-                                :key="index"
-                                :src="emojiUrl + emojiItem"
-                                @click="chooseEmoji(emojiKey)"
-                            />
+                <i class="iconfont icon-smile" slot="reference"  @click="showEmojiBox"></i>
+            </div>
+            <!-- 图片 -->
+            <div class="chat-option">
+                <label for="img-input" title="图片">
+                    <i class="iconfont icon-picture"></i>
+                </label>
+                <input
+                    accept="image/*"
+                    type="file"
+                    multiple
+                    @change="createImageMessage"
+                    id="img-input"
+                    ref="img-input"
+                    v-show="false"
+                />
+            </div>
+            <!-- 视频 -->
+            <div class="chat-option">
+                <label for="video-input" title="视频">
+                    <i class="iconfont icon-film"></i>
+                </label>
+                <input
+                    accept="video/*"
+                    type="file"
+                    @change="createVideoMessage"
+                    id="video-input"
+                    ref="video-input"
+                    v-show="false"
+                />
+            </div>
+            <!-- 文件 -->
+            <div class="chat-option">
+                <label for="file-input" title="文件">
+                    <i class="iconfont icon-folder-open"></i>
+                </label>
+                <input
+                    type="file"
+                    @change="createFileMessage"
+                    id="file-input"
+                    ref="file-input"
+                    v-show="false"
+                />
+            </div>
+            <!-- 自定义 -->
+            <div class="chat-option">
+                <div class="order-form" v-if="customMessageForm.visible">
+                    <div class="order-form-item">
+                        <div class="order-form-label">编号</div>
+                        <div class="order-form-input">
+                            <input v-model="customMessageForm.number" />
                         </div>
-                        <i class="iconfont icon-smile" slot="reference"></i>
-                    </el-popover>
+                    </div>
+                    <div class="order-form-item">
+                        <div class="order-form-label">商品</div>
+                        <div class="order-form-input">
+                            <input v-model="customMessageForm.goods" />
+                        </div>
+                    </div>
+                    <div class="order-form-item">
+                        <div class="order-form-label">金额</div>
+                        <div class="order-form-input">
+                            <input v-model="customMessageForm.price" />
+                        </div>
+                    </div>
+                    <button class="cancel-button" @click="customMessageForm.visible = false">取消</button>
+                    <button class="primary-button" @click="createCustomMessage">创建</button>
                 </div>
-                <!-- 图片 -->
-                <div class="chat-option">
-                    <el-tooltip effect="dark" content="图片" placement="top-start">
-                        <label for="img-input">
-                            <i class="iconfont icon-picture"></i>
-                        </label>
-                    </el-tooltip>
-                    <input
-                        accept="image/*"
-                        type="file"
-                        multiple
-                        @change="createImageMessage"
-                        id="img-input"
-                        ref="img-input"
-                        v-show="false"
-                    />
-                </div>
-                <!-- 视频 -->
-                <div class="chat-option">
-                    <el-tooltip effect="dark" content="视频" placement="top-start">
-                        <label for="video-input">
-                            <i class="iconfont icon-film"></i>
-                        </label>
-                    </el-tooltip>
-                    <input
-                        accept="video/*"
-                        type="file"
-                        @change="createVideoMessage"
-                        id="video-input"
-                        ref="video-input"
-                        v-show="false"
-                    />
-                </div>
-                <!-- 文件 -->
-                <div class="chat-option">
-                    <el-tooltip effect="dark" content="文件" placement="top-start">
-                        <label for="file-input">
-                            <i class="iconfont el-icon-folder"></i>
-                        </label>
-                    </el-tooltip>
-                    <input
-                        type="file"
-                        @change="createFileMessage"
-                        id="file-input"
-                        ref="file-input"
-                        v-show="false"
-                    />
-                </div>
-                <!-- 自定义 -->
-                <div class="chat-option">
-                    <el-tooltip effect="dark" content="订单" placement="top-start">
-                        <el-popover placement="top" width="250" trigger="manual" v-model="customMessageForm.visible">
-                            <el-form label-position="left" label-width="50px" size="small">
-                                <el-form-item label="编号">
-                                    <el-input v-model="customMessageForm.number"></el-input>
-                                </el-form-item>
-                                <el-form-item label="商品">
-                                    <el-input v-model="customMessageForm.goods"></el-input>
-                                </el-form-item>
-                                <el-form-item label="金额">
-                                    <el-input v-model="customMessageForm.price"></el-input>
-                                </el-form-item>
-                                <el-button class="cancel-button" size="small" @click="customMessageForm.visible = false">取消</el-button>
-                                <el-button class="primary-button" size="small" @click="createCustomMessage">创建</el-button>
-                            </el-form>
-                            <i class="iconfont el-icon-edit-outline" slot="reference" @click="showCustomMessageForm"></i>
-                        </el-popover>
-                    </el-tooltip>
-                </div>
+                <i class="iconfont el-icon-edit-outline" @click="showCustomMessageForm"></i>
             </div>
+        </div>
 
-            <div class="content-send" v-if="!audio.visible">
-                <el-input
-                    rows="3"
-                    type="textarea"
-                    v-model="content"
-                    ref="input"
-                ></el-input>
-            </div>
+        <div class="content-send" v-if="!audio.visible">
+            <textarea
+                autocomplete="off"
+                class="content-input"
+                v-model="content"
+                ref="input"
+            ></textarea>
+        </div>
 
-            <div class="send-message" v-if="!audio.visible">
-                <el-button class="primary-button" size="small" @click="createTextMessage">发送</el-button>
-            </div>
+        <div class="send-message" v-if="!audio.visible">
+            <button class="primary-button" @click="createTextMessage">发送</button>
+        </div>
 
-            <GoEasyRecorder @onComplete="createAudioMessage" v-if="audio.visible" />
-        </el-main>
-    </el-container>
+        <GoEasyRecorder @onComplete="createAudioMessage" v-if="audio.visible" />
+    </div>
 </template>
 
 <script>
@@ -152,6 +147,9 @@ export default {
                 number: null,
                 goods: null,
                 price: null
+            },
+            emoji: {
+                visible: false
             }
         };
     },
@@ -204,8 +202,12 @@ export default {
                 this.$refs.input.focus();
             });
         },
+        showEmojiBox () {
+            this.emoji.visible = !this.emoji.visible;
+        },
         chooseEmoji(emojiKey) {
             this.content += emojiKey;
+            this.emoji.visible = false;
         },
         createImageMessage(e) {
             let fileList = [...e.target.files];
@@ -297,6 +299,7 @@ export default {
         .chat-option {
             text-align: left;
             padding: 10px 0;
+            position: relative;
             .iconfont {
                 font-size: 22px;
                 margin: 0 10px;
@@ -308,23 +311,73 @@ export default {
                     color: #af4e4e;
                 }
             }
-            .emojiList {
-                display: flex;
-                flex-wrap: wrap;
-                .emoji-item {
-                    width: 50px;
-                    height: 50px;
+            .emoji-box {
+                width: 250px;
+                position: absolute;
+                top: -126px;
+                left: -53px;
+                z-index: 2007;
+                margin-bottom: 12px;
+                background: #FFF;
+                min-width: 150px;
+                border: 1px solid #EBEEF5;
+                padding: 12px;
+                text-align: justify;
+                font-size: 14px;
+                box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
+                word-break: break-all;
+                border-radius: 4px;
+                .emoji-list {
+                    display: flex;
+                    flex-wrap: wrap;
+                    .emoji-item {
+                        width: 50px;
+                        height: 50px;
+                    }
+                }
+            }
+            .order-form {
+                width: 220px;
+                position: absolute;
+                top: -160px;
+                left: -105px;
+                z-index: 2015;
+                margin-bottom: 12px;
+                background: #FFF;
+                border: 1px solid #EBEEF5;
+                padding: 12px;
+                color: #606266;
+                text-align: justify;
+                font-size: 14px;
+                box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
+                border-radius: 4px;
+                .order-form-item {
+                    display: flex;
+                    margin: 10px 0;
+                    .order-form-label {
+                        width: 50px;
+                    }
+                    .order-form-input {
+                        outline: none;
+                    }
                 }
             }
         }
     }
     .content-send {
         padding: 0 10px;
-    }
-    .content-send/deep/.el-textarea__inner {
-        border: none;
-        resize: none;
-        max-height: 73px;
+        .content-input {
+            min-height: 66px;
+            border: none;
+            resize: none;
+            display: block;
+            padding: 5px 15px;
+            box-sizing: border-box;
+            width: 100%;
+            color: #606266;
+            outline: none;
+            background-color: #FFF;
+        }
     }
     .send-message {
         padding: 5px 10px;
@@ -333,6 +386,13 @@ export default {
 }
 .cancel-button {
     margin: 0 35px 0 50px;
+    border: none;
+    padding: 6px 15px;
+    font-size: 12px;
+    border-radius: 3px;
+    cursor: pointer;
+    text-align: center;
+    font-weight: 500;
     &:hover {
         background: #FFFFFF;
         color: #8c8c91;
@@ -342,6 +402,12 @@ export default {
     background: #af4e4e;
     color: white;
     border: none;
+    padding: 6px 15px;
+    font-size: 12px;
+    border-radius: 3px;
+    cursor: pointer;
+    text-align: center;
+    font-weight: 500;
     &:active {
         background: #af4e4e57;
         color: #af4e4e;
