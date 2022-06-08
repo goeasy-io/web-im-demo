@@ -22,7 +22,7 @@
                     />
                 </div>
                 <div class="form-item">
-                    <el-button class="form-item-btn" type="primary" @click="login">登录</el-button>
+                    <button class="form-item-btn" @click="login">登录</button>
                 </div>
                 <div class="form-error" v-show="errorVisible">账号或密码错误!</div>
             </div>
@@ -127,8 +127,6 @@ export default {
                 height: 35px;
                 cursor: pointer;
                 text-align: center;
-                box-sizing: border-box;
-                padding: 12px 20px;
                 font-size: 14px;
                 border-radius: 4px;
             }
