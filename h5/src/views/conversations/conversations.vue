@@ -291,11 +291,13 @@ export default {
             }
             .conversation-list-content {
                 flex: 1;
-                &::-webkit-scrollbar {
-                    display: none; /* Chrome Safari */
+                overflow-y: auto;
+                margin-bottom: 10px;
+                &::-webkit-scrollbar { // Chrome Safari
+                    display: none;
                 }
-                scrollbar-width: none; /* firefox */
-                -ms-overflow-style: none; /* IE 10+ */
+                scrollbar-width: none; // firefox
+                -ms-overflow-style: none; // IE 10+
                 .no-conversation {
                     text-align: center;
                     color: #666666;

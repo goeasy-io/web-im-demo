@@ -203,10 +203,11 @@ export default {
                     cursor: pointer;
                     box-sizing: border-box;
                     height: 56px;
+                    position: relative;
                 }
                 .menu-unread {
                     position: absolute;
-                    top: 10px;
+                    top: -5px;
                     right: 26px;
                     width: 16px;
                     height: 16px;
