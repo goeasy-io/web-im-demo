@@ -33,14 +33,6 @@ export default {
                 bitRate:16,
                 onProcess : function () {}
             });
-            this.recorder.open(() => {
-                console.log('录音授权成功')
-                //授权成功
-            }, (e) => {
-                console.log('录音授权失败',e);
-                //授权失败
-                this.close()
-            })
         },
         onStateChange () {
             if(this.recording) {
@@ -50,27 +42,34 @@ export default {
             }
         },
         start () {
-            this.recording = true;
-            if(this.recorder && this.recorder.state !== 1) {
-                this.recorder.start()
-            }
+            this.recorder.open(() => {
+                console.log('录音授权成功')
+                //授权成功
+                this.recording = true;
+                if(this.recorder && this.recorder.state !== 1) {
+                    this.recorder.start()
+                }
+            }, (e) => {
+                alert('获取录音权限失败,请先授权才能发送语音消息!');
+                console.log('录音授权失败',e);
+                //授权失败
+                this.close()
+            })
         },
         stop () {
+            this.recording = false;
             this.recorder.stop((blob, duration) => {
-                this.recording = false;
-                this.open = false;
                 if (duration < 1000) {
-                    this.$alert('录音时间太短');
-                    return
+                    alert('录音时间太短');
+                } else {
+                    let file = new File([blob], 'audio.mp3', {type: blob.type, lastModified: Date.now()});
+                    this.$emit('onComplete', file);
                 }
-                let file = new File([blob], 'audio.mp3', {type: blob.type, lastModified: Date.now()});
-                this.$emit('onComplete', file);
             }, (msg) => {
                 console.log(msg)
             })
         },
         close () {
-            this.open = true;
             if(this.recorder) {
                 this.recorder.close();
             }

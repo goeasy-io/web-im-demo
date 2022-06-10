@@ -326,13 +326,14 @@ export default {
                         display: flex;
                         flex: 1;
                         flex-direction: column;
+                        justify-content: space-around;
                         .conversation-top {
                             display: flex;
                             align-items: center;
                             justify-content: space-between;
                             text-align: right;
                             .conversation-name {
-                                font-size: 13px;
+                                font-size: 14px;
                                 font-weight: 500;
                             }
                             .conversation-time {
@@ -345,7 +346,6 @@ export default {
                         .conversation-bottom {
                             display: flex;
                             justify-content: space-between;
-                            margin-top: 10px;
                             color: #666666;
                             .conversation-content {
                                 display: flex;
