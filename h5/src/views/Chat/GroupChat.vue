@@ -58,10 +58,11 @@
                                             <div>{{Math.ceil(message.payload.duration) || 0}}"</div>
                                         </div>
                                     </div>
-                                    <div class="content-video" v-if="message.type === 'video'" @click="showVideoPlayer(message.payload.video)">
-                                        <img :src="message.payload.thumbnail.url" />
-                                        <div class="icon"></div>
-                                    </div>
+                                    <GoEasyVideoPlayer
+                                        v-if="message.type === 'video'"
+                                        :thumbnail="message.payload.thumbnail"
+                                        :video="message.payload.video"
+                                    />
                                     <div class="content-custom" v-if="message.type === 'order'">
                                         <div class="title">
                                             <img src="../../assets/img/order.png" />
@@ -207,11 +208,6 @@
             <span class="close" @click="imagePreview.visible = false">x</span>
         </div>
         <audio ref="audioPlayer"></audio>
-        <GoEasyVideoPlayer
-            v-if="videoPlayer.visible"
-            :video="videoPlayer.video"
-            @closeVideoPlayer="closeVideoPlayer"
-        />
     </div>
 </template>
 
@@ -266,10 +262,6 @@ export default {
             imagePreview: {
                 visible: false,
                 url: ''
-            },
-            videoPlayer: {
-                visible: false,
-                video: {}
             },
             // 展示消息删除弹出框
             actionPopup: {
@@ -510,13 +502,6 @@ export default {
                 this.audioPlayer.playingAudioId = null;
             }, message.payload.duration*1000)
         },
-        showVideoPlayer(video) {
-            this.videoPlayer.visible = true;
-            this.videoPlayer.video = video;
-        },
-        closeVideoPlayer() {
-            this.videoPlayer.visible = false;
-        },
         showCheckBox() {
             this.messageSelector.messages = [];
             this.messageSelector.visible = true;
@@ -755,29 +740,6 @@ export default {
                         .audio-facade-bg.play-icon{
                             background: url("../../assets/img/play.gif") no-repeat center;
                             background-size: 15px;
-                        }
-                    }
-                    .content-video {
-                        display: block;
-                        margin: 5px 10px;
-                        cursor: pointer;
-                        max-height: 200px;
-                        position: relative;
-                        img {
-                            max-width: 200px;
-                            max-height: 200px;
-                        }
-                        .icon {
-                            position: absolute;
-                            width: 20px;
-                            height: 20px;
-                            background: url('../../assets/img/play.png') no-repeat center;
-                            background-size: 100%;
-                            top: 0;
-                            left: 0;
-                            right: 0;
-                            bottom: 0;
-                            margin: auto;
                         }
                     }
                     .content-custom {

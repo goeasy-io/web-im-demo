@@ -1,38 +1,62 @@
 <template>
-    <div class="goeays-video-player">
-        <video
-            class="video-player"
-            controls=""
-            id="video"
-            ref="video"
-            :src="video.url"
-        ></video>
-        <span class="close-player" @click="handleClose">x</span>
+    <div>
+        <div class="content-video" @click="toggleVideoVisible">
+            <img :src="thumbnail.url" />
+            <div class="icon"></div>
+        </div>
+        <div class="goeays-video-player" v-if="visible">
+            <video
+                class="video-player"
+                :src="video.url"
+                controls
+                autoplay
+            ></video>
+            <span class="close-player" @click="toggleVideoVisible">x</span>
+        </div>
     </div>
 </template>
 
 <script>
 export default {
     name: 'video-player',
-    props: {
-        video: {
-            type: Object,
+    props: ['thumbnail','video'],
+    data () {
+        return {
+            visible: false
         }
     },
-    mounted() {
-        this.$refs.video.play();
-    },
     methods: {
-        handleClose() {
-            this.$emit('closeVideoPlayer');
-            // 关闭弹出框时 视频关闭播放
-            this.$refs.video.pause();
+        toggleVideoVisible () {
+            this.visible = !this.visible;
         },
     },
 };
 </script>
 
 <style lang="scss">
+.content-video {
+    display: block;
+    margin: 5px 10px;
+    cursor: pointer;
+    max-height: 200px;
+    position: relative;
+    img {
+        max-width: 200px;
+        max-height: 200px;
+    }
+    .icon {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        background: url('../../assets/img/play.png') no-repeat center;
+        background-size: 100%;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+    }
+}
 .goeays-video-player {
     max-width: 750px;
     max-height: 500px;
