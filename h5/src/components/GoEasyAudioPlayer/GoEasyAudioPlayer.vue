@@ -4,7 +4,7 @@
             <div class="audio-facade-bg" :class="{'play-icon':play}"> </div>
             <div>{{Math.ceil(duration) || 0}}"</div>
         </div>
-        <audio ref="audioPlayer"></audio>
+        <audio ref="audioPlayer" @ended="onPlayEnd"></audio>
     </div>
 </template>
 
@@ -24,9 +24,9 @@ export default {
             this.$refs.audioPlayer.load();
             this.$refs.audioPlayer.currentTime = 0;
             this.$refs.audioPlayer.play();
-            setTimeout(() => {
-                this.play = false;
-            }, this.duration*1000)
+        },
+        onPlayEnd () {
+            this.play = false;
         }
     }
 }
