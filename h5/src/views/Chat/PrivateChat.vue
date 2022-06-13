@@ -52,12 +52,11 @@
                                             <img class="file-img" src="../../assets/img/file.png" />
                                         </div>
                                     </a>
-                                    <div v-if="message.type ==='audio'" class="content-audio" @click="playAudio(message)">
-                                        <div class="audio-facade" :style="{width:Math.ceil(message.payload.duration)*7 + 60 + 'px'}">
-                                            <div class="audio-facade-bg" :class="audioPlayer.playingAudioId === message.messageId ? 'play-icon':''"> </div>
-                                            <div>{{Math.ceil(message.payload.duration) || 0}}"</div>
-                                        </div>
-                                    </div>
+                                    <GoEasyAudioPlayer
+                                        v-if="message.type ==='audio'"
+                                        :src="message.payload.url"
+                                        :duration="message.payload.duration"
+                                    />
                                     <GoEasyVideoPlayer
                                         v-if="message.type === 'video'"
                                         :thumbnail="message.payload.thumbnail"
@@ -211,13 +210,13 @@
             <img :src="imagePreview.url" alt="图片" />
             <span class="close" @click="imagePreview.visible = false">x</span>
         </div>
-        <audio ref="audioPlayer"></audio>
     </div>
 </template>
 
 <script>
 import restApi from '../../api/restapi';
 import EmojiDecoder from '../../utils/EmojiDecoder';
+import GoEasyAudioPlayer from '../../components/GoEasyAudioPlayer/GoEasyAudioPlayer';
 import GoEasyVideoPlayer from '../../components/GoEasyVideoPlayer/GoEasyVideoPlayer';
 import GoEasyRecorder from "../../components/GoEasyRecorder/GoEasyRecorder";
 export default {
@@ -225,6 +224,7 @@ export default {
     components: {
         GoEasyRecorder,
         GoEasyVideoPlayer,
+        GoEasyAudioPlayer,
     },
     data() {
         const emojiUrl = 'https://imgcache.qq.com/open/qcloud/tim/assets/emoji/';
@@ -258,10 +258,6 @@ export default {
             audioRecorder : {
                 //录音按钮展示
                 visible : false
-            },
-            audioPlayer: {
-                playingAudioId: null,
-                timer: null
             },
             imagePreview: {
                 visible: false,
@@ -494,19 +490,6 @@ export default {
             this.imagePreview.visible = true;
             this.imagePreview.url = url;
         },
-        playAudio (message) {
-            this.audioPlayer.playingAudioId = message.messageId;
-            this.$refs.audioPlayer.src = message.payload.url;
-            this.$refs.audioPlayer.load();
-            this.$refs.audioPlayer.currentTime = 0;
-            this.$refs.audioPlayer.play();
-            if(this.audioPlayer.timer != null){
-                clearInterval(this.audioPlayer.timer);
-            }
-            this.audioPlayer.timer = setTimeout(() => {
-                this.audioPlayer.playingAudioId = null;
-            }, message.payload.duration*1000)
-        },
         showCheckBox() {
             this.messageSelector.messages = [];
             this.messageSelector.visible = true;
@@ -735,29 +718,6 @@ export default {
                             width: 30px;
                             height: 30px;
                             margin: auto 8px;
-                        }
-                    }
-                    .content-audio {
-                        -webkit-tap-highlight-color:rgba(0,0,0,0);
-                        .audio-facade{
-                            min-width: 12px;
-                            background: #FFFFFF;
-                            border-radius: 7px;
-                            display: flex;
-                            font-size: 14px;
-                            padding: 8px;
-                            margin: 5px 10px;
-                            line-height: 25px;
-                            cursor: pointer;
-                        }
-                        .audio-facade-bg{
-                            background: url("../../assets/img/voice.png") no-repeat center;
-                            background-size: 15px;
-                            width: 20px;
-                        }
-                        .audio-facade-bg.play-icon{
-                            background: url("../../assets/img/play.gif") no-repeat center;
-                            background-size: 15px;
                         }
                     }
                     .content-custom {
