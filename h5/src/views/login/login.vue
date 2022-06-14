@@ -2,7 +2,8 @@
     <div class="login">
         <div class="login-main">
             <div class="login-header">
-                <div class="logo"></div>
+<!--                <div class="logo"></div>-->
+                <div>GoEasyIM-Demo</div>
             </div>
             <div class="login-form" ref="form">
                 <div class="form-item">
@@ -18,7 +19,7 @@
                         class="form-item-input"
                         v-model="password"
                         placeholder="请输入密码"
-                        ref="password"
+                        type="password"
                     />
                 </div>
                 <div class="form-item">
@@ -52,88 +53,89 @@ export default {
                 let user = restApi.findUser(this.username, this.password);
                 if (user) {
                     localStorage.setItem('currentUser', JSON.stringify(user));
-                    const { to = '../conversations' } = this.$route.params;
-                    this.$router.push(to);
+                    this.$router.push('../conversations');
                     return;
                 }
             }
             this.errorVisible = true;
-        },
-        inputFocus(isLogin) {
-            if (isLogin) {
-                this.login();
-            } else {
-                this.$refs.password.focus();
-            }
-        },
+        }
     },
 };
 </script>
 
 <style lang="scss" scoped>
 .login {
-    width: 1000px;
+    width: 900px;
     height: 600px;
     margin: 50px auto;
     border-radius: 4px;
     overflow: hidden;
     box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
-    background: url(../../assets/img/login.jpg) no-repeat;
-    background-size: cover;
+    background: linear-gradient(45deg, #996666, transparent);
     .login-main {
-        width: 300px;
+        width: 600px;
         margin: 100px auto;
-        padding: 30px 50px 10px;
-        background-color: rgba($color: #ccc, $alpha: 0.5);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
         .login-header {
             margin: 20px auto;
+            width: 300px;
+            text-align: center;
+            font-size: 35px;
+            font-weight: 600;
+            color: #93262b;
             .logo {
                 width: 80px;
                 height: 80px;
-                margin: 10px auto;
+                margin: 0 auto;
                 background: url(../../assets/img/logo.png) no-repeat;
                 background-size: contain;
             }
         }
-        .login-form/deep/.el-input__inner:focus {
-            border-color: #DCDFE6;
-        }
-        .form-item {
-            margin: 30px 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            .form-item-input {
-                background-color: #FFF;
-                background-image: none;
-                border-radius: 4px;
-                border: 1px solid #DCDFE6;
-                box-sizing: border-box;
-                color: #606266;
-                display: inline-block;
-                font-size: inherit;
-                height: 40px;
-                line-height: 40px;
-                outline: 0;
-                padding: 0 15px;
-                width: 100%;
+        .login-form {
+            width: 300px;
+            .login-form/deep/.el-input__inner:focus {
+                border-color: #DCDFE6;
             }
-            .form-item-btn {
-                width: 100%;
-                color: #FFFFFF;
-                background-color: #af4e4e;
-                border-color: #af4e4e;
-                height: 35px;
-                cursor: pointer;
-                text-align: center;
-                font-size: 14px;
-                border-radius: 4px;
+            .form-item {
+                margin: 30px 0;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                .form-item-input {
+                    background-color: #FFF;
+                    background-image: none;
+                    border-radius: 4px;
+                    border: 1px solid #DCDFE6;
+                    box-sizing: border-box;
+                    color: #606266;
+                    display: inline-block;
+                    font-size: inherit;
+                    height: 40px;
+                    line-height: 40px;
+                    outline: 0;
+                    padding: 0 15px;
+                    width: 100%;
+                }
+                .form-item-btn {
+                    width: 100%;
+                    color: #FFFFFF;
+                    background-color: #93262b;
+                    border: none;
+                    height: 35px;
+                    cursor: pointer;
+                    text-align: center;
+                    font-size: 14px;
+                    border-radius: 4px;
+                }
             }
-        }
-        .form-error {
-            color: #D02129;
-            margin-bottom: 22px;
+            .form-error {
+                color: #93262b;
+                margin-bottom: 22px;
+            }
         }
     }
 }

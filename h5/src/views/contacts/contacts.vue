@@ -31,35 +31,39 @@
             </div>
         </div>
         <div class="contact-main">
-            <el-card class="friend-card" v-if="currentContact.type === 'friend'">
-                <div slot="header" class="card-title">
+            <div class="friend-card" v-if="currentContact.type === 'friend'">
+                <div class="card-title">
                     <div class="friend-name">
-                        <i class="iconfont icon-people"></i>
+                        <i class="iconfont icon-zhanghu"></i>
                         <div>{{ currentContact.data.name }}</div>
                     </div>
                     <div class="friend-avatar">
                         <img :src="currentContact.data.avatar" />
                     </div>
                 </div>
-                <el-row class="info-item">
-                    <el-col class="info-name">邮 箱</el-col>
-                    <el-col class="info-text">{{ currentContact.data.email }}</el-col>
-                </el-row>
-                <el-row class="info-item">
-                    <el-col class="info-name">手 机</el-col>
-                    <el-col class="info-text">{{ currentContact.data.phone }}</el-col>
-                </el-row>
-                <el-button class="card-button" @click="goChatPage()">发消息</el-button>
-            </el-card>
-            <el-card class="group-card" v-else-if="currentContact.type === 'group'">
+                <div class="info-item">
+                    <div class="info-name">邮 箱</div>
+                    <div class="info-text">{{ currentContact.data.email }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-name">手 机</div>
+                    <div class="info-text">{{ currentContact.data.phone }}</div>
+                </div>
+                <div class="button-box">
+                    <button class="card-button" @click="goChatPage()">发消息</button>
+                </div>
+            </div>
+            <div class="group-card" v-else-if="currentContact.type === 'group'">
                 <div class="group-members">
                     <div class="member" v-for="(member, index) in currentContact.data.userInfoList" :key="index">
                         <img class="member-avatar" :src="member.avatar" />
                         <span class="member-name">{{ member.name }}</span>
                     </div>
                 </div>
-                <el-button class="card-button" @click="goChatPage(currentContact)">发消息</el-button>
-            </el-card>
+                <div class="button-box">
+                    <button class="card-button" @click="goChatPage(currentContact)">发消息</button>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -148,7 +152,7 @@ export default {
             .tab-item {
                 flex: 1;
                 text-align: center;
-                color: #4f4242;
+                color: #403a3a;
                 height: 40px;
                 box-sizing: border-box;
                 line-height: 40px;
@@ -159,7 +163,7 @@ export default {
                 margin-bottom: 10px;
             }
             .selected {
-                border-bottom: 2px solid #4f4242;
+                border-bottom: 2px solid #403a3a;
             }
         }
         .contact-list {
@@ -243,9 +247,12 @@ export default {
 
 .friend-card {
     width: 400px;
-    margin: 100px auto;
+    margin: 150px auto;
+    border-radius: 20px;
     background-color: #f9f8ff;
     .card-title {
+        padding: 30px;
+        border-bottom: 1px solid #eeeeee;
         display: flex;
         justify-content: space-around;
         .friend-name {
@@ -253,9 +260,9 @@ export default {
             font-size: 18px;
             display: flex;
             align-items: center;
-            .icon-people {
-                font-size: 20px;
-                color: #af4e4e;
+            .icon-zhanghu {
+                font-size: 26px;
+                color: #93262b;
                 margin-right: 10px;
             }
         }
@@ -264,6 +271,7 @@ export default {
         }
     }
     .info-item {
+        padding: 0 30px;
         display: flex;
         justify-content: space-around;
         text-align: left;
@@ -279,7 +287,8 @@ export default {
 }
 .group-card {
     width: 400px;
-    margin: 80px auto;
+    margin: 150px auto;
+    border-radius: 20px;
     background-color: #f9f8ff;
     .group-members {
         min-height: 200px;
@@ -304,13 +313,20 @@ export default {
         }
     }
 }
-.card-button {
-    background: #af4e4e;
-    color: white;
-    border: none;
-    display: flex;
-    margin: 10px auto;
-    align-items: center;
-    justify-content: center;
+.button-box {
+    padding: 20px 0;
+    .card-button {
+        background: #93262b;
+        color: white;
+        border: none;
+        display: flex;
+        width: 80px;
+        height: 25px;
+        cursor: pointer;
+        border-radius: 5px;
+        margin: 0 auto;
+        align-items: center;
+        justify-content: center;
+    }
 }
 </style>

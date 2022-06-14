@@ -5,6 +5,8 @@ import GoEasy from 'goeasy'
 
 // 加载全局样式文件
 import './style/index.scss';
+// 引入阿里字体图标
+import './assets/iconfont/iconfont.css';
 
 Vue.config.productionTip = false;
 

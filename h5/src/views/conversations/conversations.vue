@@ -313,7 +313,7 @@ export default {
                         height: 16px;
                         border-radius: 50%;
                         color: white;
-                        background: #af4e4e;
+                        background: #93262b;
                         .unread {
                             display: block;
                             font-size: 12px;
@@ -360,7 +360,7 @@ export default {
                                 }
                             }
                             .unread-text {
-                                color: #af4e4e;
+                                color: #93262b;
                                 width: 45px !important;
                             }
                             .conversation-bottom-action {

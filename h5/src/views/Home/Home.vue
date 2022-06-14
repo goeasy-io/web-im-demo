@@ -7,7 +7,7 @@
                     class="user-avatar"
                     :src="currentUser.avatar"
                 />
-                <div class="user-profile">
+                <div class="user-profile" v-if="currentUser">
                     <div class="user-profile-main">
                         <div class="user-profile-header">
                             <img :src="currentUser.avatar" />
@@ -36,14 +36,14 @@
                     <div class="menu-item">
                         <router-link to="/contacts">
                             <i
-                                class="iconfont icon-deleteuser"
+                                class="iconfont icon-lianxiren1"
                                 :class="{ selected: currentPage === 'Contacts' }"
                             ></i>
                         </router-link>
                     </div>
                 </div>
                 <div class="exit">
-                    <i class="iconfont icon-ico-exit" @click="logout"></i>
+                    <i class="iconfont icon-tuichu" @click="logout"></i>
                 </div>
             </div>
             <div class="home-main">
@@ -116,22 +116,23 @@ export default {
 
 <style lang="scss" scoped>
 .home {
-    box-sizing: border-box;
     width: 100%;
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     .home-container {
-        width: 1150px;
-        height: 800px;
+        width: 900px;
+        height: 700px;
+        overflow: hidden;
         background: #FFFFFF;
         border-radius: 12px;
         box-shadow: 0 11px 20px 0 rgba(0, 0, 0, 0.3);
         display: flex;
         position: relative;
         .home-menu {
-            background-color: #4f4242;
+            width: 70px;
+            background-color: #403a3a;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -149,7 +150,7 @@ export default {
                 color: #FFFFFF;
                 position: absolute;
                 top: 0;
-                left: 100px;
+                left: 70px;
                 width: 250px;
                 height: 200px;
                 background: #FFFFFF;
@@ -190,8 +191,8 @@ export default {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                background-color: #4f4242;
-                height: calc(100% - 160px);
+                background-color: #403a3a;
+                height: 500px;
                 .iconfont {
                     padding: 15px;
                     font-size: 28px;
@@ -199,7 +200,6 @@ export default {
                 }
                 .menu-item {
                     color: #303133;
-                    padding: 0 20px;
                     cursor: pointer;
                     box-sizing: border-box;
                     height: 56px;
@@ -208,7 +208,7 @@ export default {
                 .menu-unread {
                     position: absolute;
                     top: -5px;
-                    right: 26px;
+                    right: 5px;
                     width: 16px;
                     height: 16px;
                     line-height: 16px;
@@ -218,18 +218,15 @@ export default {
                     color: #ffffff;
                 }
                 .selected {
-                    color: #af4e4e !important;
+                    color: #93262b !important;
                 }
             }
-            .exit {
-                .icon-ico-exit {
-                    padding: 15px;
-                    font-size: 22px;
-                    color: #e9e8ee;
-                    cursor: pointer;
-                    &:active {
-                        color: #af4e4e;
-                    }
+            .icon-tuichu {
+                font-size: 28px;
+                color: #e9e8ee;
+                cursor: pointer;
+                &:active {
+                    color: #93262b;
                 }
             }
         }

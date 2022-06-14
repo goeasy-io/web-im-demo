@@ -96,6 +96,7 @@ export default {
     color: #ffffff;
     text-align: center;
     background: #af4e4e;
+    cursor: pointer;
 }
 
 .record-loading{

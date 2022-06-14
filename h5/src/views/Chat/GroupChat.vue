@@ -67,7 +67,7 @@
                                             <img src="../../assets/img/order.png" />
                                             <div>自定义消息</div>
                                         </div>
-                                        <div>编号：{{message.payload.number}}</div>
+                                        <div>编号: {{message.payload.number}}</div>
                                         <div>商品: {{message.payload.goods}}</div>
                                         <div>金额: {{message.payload.price}}</div>
                                     </div>
@@ -87,14 +87,14 @@
                 <div class="action-bar">
                     <!-- 语音 -->
                     <div class="action-item">
-                        <label for="audio-input" @click="switchAudioKeyboard" :title="audioRecorder.visible ?'键盘':'语音'">
-                            <i v-if="!audioRecorder.visible" class="iconfont icon-maikefeng"></i>
-                            <i v-else class="iconfont icon-jianpan"></i>
+                        <label @click="switchAudioKeyboard">
+                            <i v-if="!audioRecorder.visible" class="iconfont icon-audio" :title="audioRecorder.visible ?'键盘':'语音'"></i>
+                            <i v-else class="iconfont icon-jianpanqiehuan"></i>
                         </label>
                     </div>
                     <!-- 表情 -->
                     <div class="action-item">
-                        <div class="emoji-box" v-if="emoji.visible" title="表情">
+                        <div class="emoji-box" v-if="emoji.visible">
                             <div class="emoji-list">
                                 <img
                                     class="emoji-item"
@@ -105,12 +105,12 @@
                                 />
                             </div>
                         </div>
-                        <i class="iconfont icon-smile" slot="reference"  @click="showEmojiBox"></i>
+                        <i class="iconfont icon-smile" title="表情" @click="showEmojiBox"></i>
                     </div>
                     <!-- 图片 -->
                     <div class="action-item">
-                        <label for="img-input" title="图片">
-                            <i class="iconfont icon-picture"></i>
+                        <label for="img-input">
+                            <i class="iconfont icon-picture" title="图片"></i>
                         </label>
                         <input
                             accept="image/*"
@@ -118,34 +118,31 @@
                             multiple
                             @change="createImageMessage"
                             id="img-input"
-                            ref="img-input"
                             v-show="false"
                         />
                     </div>
                     <!-- 视频 -->
                     <div class="action-item">
-                        <label for="video-input" title="视频">
-                            <i class="iconfont icon-film"></i>
+                        <label for="video-input">
+                            <i class="iconfont icon-film" title="视频"></i>
                         </label>
                         <input
                             accept="video/*"
                             type="file"
                             @change="createVideoMessage"
                             id="video-input"
-                            ref="video-input"
                             v-show="false"
                         />
                     </div>
                     <!-- 文件 -->
                     <div class="action-item">
-                        <label for="file-input" title="文件">
-                            <i class="iconfont icon-folder-open"></i>
+                        <label for="file-input">
+                            <i class="iconfont icon-wenjianjia" title="文件"></i>
                         </label>
                         <input
                             type="file"
                             @change="createFileMessage"
                             id="file-input"
-                            ref="file-input"
                             v-show="false"
                         />
                     </div>
@@ -173,8 +170,7 @@
                             <button class="cancel-button" @click="customMessageForm.visible = false">取消</button>
                             <button class="send-button" @click="createCustomMessage">创建</button>
                         </div>
-                        <!--todo:换图标-->
-                        <i class="iconfont el-icon-edit-outline" @click="showCustomMessageForm"></i>
+                        <i class="iconfont icon-dingdan" title="订单" @click="showCustomMessageForm"></i>
                     </div>
                 </div>
 
@@ -405,10 +401,15 @@ export default {
         },
         sendMessage(message) {
             this.messages.push(message);
+            // 防止图片视频未加载完就滚动
             if (message.type === 'image') {
                 const img = new Image();
                 img.src = message.payload.url;
                 img.onload = () => this.scrollToBottom();
+            } else if (message.type === 'video') {
+                const video = document.createElement('video');
+                video.src = message.payload.video.url;
+                video.oncanplay = () => this.scrollToBottom();
             } else {
                 this.scrollToBottom();
             }
@@ -611,20 +612,42 @@ export default {
         .message-item {
             display: flex;
             .message-item-checkbox {
-                height: 50px;
-                margin: 15px;
+                height: 55px;
+                margin-right: 15px;
                 display: flex;
                 align-items: center;
+                .input-checkbox {
+                    position: relative;
+                }
+                input[type="checkbox"]::before,input[type="checkbox"]:checked::before {
+                    content: "";
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    background: #FFFFFF;
+                    width: 18px;
+                    height: 18px;
+                    border: 1px solid #cccccc;
+                }
+                input[type="checkbox"]:checked::before {
+                    content: "\2713";
+                    background-color: #93262b;
+                    width: 18px;
+                    color: #FFFFFF;
+                    text-align: center;
+                    font-weight: bold;
+                }
             }
             .message-item-content {
                 flex: 1;
                 max-height: 230px;
-                margin: 10px 0;
+                margin: 5px 0;
                 overflow: hidden;
                 display: flex;
                 .user-avatar > img {
-                    width: 50px;
-                    height: 50px;
+                    width: 45px;
+                    height: 45px;
+                    margin-top: 5px;
                 }
                 .message-content {
                     max-width: calc(100% - 100px);
@@ -643,6 +666,20 @@ export default {
                         background-size: 13px;
                         width: 15px;
                         height: 15px;
+                    }
+                    .message-read {
+                        color: gray;
+                        font-size: 12px;
+                        text-align: end;
+                        margin: 0 10px;
+                        height: 16px;
+                    }
+                    .message-unread {
+                        color: #93262b;
+                        font-size: 12px;
+                        text-align: end;
+                        margin: 0 10px;
+                        height: 16px;
                     }
                     .content-text {
                         text-align: left;
@@ -664,7 +701,6 @@ export default {
                         img {
                             max-width: 200px;
                             max-height: 200px;
-                            overflow: hidden;
                         }
                     }
                     .content-file {
@@ -761,18 +797,6 @@ export default {
                 transform:rotate(180deg);
             }
         }
-        .message-item/deep/.el-checkbox__label {
-            display: none;
-        }
-        .message-item/deep/.el-checkbox__inner {
-            border-radius: 8px;
-            width: 16px;
-            height: 16px;
-        }
-        .message-item/deep/.el-checkbox__input.is-checked .el-checkbox__inner, .el-checkbox__input.is-indeterminate .el-checkbox__inner {
-            background-color: #AC4E4E;
-            border-color: #AC4E4E;
-        }
         .message-recalled {
             display: flex;
             align-items: center;
@@ -843,7 +867,7 @@ export default {
                             outline: none;
                         }
                         &:hover {
-                            color: #af4e4e;
+                            color: #93262b;
                         }
                     }
                     .emoji-box {
@@ -935,7 +959,7 @@ export default {
                 }
             }
             .send-button {
-                background: #af4e4e;
+                background: #93262b;
                 color: white;
                 border: none;
                 padding: 6px 15px;
@@ -945,15 +969,15 @@ export default {
                 text-align: center;
                 font-weight: 500;
                 &:active {
-                    background: #af4e4e57;
-                    color: #af4e4e;
+                    background: #93262b57;
+                    color: #93262b;
                 }
                 &:hover {
                     background: #d38989;
                     color: white;
                 }
                 &:focus {
-                    background: #af4e4e;
+                    background: #93262b;
                     color: white;
                 }
             }
