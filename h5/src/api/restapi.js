@@ -1,5 +1,5 @@
 //用户数据示例
-let users = [
+const users = [
     {
         uuid: '08c0a6ec-a42b-47b2-bb1e-15e0f5f9a19a',
         name: 'Mattie',
@@ -35,7 +35,7 @@ let users = [
 ];
 
 //群数据示例
-let groups = [
+const groups = [
     {
         uuid: 'group-a42b-47b2-bb1e-15e0f5f9a19a',
         name: '小程序交流群',
@@ -65,75 +65,40 @@ let groups = [
     },
 ];
 
-function RestApi() {}
+class RestApi {
 
-function User(uuid, name, avatar, email, phone) {
-    this.uuid = uuid;
-    this.name = name;
-    this.avatar = avatar;
-    this.email = email;
-    this.phone = phone;
+	findFriends (user) {
+		return users.filter((v) => v.uuid !== user.uuid);
+	}
+
+	findGroups (user) {
+		return groups.filter((v) => v.userList.find((id) => id === user.uuid));
+	}
+
+	findUser (username, password) {
+		return users.find((user) => user.name === username && user.password === password);
+	}
+
+	findGroupById (groupId) {
+		return groups.find((group) => group.uuid === groupId);
+	}
+
+	findUserById (userId) {
+		return users.find((user) => user.uuid === userId);
+	}
+
+	findGroupMemberAvatars (groupId) {
+		let avatars = [];
+		let group = groups.find((v) => v.uuid === groupId);
+		users.map((user) => {
+			group.userList.forEach((userId) => {
+				if (user.uuid === userId) {
+					avatars.push(user.avatar);
+				}
+			});
+		});
+		return avatars;
+	}
 }
-
-function Group(uuid, name, avatar) {
-    this.uuid = uuid;
-    this.name = name;
-    this.avatar = avatar;
-}
-
-RestApi.prototype.findFriends = function (user) {
-    let friendList = users.filter((v) => v.uuid !== user.uuid);
-    return friendList;
-};
-
-RestApi.prototype.findGroups = function (user) {
-    let groupList = groups.filter((v) => v.userList.find((id) => id === user.uuid));
-    return groupList;
-};
-
-RestApi.prototype.findUser = function (username, password) {
-    let user = users.find((user) => user.name === username && user.password === password);
-    if (user) {
-        return new User(user.uuid, user.name, user.avatar, user.email, user.phone);
-    }
-    return user;
-};
-
-RestApi.prototype.findGroupById = function (groupId) {
-    let group = groups.find((group) => group.uuid === groupId);
-    return new Group(group.uuid, group.name, group.avatar);
-};
-
-RestApi.prototype.findUserById = function (userId) {
-    let user = users.find((user) => user.uuid === userId);
-    return new User(user.uuid, user.name, user.avatar, user.email, user.phone);
-};
-
-RestApi.prototype.findGroupMembers = function (groupId) {
-    let members = {};
-    let group = groups.find((v) => v.uuid === groupId);
-    users.map((user) => {
-        let groupUserUuid = group.userList.find((uuid) => {
-            return uuid === user.uuid;
-        });
-        if (groupUserUuid) {
-            members[groupUserUuid] = new User(user.uuid, user.name, user.avatar);
-        }
-    });
-    return members;
-};
-
-RestApi.prototype.findGroupMemberAvatars = function (groupId) {
-    let avatars = [];
-    let group = groups.find((v) => v.uuid === groupId);
-    users.map((user) => {
-        group.userList.forEach((userId) => {
-            if (user.uuid === userId) {
-                avatars.push(user.avatar);
-            }
-        });
-    });
-    return avatars;
-};
 
 export default new RestApi();
