@@ -27,7 +27,7 @@
                                         :key="index"
                                     />
                                 </div>
-                                <div v-if="conversation.unread && currentUser.uuid !== conversation.lastMessage.senderId" class="mark">
+                                <div v-if="conversation.unread && currentUser.uuid !== conversation.lastMessage.senderId" class="unread-count">
                                     <span class="unread">{{ conversation.unread }}</span>
                                 </div>
                             </div>
@@ -107,25 +107,6 @@ export default {
     created() {
         this.currentConversationId = this.$route.params.id || null;
         this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        if (!this.currentUser) {
-            this.$router.push({ path: '/login' });
-        } else {
-            if (this.goEasy.getConnectionStatus() === 'disconnected') {
-                this.goEasy.connect({
-                    id: this.currentUser.uuid,
-                    data: this.currentUser,
-                    onSuccess: function () {  //连接成功
-                      console.log("GoEasy connect successfully.") //连接成功
-                    },
-                    onFailed: function (error) { //连接失败
-                      console.log("Failed to connect GoEasy, code:"+error.code+ ",error:"+error.content);
-                    },
-                    onProgress:function(attempts) { //连接或自动重连中
-                      console.log("GoEasy is connecting", attempts);
-                    }
-                });
-            }
-        }
     },
     watch: {
         $route() {
@@ -305,12 +286,12 @@ export default {
                 .conversation {
                     display: flex;
                     padding: 5px 10px;
-                    .mark {
+                    .unread-count {
                         position: absolute;
                         top: -5px;
                         left: 45px;
-                        width: 16px;
-                        height: 16px;
+                        width: 18px;
+                        height: 18px;
                         border-radius: 50%;
                         color: white;
                         background: #93262b;
@@ -318,7 +299,7 @@ export default {
                             display: block;
                             font-size: 12px;
                             text-align: center;
-                            line-height: 16px;
+                            line-height: 18px;
                         }
                     }
                     .conversation-mes {

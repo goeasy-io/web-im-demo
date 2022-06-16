@@ -2,12 +2,8 @@
     <div class="home">
         <div class="home-container">
             <div class="home-menu">
-                <img
-                    v-if="currentUser"
-                    class="user-avatar"
-                    :src="currentUser.avatar"
-                />
-                <div class="user-profile" v-if="currentUser">
+                <img class="user-avatar" :src="currentUser.avatar"/>
+                <div class="user-profile">
                     <div class="user-profile-main">
                         <div class="user-profile-header">
                             <img :src="currentUser.avatar" />
@@ -64,9 +60,6 @@ export default {
     },
     created() {
         this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        if (!this.currentUser) {
-            this.$router.push('../login');
-        }
         if(this.goEasy.getConnectionStatus() === 'disconnected') {
             this.connectGoEasy();  //连接goeasy
         }
@@ -209,9 +202,9 @@ export default {
                     position: absolute;
                     top: -5px;
                     right: 5px;
-                    width: 16px;
-                    height: 16px;
-                    line-height: 16px;
+                    width: 18px;
+                    height: 18px;
+                    line-height: 18px;
                     text-align: center;
                     border-radius: 50%;
                     background-color: #AF4E4E;

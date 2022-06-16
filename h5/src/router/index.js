@@ -8,11 +8,6 @@ const PrivateChat = () => import('@/views/Chat/PrivateChat');
 const GroupChat = () => import('@/views/Chat/GroupChat');
 Vue.use(VueRouter);
 
-const originalPush = VueRouter.prototype.push;
-VueRouter.prototype.push = function push(location) {
-    return originalPush.call(this, location).catch((err) => err);
-};
-
 const routes = [
     {
         path: '/',
@@ -66,5 +61,13 @@ const routes = [
 const router = new VueRouter({
     routes,
 });
+
+router.beforeEach((to, from, next) => {
+	const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+	if (to.name !== 'Login' && !currentUser) {
+		next({name: 'Login'})
+	}
+	else next()
+})
 
 export default router;
