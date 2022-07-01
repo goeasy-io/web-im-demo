@@ -1,8 +1,8 @@
 <template>
-    <div class="login">
+  <div class="login">
+    <div class="login-container">
         <div class="login-main">
             <div class="login-header">
-<!--                <div class="logo"></div>-->
                 <div>GoEasyIM-Demo</div>
             </div>
             <div class="login-form" ref="form">
@@ -29,6 +29,7 @@
             </div>
         </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -65,78 +66,76 @@ export default {
 
 <style lang="scss" scoped>
 .login {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .login-container {
     width: 900px;
-    height: 600px;
-    margin: 50px auto;
-    border-radius: 4px;
-    overflow: hidden;
-    box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
+    height: 700px;
+    border-radius: 12px;
+    box-shadow: 0 11px 20px 0 rgba(0, 0, 0, 0.3);
     background: linear-gradient(45deg, #996666, transparent);
     .login-main {
-        width: 600px;
-        margin: 100px auto;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        .login-header {
-            margin: 20px auto;
-            width: 300px;
+      width: 600px;
+      margin: 150px auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      .login-header {
+        margin: 20px auto;
+        width: 300px;
+        text-align: center;
+        font-size: 35px;
+        font-weight: 600;
+        color: #93262b;
+      }
+      .login-form {
+        width: 300px;
+        .login-form/deep/.el-input__inner:focus {
+          border-color: #DCDFE6;
+        }
+        .form-item {
+          margin: 30px 0;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          .form-item-input {
+            background-color: #FFF;
+            background-image: none;
+            border-radius: 4px;
+            border: 1px solid #DCDFE6;
+            box-sizing: border-box;
+            color: #606266;
+            display: inline-block;
+            font-size: inherit;
+            height: 40px;
+            line-height: 40px;
+            outline: 0;
+            padding: 0 15px;
+            width: 100%;
+          }
+          .form-item-btn {
+            width: 100%;
+            color: #FFFFFF;
+            background-color: #93262b;
+            border: none;
+            height: 35px;
+            cursor: pointer;
             text-align: center;
-            font-size: 35px;
-            font-weight: 600;
-            color: #93262b;
-            .logo {
-                width: 80px;
-                height: 80px;
-                margin: 0 auto;
-                background: url(../../assets/img/logo.png) no-repeat;
-                background-size: contain;
-            }
+            font-size: 14px;
+            border-radius: 4px;
+          }
         }
-        .login-form {
-            width: 300px;
-            .login-form/deep/.el-input__inner:focus {
-                border-color: #DCDFE6;
-            }
-            .form-item {
-                margin: 30px 0;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                .form-item-input {
-                    background-color: #FFF;
-                    background-image: none;
-                    border-radius: 4px;
-                    border: 1px solid #DCDFE6;
-                    box-sizing: border-box;
-                    color: #606266;
-                    display: inline-block;
-                    font-size: inherit;
-                    height: 40px;
-                    line-height: 40px;
-                    outline: 0;
-                    padding: 0 15px;
-                    width: 100%;
-                }
-                .form-item-btn {
-                    width: 100%;
-                    color: #FFFFFF;
-                    background-color: #93262b;
-                    border: none;
-                    height: 35px;
-                    cursor: pointer;
-                    text-align: center;
-                    font-size: 14px;
-                    border-radius: 4px;
-                }
-            }
-            .form-error {
-                color: #93262b;
-                margin-bottom: 22px;
-            }
+        .form-error {
+          color: #93262b;
+          margin-bottom: 22px;
         }
+      }
     }
+  }
 }
 </style>

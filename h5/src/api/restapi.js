@@ -1,4 +1,5 @@
 class RestApi {
+	//用户数据示例
 	users = [
 		{
 			uuid: '08c0a6ec-a42b-47b2-bb1e-15e0f5f9a19a',
@@ -33,6 +34,7 @@ class RestApi {
 			phone: '138xxxxxxxx',
 		},
 	];
+	//群数据示例
 	groups = [
 		{
 			uuid: 'group-a42b-47b2-bb1e-15e0f5f9a19a',

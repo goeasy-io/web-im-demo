@@ -985,7 +985,7 @@ export default {
     }
     .action-popup {
         width: 100%;
-        height: 585px;
+        height: 485px;
         position: absolute;
         top: 54px;
         left: 0;

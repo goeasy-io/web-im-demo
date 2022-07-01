@@ -61,8 +61,7 @@ export default {
     max-width: 750px;
     max-height: 500px;
     overflow: hidden;
-    padding: 30px 0 5px 0;
-    background: #FFFFFF;
+    background: #3e3e3e;
     display: flex;
     align-items: center;
     justify-content: center;
