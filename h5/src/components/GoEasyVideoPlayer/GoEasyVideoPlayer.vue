@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="content-video" @click="toggleVideoVisible">
+        <div class="content-video" @click="play">
             <img :src="thumbnail.url" />
             <div class="icon"></div>
         </div>
@@ -11,24 +11,30 @@
                 controls
                 autoplay
             ></video>
-            <span class="close-player" @click="toggleVideoVisible">x</span>
+            <span class="close-player" @click="end">x</span>
         </div>
     </div>
 </template>
 
 <script>
+
 export default {
-    name: 'video-player',
-    props: ['thumbnail','video'],
+    name: 'goeasy-video-player',
+    props: ['src','thumbnail'],
     data () {
         return {
-            visible: false
+            play: false
         }
     },
     methods: {
-        toggleVideoVisible () {
-            this.visible = !this.visible;
+        play () {
+            this.play = true;
         },
+
+        end() {
+            this.play = false;
+        }
+
     },
 };
 </script>

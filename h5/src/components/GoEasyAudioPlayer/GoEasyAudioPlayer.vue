@@ -1,16 +1,16 @@
 <template>
-    <div class="goeasy-audio-player" @click="playAudio">
+    <div class="goeasy-audio-player" @click="play">
         <div class="audio-facade" :style="{width:Math.ceil(duration)*7 + 60 + 'px'}">
             <div class="audio-facade-bg" :class="{'play-icon':play}"> </div>
             <div>{{Math.ceil(duration) || 0}}"</div>
         </div>
-        <audio ref="audioPlayer" @ended="onPlayEnd"></audio>
+        <audio ref="audioPlayer" @ended="onEnd"></audio>
     </div>
 </template>
 
 <script>
 export default {
-    name: 'GoEasyAudioPlayer',
+    name: 'goeasy-audio-player',
     props : ['src', 'duration'],
     data () {
         return {
@@ -18,14 +18,14 @@ export default {
         }
     },
     methods : {
-        playAudio () {
+        play () {
             this.play = true;
             this.$refs.audioPlayer.src =this.src;
             this.$refs.audioPlayer.load();
             this.$refs.audioPlayer.currentTime = 0;
             this.$refs.audioPlayer.play();
         },
-        onPlayEnd () {
+        onEnd () {
             this.play = false;
         }
     }
