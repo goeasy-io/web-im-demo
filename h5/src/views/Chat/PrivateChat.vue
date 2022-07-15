@@ -279,15 +279,19 @@ export default {
 
         this.loadHistoryMessage(true);
 
-        this.goEasy.im.on(this.GoEasy.IM_EVENT.PRIVATE_MESSAGE_RECEIVED, (message) => {
+        this.goEasy.im.on(this.GoEasy.IM_EVENT.PRIVATE_MESSAGE_RECEIVED, this.onReceivedPrivateMessage);
+    },
+    beforeDestroy(){
+        this.goEasy.im.off(this.GoEasy.IM_EVENT.PRIVATE_MESSAGE_RECEIVED, this.onReceivedPrivateMessage);
+    },
+    methods: {
+        onReceivedPrivateMessage(message) {
             if (message.senderId === this.friend.uuid) {
                 this.messages.push(message);
                 this.markPrivateMessageAsRead();
             }
             this.scrollToBottom();
-        });
-    },
-    methods: {
+        },
         renderTextMessage(message) {
             return (
                 '<span class="content-text">' +

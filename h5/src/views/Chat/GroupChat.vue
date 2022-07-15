@@ -276,16 +276,20 @@ export default {
 
         this.loadHistoryMessage(true);
 
-        this.goEasy.im.on(this.GoEasy.IM_EVENT.GROUP_MESSAGE_RECEIVED, (message) => {
+        this.goEasy.im.on(this.GoEasy.IM_EVENT.GROUP_MESSAGE_RECEIVED, this.onReceivedGroupMessage);
+    },
+    beforeDestroy(){
+        this.goEasy.im.off(this.GoEasy.IM_EVENT.GROUP_MESSAGE_RECEIVED, this.onReceivedGroupMessage);
+    },
+    methods: {
+        onReceivedGroupMessage(message) {
             let groupId = message.groupId;
             if (groupId === this.group.uuid) {
                 this.messages.push(message);
                 this.markGroupMessageAsRead();
             }
             this.scrollToBottom();
-        });
-    },
-    methods: {
+        },
         renderTextMessage(message) {
             return (
                 '<span class="content-text">' +

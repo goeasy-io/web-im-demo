@@ -24,7 +24,7 @@
                         <router-link to="/conversations">
                             <i
                                 class="iconfont icon-message"
-                                :class="{ selected: currentPage !== 'Contacts' }"
+                                :class="{ selected: activeTab !== 'Contacts' }"
                             ></i>
                         </router-link>
                         <span v-if="unreadTotal" class="menu-unread">{{ unreadTotal }}</span>
@@ -33,7 +33,7 @@
                         <router-link to="/contacts">
                             <i
                                 class="iconfont icon-lianxiren1"
-                                :class="{ selected: currentPage === 'Contacts' }"
+                                :class="{ selected: activeTab === 'Contacts' }"
                             ></i>
                         </router-link>
                     </div>
@@ -54,7 +54,7 @@ export default {
     data() {
         return {
             currentUser: null,
-            currentPage: this.$route.name,
+            activeTab: this.$route.name,
             unreadTotal: null
         };
     },
@@ -63,14 +63,15 @@ export default {
         if(this.goEasy.getConnectionStatus() === 'disconnected') {
             this.connectGoEasy();  //连接goeasy
         }
-        this.$EventBus.$on('setUnreadAmount', (unreadTotal)=>{
-            this.unreadTotal = unreadTotal;
-        })
+        this.goEasy.im.on(this.GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, this.setUnreadNumber);
     },
     watch: {
         $route() {
-            this.currentPage = this.$route.name;
+            this.activeTab = this.$route.name;
         },
+    },
+    beforeDestroy(){
+        this.goEasy.im.off(this.GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, this.setUnreadNumber);
     },
     methods: {
         connectGoEasy () {
@@ -88,12 +89,14 @@ export default {
                 }
             });
         },
+        setUnreadNumber (content) {
+            this.unreadTotal = content.unreadTotal;
+        },
         logout() {
             this.goEasy.disconnect({
                 onSuccess: () => {
                     localStorage.removeItem('currentUser');
-                    const { to = '../login' } = this.$route.params;
-                    this.$router.push(to);
+                    this.$router.push('../login');
                 },
                 onFailed: (error) => {
                     console.log("Failed to disconnect GoEasy, code:"+error.code+ ",error:"+error.content);
@@ -101,9 +104,6 @@ export default {
             });
         },
     },
-    beforeDestroy(){
-        this.$EventBus.$off('setUnreadAmount');
-    }
 };
 </script>
 

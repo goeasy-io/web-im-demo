@@ -120,6 +120,9 @@ export default {
         this.loadConversations(); //加载会话列表
         this.subscribeGroup();  //订阅群消息
     },
+    beforeDestroy(){
+        this.goEasy.im.off(this.GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, this.renderConversations);
+    },
     methods: {
         loadConversations() {
             this.isLoading = true;
@@ -137,17 +140,10 @@ export default {
         },
         listenConversationUpdate() {
             // 监听会话列表变化
-            this.goEasy.im.on(this.GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, (content) => {
-                this.renderConversations(content);
-
-            });
+            this.goEasy.im.on(this.GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, this.renderConversations);
         },
         renderConversations(content) {
             this.conversations = content.conversations;
-            this.setUnreadAmount(content.unreadTotal);
-        },
-        setUnreadAmount(unreadTotal) {
-            this.$EventBus.$emit('setUnreadAmount', unreadTotal);
         },
         subscribeGroup() {
             let groups = restApi.findGroups(this.currentUser);

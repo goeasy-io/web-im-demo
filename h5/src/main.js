@@ -1,7 +1,8 @@
 import Vue from 'vue';
 import App from './App.vue';
 import router from './router/index';
-import GoEasy from 'goeasy'
+// import GoEasy from 'goeasy'
+import GoEasy from './assets/goeasy.min'
 
 // 加载全局样式文件
 import './style/index.scss';
@@ -38,5 +39,3 @@ Vue.prototype.formatDate = function (t) {
     str += time.getMinutes() < 10 ? '0' + time.getMinutes() : time.getMinutes();
     return str;
 };
-
-Vue.prototype.$EventBus = new Vue();
