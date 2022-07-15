@@ -1,13 +1,13 @@
 <template>
     <div>
         <div class="content-video" @click="play">
-            <img :src="thumbnail.url" />
+            <img :src="thumbnail" />
             <div class="icon"></div>
         </div>
-        <div class="goeays-video-player" v-if="visible">
+        <div class="goeays-video-player" v-if="playing">
             <video
                 class="video-player"
-                :src="video.url"
+                :src="src"
                 controls
                 autoplay
             ></video>
@@ -23,16 +23,16 @@ export default {
     props: ['src','thumbnail'],
     data () {
         return {
-            play: false
+          playing: false
         }
     },
     methods: {
         play () {
-            this.play = true;
+            this.playing = true;
         },
 
         end() {
-            this.play = false;
+            this.playing = false;
         }
 
     },

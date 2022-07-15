@@ -1,7 +1,7 @@
 <template>
     <div class="goeasy-audio-player" @click="play">
         <div class="audio-facade" :style="{width:Math.ceil(duration)*7 + 60 + 'px'}">
-            <div class="audio-facade-bg" :class="{'play-icon':play}"> </div>
+            <div class="audio-facade-bg" :class="{'play-icon':playing}"> </div>
             <div>{{Math.ceil(duration) || 0}}"</div>
         </div>
         <audio ref="audioPlayer" @ended="onEnd"></audio>
@@ -14,19 +14,19 @@ export default {
     props : ['src', 'duration'],
     data () {
         return {
-            play : false
+            playing : false
         }
     },
     methods : {
         play () {
-            this.play = true;
+            this.playing = true;
             this.$refs.audioPlayer.src =this.src;
             this.$refs.audioPlayer.load();
             this.$refs.audioPlayer.currentTime = 0;
             this.$refs.audioPlayer.play();
         },
         onEnd () {
-            this.play = false;
+            this.playing = false;
         }
     }
 }

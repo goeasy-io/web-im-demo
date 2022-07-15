@@ -52,15 +52,15 @@
                                             <img class="file-img" src="../../assets/img/file.png" />
                                         </div>
                                     </a>
-                                    <GoEasyAudioPlayer
+                                    <goeasy-audio-player
                                         v-if="message.type ==='audio'"
                                         :src="message.payload.url"
                                         :duration="message.payload.duration"
                                     />
-                                    <GoEasyVideoPlayer
+                                    <goeasy-video-player
                                         v-if="message.type === 'video'"
-                                        :thumbnail="message.payload.thumbnail"
-                                        :video="message.payload.video"
+                                        :thumbnail="message.payload.thumbnail.url"
+                                        :src="message.payload.video.url"
                                     />
                                     <div class="content-custom" v-if="message.type === 'order'">
                                         <div class="title">
@@ -85,13 +85,6 @@
             </div>
             <div class="action-box" v-else>
                 <div class="action-bar">
-                    <!-- 语音 -->
-                    <div class="action-item">
-                        <label @click="switchAudioKeyboard">
-                            <i v-if="!audioRecorder.visible" class="iconfont icon-audio" :title="audioRecorder.visible ?'键盘':'语音'"></i>
-                            <i v-else class="iconfont icon-jianpanqiehuan"></i>
-                        </label>
-                    </div>
                     <!-- 表情 -->
                     <div class="action-item">
                         <div class="emoji-box" v-if="emoji.visible">
@@ -174,7 +167,7 @@
                     </div>
                 </div>
 
-                <div class="input-box" v-if="!audioRecorder.visible">
+                <div class="input-box">
                     <textarea
                         autocomplete="off"
                         class="input-content"
@@ -183,11 +176,10 @@
                     ></textarea>
                 </div>
 
-                <div class="send-box" v-if="!audioRecorder.visible">
+                <div class="send-box">
                     <button class="send-button" @click="createTextMessage">发送</button>
                 </div>
 
-                <GoEasyRecorder @onComplete="createAudioMessage" v-if="audioRecorder.visible" />
             </div>
         </div>
         <div class="action-popup" v-if="actionPopup.visible" @click="actionPopup.visible = false">
@@ -210,11 +202,13 @@ import restApi from '../../api/restapi';
 import EmojiDecoder from '../../utils/EmojiDecoder';
 import GoEasyAudioPlayer from '../../components/GoEasyAudioPlayer/GoEasyAudioPlayer';
 import GoEasyVideoPlayer from '../../components/GoEasyVideoPlayer/GoEasyVideoPlayer';
-import GoEasyRecorder from "../../components/GoEasyRecorder/GoEasyRecorder";
+import GoeasyAudioPlayer from "../../components/GoEasyAudioPlayer/GoEasyAudioPlayer";
+import GoeasyVideoPlayer from "../../components/GoEasyVideoPlayer/GoEasyVideoPlayer";
 export default {
     name: 'GroupChat',
     components: {
-        GoEasyRecorder,
+      GoeasyVideoPlayer,
+      GoeasyAudioPlayer,
         GoEasyVideoPlayer,
         GoEasyAudioPlayer,
     },
@@ -246,10 +240,6 @@ export default {
                 number: null,
                 goods: null,
                 price: null
-            },
-            audioRecorder : {
-                //录音按钮展示
-                visible : false
             },
             imagePreview: {
                 visible: false,
@@ -322,23 +312,6 @@ export default {
         chooseEmoji(emojiKey) {
             this.content += emojiKey;
             this.emoji.visible = false;
-        },
-        switchAudioKeyboard() {
-            this.audioRecorder.visible = !this.audioRecorder.visible;
-        },
-        createAudioMessage (file) {
-            let audioMessage = this.goEasy.im.createAudioMessage({
-                to : {
-                    type: this.GoEasy.IM_SCENE.GROUP,
-                    id: this.group.uuid,
-                    data: this.group,
-                },
-                file: file,
-                onProgress :function (progress) {
-                    console.log(progress)
-                }
-            });
-            this.sendMessage(audioMessage);
         },
         createImageMessage(e) {
             let fileList = [...e.target.files];
@@ -481,9 +454,6 @@ export default {
             });
         },
         editRecalledMessage (content) {
-            if (this.audioRecorder.visible) {
-                this.audioRecorder.visible = false;
-            }
             this.content = content;
         },
         showImagePreview(url) {
