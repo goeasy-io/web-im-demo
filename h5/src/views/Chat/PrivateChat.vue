@@ -225,11 +225,17 @@ export default {
             '[傲慢]': 'emoji_8@2x.png',
         };
         return {
-            content: '',
-            friend: null,
             currentUser: null,
-            messages: [],
-            allHistoryLoaded: false,
+            friend: null,
+
+            history: {
+                messages: [],
+                allLoaded: false,
+            },
+
+
+            text: '',
+
             //定义表情列表
             emoji: {
                 url: emojiUrl,
@@ -237,6 +243,7 @@ export default {
                 visible: false,
                 decoder: new EmojiDecoder(emojiUrl, emojiMap),
             },
+
             customMessageForm: {
                 visible: false,
                 number: null,
@@ -257,7 +264,7 @@ export default {
             messageSelector: {
                 visible: false,
                 messages: [],
-                ids: []
+                ids: []  //todo: 为啥要两个？
             },
         };
     },
@@ -288,7 +295,8 @@ export default {
                 '</span>'
             );
         },
-        createTextMessage() {
+
+        sendTextMessage() {
             if (!this.content.trim()) {
                 console.log('输入为空');
                 return
@@ -314,7 +322,8 @@ export default {
             this.content += emojiKey;
             this.emoji.visible = false;
         },
-        createImageMessage(e) {
+
+        sendImageMessage(e) {
             let fileList = [...e.target.files];
             fileList.forEach((file) => {
                 const imageMessage = this.goEasy.im.createImageMessage({
@@ -328,7 +337,8 @@ export default {
                 this.sendMessage(imageMessage);
             })
         },
-        createVideoMessage(e) {
+
+        sendVideoMessage(e) {
             const file = e.target.files[0];
             const videoMessage = this.goEasy.im.createVideoMessage({
                 file: file,
@@ -340,7 +350,8 @@ export default {
             });
             this.sendMessage(videoMessage);
         },
-        createFileMessage(e) {
+
+        sendFileMessage(e) {
             const file = e.target.files[0];
             const fileMessage = this.goEasy.im.createFileMessage({
                 file: file,
@@ -360,7 +371,8 @@ export default {
                 price: null
             }
         },
-        createCustomMessage () {
+
+        sendCustomMessage () {
             this.customMessageForm.visible = false;
             const customMessage = this.goEasy.im.createCustomMessage({
                 type : 'order',
@@ -379,6 +391,7 @@ export default {
         },
         sendMessage(message) {
             this.messages.push(message);
+            //todo:不好
             // 防止图片视频未加载完就滚动
             if (message.type === 'image') {
                 const img = new Image();
