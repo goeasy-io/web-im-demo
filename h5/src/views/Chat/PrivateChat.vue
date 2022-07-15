@@ -6,9 +6,9 @@
         <div class="chat-main" ref="scrollView">
             <div class="message-list" ref="chatView">
                 <div class="history-loaded" @click="loadHistoryMessage(false)">
-                    {{ allHistoryLoaded ? '已经没有更多的历史消息' : '获取历史消息' }}
+                    {{ history.allLoaded ? '已经没有更多的历史消息' : '获取历史消息' }}
                 </div>
-                <div v-for="(message, index) in messages" :key="index">
+                <div v-for="(message, index) in history.messages" :key="index">
                     <div class="time-tips">
                         {{ renderMessageDate(message, index) }}
                     </div>
@@ -112,7 +112,7 @@
                             accept="image/*"
                             type="file"
                             multiple
-                            @change="createImageMessage"
+                            @change="sendImageMessage"
                             id="img-input"
                             v-show="false"
                         />
@@ -125,7 +125,7 @@
                         <input
                             accept="video/*"
                             type="file"
-                            @change="createVideoMessage"
+                            @change="sendVideoMessage"
                             id="video-input"
                             v-show="false"
                         />
@@ -137,7 +137,7 @@
                         </label>
                         <input
                             type="file"
-                            @change="createFileMessage"
+                            @change="sendFileMessage"
                             id="file-input"
                             v-show="false"
                         />
@@ -164,7 +164,7 @@
                                 </div>
                             </div>
                             <button class="cancel-button" @click="customMessageForm.visible = false">取消</button>
-                            <button class="send-button" @click="createCustomMessage">创建</button>
+                            <button class="send-button" @click="sendCustomMessage">创建</button>
                         </div>
                         <i class="iconfont icon-dingdan" title="订单" @click="showCustomMessageForm"></i>
                     </div>
@@ -174,13 +174,13 @@
                     <textarea
                         autocomplete="off"
                         class="input-content"
-                        v-model="content"
+                        v-model="text"
                         ref="input"
                     ></textarea>
                 </div>
 
                 <div class="send-box">
-                    <button class="send-button" @click="createTextMessage">发送</button>
+                    <button class="send-button" @click="sendTextMessage">发送</button>
                 </div>
             </div>
         </div>
@@ -202,17 +202,13 @@
 <script>
 import restApi from '../../api/restapi';
 import EmojiDecoder from '../../utils/EmojiDecoder';
-import GoEasyAudioPlayer from '../../components/GoEasyAudioPlayer/GoEasyAudioPlayer';
-import GoEasyVideoPlayer from '../../components/GoEasyVideoPlayer/GoEasyVideoPlayer';
 import GoeasyAudioPlayer from "../../components/GoEasyAudioPlayer/GoEasyAudioPlayer";
 import GoeasyVideoPlayer from "../../components/GoEasyVideoPlayer/GoEasyVideoPlayer";
 export default {
     name: 'PrivateChat',
     components: {
-      GoeasyVideoPlayer,
-      GoeasyAudioPlayer,
-        GoEasyVideoPlayer,
-        GoEasyAudioPlayer,
+        GoeasyVideoPlayer,
+        GoeasyAudioPlayer,
     },
     data() {
         const emojiUrl = 'https://imgcache.qq.com/open/qcloud/tim/assets/emoji/';
@@ -232,7 +228,6 @@ export default {
                 messages: [],
                 allLoaded: false,
             },
-
 
             text: '',
 
@@ -283,7 +278,7 @@ export default {
     methods: {
         onReceivedPrivateMessage(message) {
             if (message.senderId === this.friend.uuid) {
-                this.messages.push(message);
+                this.history.messages.push(message);
                 this.markPrivateMessageAsRead();
             }
             this.scrollToBottom();
@@ -297,12 +292,12 @@ export default {
         },
 
         sendTextMessage() {
-            if (!this.content.trim()) {
+            if (!this.text.trim()) {
                 console.log('输入为空');
                 return
             }
             const textMessage = this.goEasy.im.createTextMessage({
-                text: this.content,
+                text: this.text,
                 to: {
                     type: this.GoEasy.IM_SCENE.PRIVATE,
                     id: this.friend.uuid,
@@ -310,7 +305,7 @@ export default {
                 },
             });
             this.sendMessage(textMessage);
-            this.content = '';
+            this.text = '';
             this.$nextTick(() => {
                 this.$refs.input.focus();
             });
@@ -319,7 +314,7 @@ export default {
             this.emoji.visible = !this.emoji.visible;
         },
         chooseEmoji(emojiKey) {
-            this.content += emojiKey;
+            this.text += emojiKey;
             this.emoji.visible = false;
         },
 
@@ -390,7 +385,7 @@ export default {
             this.sendMessage(customMessage);
         },
         sendMessage(message) {
-            this.messages.push(message);
+            this.history.messages.push(message);
             //todo:不好
             // 防止图片视频未加载完就滚动
             if (message.type === 'image') {
@@ -413,7 +408,7 @@ export default {
         },
         showActionPopup(message) {
             const MAX_RECALLABLE_TIME = 3 * 60 * 1000; //3分钟以内的消息才可以撤回
-            this.messageSelector.messages = [message];
+            this.messageSelector.ids = [message.messageId];
             if ((Date.now() - message.timestamp) < MAX_RECALLABLE_TIME && message.senderId === this.currentUser.uuid && message.status === 'success') {
                 this.actionPopup.recallable = true;
             } else {
@@ -426,7 +421,7 @@ export default {
             this.deleteMessage();
         },
         deleteMultipleMessages() {
-            if (this.messageSelector.messages.length > 0) {
+            if (this.messageSelector.ids.length > 0) {
                 this.messageSelector.visible = false;
                 this.deleteMessage();
             }
@@ -434,17 +429,22 @@ export default {
         deleteMessage() {
             let conf = confirm("确认删除？");
             if (conf === true) {
+                let selectedMessages = [];
+                this.history.messages.forEach((message) => {
+                    if (this.messageSelector.ids.includes(message.messageId)) {
+                        selectedMessages.push(message);
+                    }
+                });
                 this.goEasy.im.deleteMessage({
-                    messages: this.messageSelector.messages,
+                    messages: selectedMessages,
                     onSuccess: () => {
-                        this.messageSelector.messages.forEach((message) => {
-                            let index = this.messages.indexOf(message);
+                        selectedMessages.forEach((message) => {
+                            let index = this.history.messages.indexOf(message);
                             if (index > -1) {
-                                this.messages.splice(index, 1);
+                                this.history.messages.splice(index, 1);
                             }
                         });
                         this.messageSelector.ids = [];
-                        this.messageSelector.messages = [];
                     },
                     onFailed: (error) => {
                         console.log('error:', error);
@@ -452,13 +452,18 @@ export default {
                 });
             } else {
                 this.messageSelector.ids = [];
-                this.messageSelector.messages = [];
             }
         },
         recallMessage() {
+            let selectedMessages = [];
+            this.history.messages.forEach((message) => {
+                if (this.messageSelector.ids.includes(message.messageId)) {
+                    selectedMessages.push(message);
+                }
+            });
             this.actionPopup.visible = false;
             this.goEasy.im.recallMessage({
-                messages: this.messageSelector.messages,
+                messages: selectedMessages,
                 onSuccess: ()=>{
                     console.log('撤回成功');
                 },
@@ -467,15 +472,15 @@ export default {
                 }
             });
         },
-        editRecalledMessage (content) {
-            this.content = content;
+        editRecalledMessage (text) {
+            this.text = text;
         },
         showImagePreview(url) {
             this.imagePreview.visible = true;
             this.imagePreview.url = url;
         },
         showCheckBox() {
-            this.messageSelector.messages = [];
+            this.messageSelector.ids = [];
             this.messageSelector.visible = true;
             this.actionPopup.visible = false;
         },
@@ -488,18 +493,11 @@ export default {
                     this.messageSelector.ids.splice(index, 1);
                 }
             }
-            let selectedMessages = [];
-            this.messages.forEach((message) => {
-                if (this.messageSelector.ids.includes(message.messageId)) {
-                    selectedMessages.push(message);
-                }
-            });
-            this.messageSelector.messages = selectedMessages;
         },
         loadHistoryMessage(scrollToBottom) {
             //历史消息
             let lastMessageTimeStamp = null;
-            let lastMessage = this.messages[0];
+            let lastMessage = this.history.messages[0];
             if (lastMessage) {
                 lastMessageTimeStamp = lastMessage.timestamp;
             }
@@ -510,9 +508,9 @@ export default {
                 onSuccess: (result) => {
                     let messages = result.content;
                     if (messages.length === 0) {
-                        this.allHistoryLoaded = true;
+                        this.history.allLoaded = true;
                     } else {
-                        this.messages = messages.concat(this.messages);
+                        this.history.messages = messages.concat(this.history.messages);
                         if (scrollToBottom) {
                             this.scrollToBottom();
                             //收到的消息设置为已读
@@ -548,7 +546,7 @@ export default {
             if (index === 0) {
                 return this.formatDate(message.timestamp);
             } else {
-                if (message.timestamp - this.messages[index - 1].timestamp > 5 * 60 * 1000) {
+                if (message.timestamp - this.history.messages[index - 1].timestamp > 5 * 60 * 1000) {
                     return this.formatDate(message.timestamp);
                 }
             }
