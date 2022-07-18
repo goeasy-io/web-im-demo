@@ -3,9 +3,12 @@
         <div class="chat-header">
             <div>{{ friend.name }}</div>
         </div>
-        <div class="chat-main" ref="scrollView">
-            <div class="message-list" ref="chatView">
-                <div class="history-loaded" @click="loadHistoryMessage(false)">
+        <div class="chat-main" ref="scrollView" @scroll="listenScroll">
+            <div class="message-list" ref="messageList">
+                <div v-if="history.loading" class="history-loading">
+                    <img src="../../assets/img/pending.gif" />
+                </div>
+                <div v-else class="history-loaded" @click="loadHistoryMessage(false,0)">
                     {{ history.allLoaded ? '已经没有更多的历史消息' : '获取历史消息' }}
                 </div>
                 <div v-for="(message, index) in history.messages" :key="index">
@@ -33,7 +36,7 @@
                                     <div class="pending" v-if="message.status === 'sending'"></div>
                                     <div class="send-fail" v-if="message.status === 'fail'"></div>
                                     <div class="content-text" v-if="message.type === 'text'">
-                                        <div v-html="renderTextMessage(message)"></div>
+                                        {{ emoji.decoder.decode(message.payload.text) }}
                                     </div>
                                     <div class="content-image"
                                          v-if="message.type === 'image'"
@@ -177,7 +180,7 @@
                         autocomplete="off"
                         class="input-content"
                         v-model="text"
-                        ref="input"
+                        ref="textBox"
                     ></textarea>
                 </div>
 
@@ -229,6 +232,7 @@ export default {
             history: {
                 messages: [],
                 allLoaded: false,
+                loading: true
             },
 
             text: '',
@@ -269,7 +273,7 @@ export default {
         this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.friend = restApi.findUserById(friendId);
 
-        this.loadHistoryMessage(true);
+        this.loadHistoryMessage(true,0);
 
         this.goEasy.im.on(this.GoEasy.IM_EVENT.PRIVATE_MESSAGE_RECEIVED, this.onReceivedPrivateMessage);
     },
@@ -293,13 +297,6 @@ export default {
             }
             this.scrollToBottom();
         },
-        renderTextMessage(message) {
-            return (
-                '<span class="content-text">' +
-                this.emoji.decoder.decode(message.payload.text) +
-                '</span>'
-            );
-        },
 
         sendTextMessage() {
             if (!this.text.trim()) {
@@ -317,7 +314,7 @@ export default {
             this.sendMessage(textMessage);
             this.text = '';
             this.$nextTick(() => {
-                this.$refs.input.focus();
+                this.$refs.textBox.focus();
             });
         },
         showEmojiBox () {
@@ -500,7 +497,8 @@ export default {
                 }
             }
         },
-        loadHistoryMessage(scrollToBottom) {
+        loadHistoryMessage(scrollToBottom,offsetHeight) {
+            this.history.loading = true;
             //历史消息
             let lastMessageTimeStamp = null;
             let lastMessage = this.history.messages[0];
@@ -512,13 +510,17 @@ export default {
                 lastTimestamp: lastMessageTimeStamp,
                 limit: 10,
                 onSuccess: (result) => {
+                    this.history.loading = false;
                     let messages = result.content;
                     if (messages.length === 0) {
                         this.history.allLoaded = true;
                     } else {
                         this.history.messages = messages.concat(this.history.messages);
+                        if (messages.length < 10) {
+                            this.history.allLoaded = true;
+                        }
                         if (scrollToBottom) {
-                            this.scrollToBottom();
+                            this.scrollToBottom(offsetHeight);
                             //收到的消息设置为已读
                             this.markPrivateMessageAsRead();
                         }
@@ -526,6 +528,7 @@ export default {
                 },
                 onFailed: (error) => {
                     //获取失败
+                    this.history.loading = false;
                     console.log('获取历史消息失败, code:' + error.code + ',错误信息:' + error.content);
                 },
             });
@@ -541,11 +544,23 @@ export default {
                 },
             });
         },
-        scrollToBottom() {
+        listenScroll(e){
+            if (e.target.scrollTop === 0 && !this.history.allLoaded) {
+                const offsetHeight = this.$refs.messageList.offsetHeight;
+                this.loadHistoryMessage(true,offsetHeight);
+            }
+        },
+        scrollToBottom(offsetHeight) {
+            /**
+             * $nextTick：在下次DOM更新循环结束之后执行延迟回调。在修改数据之后立即使用这个方法，获取更新后的 DOM。
+             *            vue执行dom更新是异步的，只要是观察到数据变化vue将会开启一个队列，并缓冲在同一事件循环中发生的所有数据改变。
+             *            在这种缓冲时去除重复数据避免不必要的计算，然后下一个事件循环 “tick”中，vue刷新队列执行实际工作。
+             * $nextTick使用场景：
+             * 1.在修改数据之后要执行某个操作，而这个操作需要使用DOM结构的时候，因为赋值操作只完成了数据模型的改变并没有完成视图更新
+             * 2.在Vue生命周期的created()钩子函数进行DOM操作时，在执行Vue生命周期的created函数中，DOM还没有进行任何渲染
+             **/
             this.$nextTick(() => {
-                if (this.$refs.chatView) {
-                    this.$refs.scrollView.scrollTop = this.$refs.chatView.scrollHeight;
-                }
+                this.$refs.scrollView.scrollTop = this.$refs.messageList.scrollHeight - offsetHeight;
             });
         },
         renderMessageDate(message, index) {
