@@ -8,6 +8,12 @@ const PrivateChat = () => import('@/views/Chat/PrivateChat');
 const GroupChat = () => import('@/views/Chat/GroupChat');
 Vue.use(VueRouter);
 
+//解决vue-router3.0以上版本，避免对当前位置冗余导航的警告信息：NavigationDuplicated: Avoided redundant navigation to current location
+const originalPush = VueRouter.prototype.push;
+VueRouter.prototype.push = function push(location) {
+	return originalPush.call(this, location).catch((err) => err);
+};
+
 const routes = [
     {
         path: '/',
@@ -20,41 +26,31 @@ const routes = [
             {
                 path: '/conversations',
                 name: 'Conversations',
-                components: {
-                    default: Conversations,
-                },
+	            component: Conversations,
                 children: [
                     {
                         path: '/privatechat/:id',
-                        name: 'private',
-                        components: {
-                            default: PrivateChat,
-                        },
+                        name: 'PrivateChat',
+                        component: PrivateChat,
                     },
                     {
                         path: '/groupchat/:id',
-                        name: 'group',
-                        components: {
-                            default: GroupChat,
-                        },
+                        name: 'GroupChat',
+	                    component: GroupChat,
                     },
                 ],
             },
             {
                 path: '/contacts',
                 name: 'Contacts',
-                components: {
-                    default: Contacts,
-                },
+	            component: Contacts,
             },
         ],
     },
     {
         path: '/login',
         name: 'Login',
-        components: {
-            default: Login,
-        },
+	    component: Login,
     },
 ];
 

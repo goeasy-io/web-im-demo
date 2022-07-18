@@ -6,9 +6,9 @@
         <div class="chat-main" ref="scrollView">
             <div class="message-list" ref="chatView">
                 <div class="history-loaded" @click="loadHistoryMessage(false)">
-                    {{ allHistoryLoaded ? '已经没有更多的历史消息' : '获取历史消息' }}
+                    {{ history.allLoaded ? '已经没有更多的历史消息' : '获取历史消息' }}
                 </div>
-                <div v-for="(message, index) in messages" :key="index">
+                <div v-for="(message, index) in history.messages" :key="index">
                     <div class="time-tips">
                         {{ renderMessageDate(message, index) }}
                     </div>
@@ -35,7 +35,11 @@
                                     <div class="content-text" v-if="message.type === 'text'">
                                         <div v-html="renderTextMessage(message)"></div>
                                     </div>
-                                    <div class="content-image" v-if="message.type === 'image'" @click="showImagePreview(message.payload.url)">
+                                    <div class="content-image"
+                                         v-if="message.type === 'image'"
+                                         :style="getImgHeight(message.payload.width,message.payload.height)"
+                                         @click="showImagePreview(message.payload.url)"
+                                    >
                                         <img :src="message.payload.url" alt="图片"/>
                                     </div>
                                     <a
@@ -59,7 +63,7 @@
                                     />
                                     <goeasy-video-player
                                         v-if="message.type === 'video'"
-                                        :thumbnail="message.payload.thumbnail.url"
+                                        :thumbnail="message.payload.thumbnail"
                                         :src="message.payload.video.url"
                                     />
                                     <div class="content-custom" v-if="message.type === 'order'">
@@ -88,15 +92,13 @@
                     <!-- 表情 -->
                     <div class="action-item">
                         <div class="emoji-box" v-if="emoji.visible">
-                            <div class="emoji-list">
-                                <img
-                                    class="emoji-item"
-                                    v-for="(emojiItem, emojiKey, index) in emoji.map"
-                                    :key="index"
-                                    :src="emoji.url + emojiItem"
-                                    @click="chooseEmoji(emojiKey)"
-                                />
-                            </div>
+                            <img
+                                class="emoji-item"
+                                v-for="(emojiItem, emojiKey, index) in emoji.map"
+                                :key="index"
+                                :src="emoji.url + emojiItem"
+                                @click="chooseEmoji(emojiKey)"
+                            />
                         </div>
                         <i class="iconfont icon-smile" title="表情" @click="showEmojiBox"></i>
                     </div>
@@ -109,7 +111,7 @@
                             accept="image/*"
                             type="file"
                             multiple
-                            @change="createImageMessage"
+                            @change="sendImageMessage"
                             id="img-input"
                             v-show="false"
                         />
@@ -122,7 +124,7 @@
                         <input
                             accept="video/*"
                             type="file"
-                            @change="createVideoMessage"
+                            @change="sendVideoMessage"
                             id="video-input"
                             v-show="false"
                         />
@@ -134,7 +136,7 @@
                         </label>
                         <input
                             type="file"
-                            @change="createFileMessage"
+                            @change="sendFileMessage"
                             id="file-input"
                             v-show="false"
                         />
@@ -161,7 +163,7 @@
                                 </div>
                             </div>
                             <button class="cancel-button" @click="customMessageForm.visible = false">取消</button>
-                            <button class="send-button" @click="createCustomMessage">创建</button>
+                            <button class="send-button" @click="sendCustomMessage">创建</button>
                         </div>
                         <i class="iconfont icon-dingdan" title="订单" @click="showCustomMessageForm"></i>
                     </div>
@@ -171,13 +173,13 @@
                     <textarea
                         autocomplete="off"
                         class="input-content"
-                        v-model="content"
+                        v-model="text"
                         ref="input"
                     ></textarea>
                 </div>
 
                 <div class="send-box">
-                    <button class="send-button" @click="createTextMessage">发送</button>
+                    <button class="send-button" @click="sendTextMessage">发送</button>
                 </div>
 
             </div>
@@ -200,17 +202,13 @@
 <script>
 import restApi from '../../api/restapi';
 import EmojiDecoder from '../../utils/EmojiDecoder';
-import GoEasyAudioPlayer from '../../components/GoEasyAudioPlayer/GoEasyAudioPlayer';
-import GoEasyVideoPlayer from '../../components/GoEasyVideoPlayer/GoEasyVideoPlayer';
 import GoeasyAudioPlayer from "../../components/GoEasyAudioPlayer/GoEasyAudioPlayer";
 import GoeasyVideoPlayer from "../../components/GoEasyVideoPlayer/GoEasyVideoPlayer";
 export default {
     name: 'GroupChat',
     components: {
-      GoeasyVideoPlayer,
-      GoeasyAudioPlayer,
-        GoEasyVideoPlayer,
-        GoEasyAudioPlayer,
+        GoeasyVideoPlayer,
+        GoeasyAudioPlayer,
     },
     data() {
         const emojiUrl = 'https://imgcache.qq.com/open/qcloud/tim/assets/emoji/';
@@ -223,11 +221,16 @@ export default {
             '[傲慢]': 'emoji_8@2x.png',
         };
         return {
-            content: '',
-            group: null,
             currentUser: null,
-            messages: [],
-            allHistoryLoaded: false,
+            group: null,
+
+            history: {
+                messages: [],
+                allLoaded: false,
+            },
+
+            text: '',
+
             //定义表情列表
             emoji: {
                 url: emojiUrl,
@@ -254,7 +257,6 @@ export default {
             // 消息选择
             messageSelector: {
                 visible: false,
-                messages: [],
                 ids: []
             },
         };
@@ -272,10 +274,19 @@ export default {
         this.goEasy.im.off(this.GoEasy.IM_EVENT.GROUP_MESSAGE_RECEIVED, this.onReceivedGroupMessage);
     },
     methods: {
+        getImgHeight (width,height) {
+            if (width < height) {
+                return { height:'200px' }
+            } else if (width > height) {
+                return { height:'150px' }
+            } else {
+                return { height: '100%' }
+            }
+        },
         onReceivedGroupMessage(message) {
             let groupId = message.groupId;
             if (groupId === this.group.uuid) {
-                this.messages.push(message);
+                this.history.messages.push(message);
                 this.markGroupMessageAsRead();
             }
             this.scrollToBottom();
@@ -287,13 +298,13 @@ export default {
                 '</span>'
             );
         },
-        createTextMessage() {
-            if (!this.content.trim()) {
+        sendTextMessage() {
+            if (!this.text.trim()) {
                 console.log('输入为空');
                 return
             }
             const textMessage = this.goEasy.im.createTextMessage({
-                text: this.content,
+                text: this.text,
                 to: {
                     type: this.GoEasy.IM_SCENE.GROUP,
                     id: this.group.uuid,
@@ -301,7 +312,7 @@ export default {
                 },
             });
             this.sendMessage(textMessage);
-            this.content = '';
+            this.text = '';
             this.$nextTick(() => {
                 this.$refs.input.focus();
             });
@@ -310,10 +321,10 @@ export default {
             this.emoji.visible = !this.emoji.visible;
         },
         chooseEmoji(emojiKey) {
-            this.content += emojiKey;
+            this.text += emojiKey;
             this.emoji.visible = false;
         },
-        createImageMessage(e) {
+        sendImageMessage(e) {
             let fileList = [...e.target.files];
             fileList.forEach((file) => {
                 const imageMessage = this.goEasy.im.createImageMessage({
@@ -324,10 +335,14 @@ export default {
                         data: this.group,
                     },
                 });
-                this.sendMessage(imageMessage);
+                imageMessage.buildOptions.complete.then(() => {
+                   this.sendMessage(imageMessage);
+                }).catch((error) => {
+                    console.log(error);
+                });
             })
         },
-        createVideoMessage(e) {
+        sendVideoMessage(e) {
             const file = e.target.files[0];
             const videoMessage = this.goEasy.im.createVideoMessage({
                 file: file,
@@ -337,9 +352,13 @@ export default {
                     data: this.group,
                 },
             });
-            this.sendMessage(videoMessage);
+            videoMessage.buildOptions.complete.then(() => {
+                this.sendMessage(videoMessage);
+            }).catch((error) => {
+                console.log(error);
+            });
         },
-        createFileMessage(e) {
+        sendFileMessage(e) {
             const file = e.target.files[0];
             const fileMessage = this.goEasy.im.createFileMessage({
                 file: file,
@@ -359,7 +378,7 @@ export default {
                 price: null
             }
         },
-        createCustomMessage () {
+        sendCustomMessage () {
             this.customMessageForm.visible = false;
             const customMessage = this.goEasy.im.createCustomMessage({
                 type : 'order',
@@ -378,18 +397,7 @@ export default {
         },
         sendMessage(message) {
             this.messages.push(message);
-            // 防止图片视频未加载完就滚动
-            if (message.type === 'image') {
-                const img = new Image();
-                img.src = message.payload.url;
-                img.onload = () => this.scrollToBottom();
-            } else if (message.type === 'video') {
-                const video = document.createElement('video');
-                video.src = message.payload.video.url;
-                video.oncanplay = () => this.scrollToBottom();
-            } else {
-                this.scrollToBottom();
-            }
+            this.scrollToBottom();
             this.goEasy.im.sendMessage({
                 message: message,
                 onSuccess: (message) => {
@@ -399,7 +407,7 @@ export default {
         },
         showActionPopup(message) {
             const MAX_RECALLABLE_TIME = 3 * 60 * 1000; //3分钟以内的消息才可以撤回
-            this.messageSelector.messages = [message];
+            this.messageSelector.ids = [message.messageId];
             if ((Date.now() - message.timestamp) < MAX_RECALLABLE_TIME && message.senderId === this.currentUser.uuid && message.status === 'success') {
                 this.actionPopup.recallable = true;
             } else {
@@ -412,7 +420,7 @@ export default {
             this.deleteMessage();
         },
         deleteMultipleMessages() {
-            if (this.messageSelector.messages.length > 0) {
+            if (this.messageSelector.ids.length > 0) {
                 this.messageSelector.visible = false;
                 this.deleteMessage();
             }
@@ -420,17 +428,22 @@ export default {
         deleteMessage() {
             let conf = confirm("确认删除？");
             if (conf === true) {
+                let selectedMessages = [];
+                this.history.messages.forEach((message) => {
+                    if (this.messageSelector.ids.includes(message.messageId)) {
+                        selectedMessages.push(message);
+                    }
+                });
                 this.goEasy.im.deleteMessage({
-                    messages: this.messageSelector.messages,
+                    messages: selectedMessages,
                     onSuccess: () => {
-                        this.messageSelector.messages.forEach((message) => {
-                            let index = this.messages.indexOf(message);
+                        selectedMessages.forEach((message) => {
+                            let index = this.history.messages.indexOf(message);
                             if (index > -1) {
-                                this.messages.splice(index, 1);
+                                this.history.messages.splice(index, 1);
                             }
                         });
                         this.messageSelector.ids = [];
-                        this.messageSelector.messages = [];
                     },
                     onFailed: (error) => {
                         console.log('error:', error);
@@ -438,13 +451,18 @@ export default {
                 });
             } else {
                 this.messageSelector.ids = [];
-                this.messageSelector.messages = [];
             }
         },
         recallMessage() {
+            let selectedMessages = [];
+            this.history.messages.forEach((message) => {
+                if (this.messageSelector.ids.includes(message.messageId)) {
+                    selectedMessages.push(message);
+                }
+            });
             this.actionPopup.visible = false;
             this.goEasy.im.recallMessage({
-                messages: this.messageSelector.messages,
+                messages: selectedMessages,
                 onSuccess: ()=>{
                     console.log('撤回成功');
                 },
@@ -453,15 +471,15 @@ export default {
                 }
             });
         },
-        editRecalledMessage (content) {
-            this.content = content;
+        editRecalledMessage (text) {
+            this.text = text;
         },
         showImagePreview(url) {
             this.imagePreview.visible = true;
             this.imagePreview.url = url;
         },
         showCheckBox() {
-            this.messageSelector.messages = [];
+            this.messageSelector.ids = [];
             this.messageSelector.visible = true;
             this.actionPopup.visible = false;
         },
@@ -474,18 +492,11 @@ export default {
                     this.messageSelector.ids.splice(index, 1);
                 }
             }
-            let selectedMessages = [];
-            this.messages.forEach((message) => {
-                if (this.messageSelector.ids.includes(message.messageId)) {
-                    selectedMessages.push(message);
-                }
-            });
-            this.messageSelector.messages = selectedMessages;
         },
         loadHistoryMessage(scrollToBottom) {
             //历史消息
             let lastMessageTimeStamp = null;
-            let lastMessage = this.messages[0];
+            let lastMessage = this.history.messages[0];
             if (lastMessage) {
                 lastMessageTimeStamp = lastMessage.timestamp;
             }
@@ -496,9 +507,9 @@ export default {
                 onSuccess: (result) => {
                     let messages = result.content;
                     if (messages.length === 0) {
-                        this.allHistoryLoaded = true;
+                        this.history.allLoaded = true;
                     } else {
-                        this.messages = messages.concat(this.messages);
+                        this.history.messages = messages.concat(this.history.messages);
                         if (scrollToBottom) {
                             this.scrollToBottom();
                             //收到的消息设置为已读
@@ -534,7 +545,7 @@ export default {
             if (index === 0) {
                 return this.formatDate(message.timestamp);
             } else {
-                if (message.timestamp - this.messages[index - 1].timestamp > 5 * 60 * 1000) {
+                if (message.timestamp - this.history.messages[index - 1].timestamp > 5 * 60 * 1000) {
                     return this.formatDate(message.timestamp);
                 }
             }
@@ -590,7 +601,7 @@ export default {
                 margin-right: 15px;
                 display: flex;
                 align-items: center;
-                .input-checkbox {
+                input[type="checkbox" i] {
                     position: relative;
                 }
                 input[type="checkbox"]::before,input[type="checkbox"]:checked::before {
@@ -860,13 +871,11 @@ export default {
                         box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
                         word-break: break-all;
                         border-radius: 4px;
-                        .emoji-list {
-                            display: flex;
-                            flex-wrap: wrap;
-                            .emoji-item {
-                                width: 50px;
-                                height: 50px;
-                            }
+                        display: flex;
+                        flex-wrap: wrap;
+                        .emoji-item {
+                            width: 50px;
+                            height: 50px;
                         }
                     }
                     .order-form {

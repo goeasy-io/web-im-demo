@@ -1,7 +1,11 @@
 <template>
     <div>
-        <div class="content-video" @click="play">
-            <img :src="thumbnail" />
+        <div
+            class="content-video"
+            :style="getImgHeight(thumbnail.width,thumbnail.height)"
+            @click="play"
+        >
+            <img :src="thumbnail.url" />
             <div class="icon"></div>
         </div>
         <div class="goeays-video-player" v-if="playing">
@@ -27,6 +31,16 @@ export default {
         }
     },
     methods: {
+        getImgHeight (width,height) {
+            if (width < height) {
+                return { height:'200px' }
+            } else if (width > height) {
+                return { height:'150px' }
+            } else {
+                return { height: '100%' }
+            }
+        },
+
         play () {
             this.playing = true;
         },
@@ -42,13 +56,12 @@ export default {
 <style lang="scss">
 .content-video {
     display: block;
-    margin: 5px 10px;
+    margin: 0 10px;
     cursor: pointer;
-    max-height: 200px;
     position: relative;
+    height: 100%;
     img {
-        max-width: 200px;
-        max-height: 200px;
+        height: 100%;
     }
     .icon {
         position: absolute;

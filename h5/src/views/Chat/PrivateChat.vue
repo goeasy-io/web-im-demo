@@ -35,7 +35,11 @@
                                     <div class="content-text" v-if="message.type === 'text'">
                                         <div v-html="renderTextMessage(message)"></div>
                                     </div>
-                                    <div class="content-image" v-if="message.type === 'image'" @click="showImagePreview(message.payload.url)">
+                                    <div class="content-image"
+                                         v-if="message.type === 'image'"
+                                         :style="getImgHeight(message.payload.width,message.payload.height)"
+                                         @click="showImagePreview(message.payload.url)"
+                                    >
                                         <img :src="message.payload.url" alt="图片" />
                                     </div>
                                     <a
@@ -59,7 +63,7 @@
                                     />
                                     <goeasy-video-player
                                         v-if="message.type === 'video'"
-                                        :thumbnail="message.payload.thumbnail.url"
+                                        :thumbnail="message.payload.thumbnail"
                                         :src="message.payload.video.url"
                                     />
                                     <div class="content-custom" v-if="message.type === 'order'">
@@ -91,15 +95,13 @@
                     <!-- 表情 -->
                     <div class="action-item">
                         <div class="emoji-box" v-if="emoji.visible">
-                            <div class="emoji-list">
-                                <img
-                                    class="emoji-item"
-                                    v-for="(emojiItem, emojiKey, index) in emoji.map"
-                                    :key="index"
-                                    :src="emoji.url + emojiItem"
-                                    @click="chooseEmoji(emojiKey)"
-                                />
-                            </div>
+                            <img
+                                class="emoji-item"
+                                v-for="(emojiItem, emojiKey, index) in emoji.map"
+                                :key="index"
+                                :src="emoji.url + emojiItem"
+                                @click="chooseEmoji(emojiKey)"
+                            />
                         </div>
                         <i class="iconfont icon-smile" title="表情" @click="showEmojiBox"></i>
                     </div>
@@ -258,8 +260,7 @@ export default {
             // 消息选择
             messageSelector: {
                 visible: false,
-                messages: [],
-                ids: []  //todo: 为啥要两个？
+                ids: []
             },
         };
     },
@@ -276,6 +277,15 @@ export default {
         this.goEasy.im.off(this.GoEasy.IM_EVENT.PRIVATE_MESSAGE_RECEIVED, this.onReceivedPrivateMessage);
     },
     methods: {
+        getImgHeight (width,height) {
+            if (width < height) {
+                return { height:'200px' }
+            } else if (width > height) {
+                return { height:'150px' }
+            } else {
+                return { height: '100%' }
+            }
+        },
         onReceivedPrivateMessage(message) {
             if (message.senderId === this.friend.uuid) {
                 this.history.messages.push(message);
@@ -329,7 +339,11 @@ export default {
                         data: this.friend,
                     },
                 });
-                this.sendMessage(imageMessage);
+                imageMessage.buildOptions.complete.then(() => {
+                    this.sendMessage(imageMessage);
+                }).catch((error) => {
+                    console.log(error);
+                });
             })
         },
 
@@ -343,7 +357,11 @@ export default {
                     data: this.friend,
                 },
             });
-            this.sendMessage(videoMessage);
+            videoMessage.buildOptions.complete.then(() => {
+                this.sendMessage(videoMessage);
+            }).catch((error) => {
+                console.log(error);
+            });
         },
 
         sendFileMessage(e) {
@@ -386,19 +404,7 @@ export default {
         },
         sendMessage(message) {
             this.history.messages.push(message);
-            //todo:不好
-            // 防止图片视频未加载完就滚动
-            if (message.type === 'image') {
-                const img = new Image();
-                img.src = message.payload.url;
-                img.onload = () => this.scrollToBottom();
-            } else if (message.type === 'video') {
-                const video = document.createElement('video');
-                video.src = message.payload.video.url;
-                video.oncanplay = () => this.scrollToBottom();
-            } else {
-                this.scrollToBottom();
-            }
+            this.scrollToBottom();
             this.goEasy.im.sendMessage({
                 message: message,
                 onSuccess: (message) => {
@@ -682,10 +688,8 @@ export default {
                         display: block;
                         margin: 5px 10px;
                         cursor: pointer;
-                        max-height: 200px;
                         img {
-                            max-width: 200px;
-                            max-height: 200px;
+                            height: 100%;
                         }
                     }
                     .content-file {
@@ -871,13 +875,11 @@ export default {
                         box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
                         word-break: break-all;
                         border-radius: 4px;
-                        .emoji-list {
-                            display: flex;
-                            flex-wrap: wrap;
-                            .emoji-item {
-                                width: 50px;
-                                height: 50px;
-                            }
+                        display: flex;
+                        flex-wrap: wrap;
+                        .emoji-item {
+                            width: 50px;
+                            height: 50px;
                         }
                     }
                     .order-form {

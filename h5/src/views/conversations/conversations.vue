@@ -76,8 +76,8 @@
             </div>
         </div>
         <div class="chat">
-            <private-chat :key="$route.params.id" v-if="$route.name === 'private'" />
-            <group-chat :key="$route.params.id" v-if="$route.name === 'group'" />
+            <private-chat :key="$route.params.id" v-if="$route.name === 'PrivateChat'" />
+            <group-chat :key="$route.params.id" v-if="$route.name === 'GroupChat'" />
         </div>
     </div>
 </template>
@@ -218,8 +218,14 @@ export default {
         },
         goChatPage(conversation) {
             const id = conversation.userId || conversation.groupId;
+            let routerName
+            if (conversation.type === 'private') {
+                routerName = 'PrivateChat';
+            } else if (conversation.type === 'group') {
+                routerName = 'GroupChat';
+            }
             this.$router.push({
-                name: conversation.type,
+                name: routerName,
                 params: { id: id },
             });
         },
