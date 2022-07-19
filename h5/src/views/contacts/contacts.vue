@@ -105,7 +105,7 @@ export default {
         },
         goChatPage() {
             const id = this.currentContact.data.uuid;
-            let name = this.currentContact.type === 'group' ? 'group' : 'private';
+            let name = this.currentContact.type === 'group' ? 'GroupChat' : 'PrivateChat';
             this.$router.push({name: name, params: {id: id}});
         },
         getGroupAvatar(groupId) {

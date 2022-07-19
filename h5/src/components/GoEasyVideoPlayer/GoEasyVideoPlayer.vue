@@ -8,7 +8,7 @@
             <img :src="thumbnail.url" />
             <div class="icon"></div>
         </div>
-        <div class="goeays-video-player" v-if="playing">
+        <div class="goeasy-video-player" v-if="playing">
             <video
                 class="video-player"
                 :src="src"
