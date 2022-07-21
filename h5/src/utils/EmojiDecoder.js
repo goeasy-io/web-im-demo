@@ -16,7 +16,7 @@ class EmojiDecoder {
 
     decode (text) {
         return text.replace(new RegExp(this.patterns.join('|'),'g'),  (match) => {
-            return typeof this.emojiMap[match] != 'undefined' ? '<img height="20rpx" width="20rpx" src="'+this.url+this.emojiMap[match]+'" />' : match;
+            return typeof this.emojiMap[match] != 'undefined' ? '<img height="25px" width="25px" src="'+this.url+this.emojiMap[match]+'" />' : match;
         });
     }
 }

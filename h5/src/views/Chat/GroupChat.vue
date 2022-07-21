@@ -35,9 +35,7 @@
                                 <div class="message-payload">
                                     <div class="pending" v-if="message.status === 'sending'"></div>
                                     <div class="send-fail" v-if="message.status === 'fail'"></div>
-                                    <div class="content-text" v-if="message.type === 'text'">
-                                       {{ emoji.decoder.decode(message.payload.text) }}
-                                    </div>
+                                    <div class="content-text" v-if="message.type === 'text'" v-html="emoji.decoder.decode(message.payload.text)"></div>
                                     <div class="content-image"
                                          v-if="message.type === 'image'"
                                          :style="getImgHeight(message.payload.width,message.payload.height)"
@@ -671,6 +669,8 @@ export default {
                         height: 16px;
                     }
                     .content-text {
+                        display: flex;
+                        align-items: center;
                         text-align: left;
                         background: #FFFFFF;
                         font-size: 14px;
