@@ -13,8 +13,8 @@
                             @click="goChatPage(conversation)"
                             :class="{
                                 current:
-                                    conversation.userId === currentConversationId ||
-                                    conversation.groupId === currentConversationId,
+                                    $route.name === 'PrivateChat' && conversation.userId === $route.params.id ||
+                                    $route.name === 'GroupChat' && conversation.groupId === $route.params.id,
                             }"
                         >
                             <div class="avatar">
@@ -95,25 +95,15 @@ export default {
     data() {
         return {
             currentUser: {},
-            currentConversationId: null,
             conversations: [],
             actionPopup: {
                 conversation: null,
                 visible: false,
-            },
-            isLoading: false
+            }
         };
     },
     created() {
-        this.currentConversationId = this.$route.params.id || null;
         this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    },
-    watch: {
-        $route() {
-            if (this.$route.params.id !== 'undefined') {
-                this.currentConversationId = this.$route.params.id;
-            }
-        },
     },
     mounted() {
         this.listenConversationUpdate(); //监听会话列表变化
@@ -125,15 +115,12 @@ export default {
     },
     methods: {
         loadConversations() {
-            this.isLoading = true;
             this.goEasy.im.latestConversations({
                 onSuccess: (result) => {
                     let content = result.content;
                     this.renderConversations(content);
-                    this.isLoading = false;
                 },
                 onFailed: (error) => {
-                    this.isLoading = false;
                     console.log('获取最新会话列表失败, code:' + error.code + 'content:' + error.content);
                 },
             });
