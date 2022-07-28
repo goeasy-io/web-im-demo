@@ -38,7 +38,7 @@
                                     <div class="content-text" v-if="message.type === 'text'" v-html="emoji.decoder.decode(message.payload.text)"></div>
                                     <div class="content-image"
                                          v-if="message.type === 'image'"
-                                         :style="getImgHeight(message.payload.width,message.payload.height)"
+                                         :class="getImgClass(message.payload.width,message.payload.height)"
                                          @click="showImagePreview(message.payload.url)"
                                     >
                                         <img :src="message.payload.url" alt="图片"/>
@@ -276,13 +276,13 @@ export default {
         this.goEasy.im.off(this.GoEasy.IM_EVENT.GROUP_MESSAGE_RECEIVED, this.onReceivedGroupMessage);
     },
     methods: {
-        getImgHeight (width,height) {
-            if (width < height) {
-                return { height:'200px' }
+        getImgClass (width,height) {
+            if (height < 200) {
+                return 'normal-img';
+            } else if (width <= height) {
+                return 'vertical-img';
             } else if (width > height) {
-                return { height:'150px' }
-            } else {
-                return { height: '100%' }
+                return 'horizontal-img';
             }
         },
         onReceivedGroupMessage(message) {
@@ -691,6 +691,15 @@ export default {
                             max-width: 200px;
                             max-height: 200px;
                         }
+                    }
+                    .vertical-img {
+                        height: 200px;
+                    }
+                    .horizontal-img {
+                        height: 150px;
+                    }
+                    .normal-img {
+                        height: 100%;
                     }
                     .content-file {
                         width: 240px;

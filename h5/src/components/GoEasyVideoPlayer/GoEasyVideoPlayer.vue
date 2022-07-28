@@ -2,7 +2,7 @@
     <div>
         <div
             class="content-video"
-            :style="getImgHeight(thumbnail.width,thumbnail.height)"
+            :class="getImgClass(thumbnail.width,thumbnail.height)"
             @click="play"
         >
             <img :src="thumbnail.url" />
@@ -31,13 +31,13 @@ export default {
         }
     },
     methods: {
-        getImgHeight (width,height) {
-            if (width < height) {
-                return { height:'200px' }
+        getImgClass (width,height) {
+            if (height < 200) {
+                return 'normal-img';
+            } else if (width <= height) {
+                return 'vertical-img';
             } else if (width > height) {
-                return { height:'150px' }
-            } else {
-                return { height: '100%' }
+                return 'horizontal-img';
             }
         },
 
@@ -75,6 +75,15 @@ export default {
         bottom: 0;
         margin: auto;
     }
+}
+.vertical-img {
+    height: 200px;
+}
+.horizontal-img {
+    height: 150px;
+}
+.normal-img {
+    height: 100%;
 }
 .goeays-video-player {
     max-width: 750px;
