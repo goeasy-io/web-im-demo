@@ -293,7 +293,7 @@ export default {
                 this.history.messages.push(message);
                 this.markPrivateMessageAsRead();
             }
-            this.scrollToBottom();
+            this.scrollTo(0);
         },
 
         sendTextMessage() {
@@ -399,7 +399,7 @@ export default {
         },
         sendMessage(message) {
             this.history.messages.push(message);
-            this.scrollToBottom();
+            this.scrollTo(0);
             this.goEasy.im.sendMessage({
                 message: message,
                 onSuccess: (message) => {
@@ -495,7 +495,7 @@ export default {
                 }
             }
         },
-        loadHistoryMessage(scrollToBottom,offsetHeight) {
+        loadHistoryMessage(scrollTo,offsetHeight) {
             this.history.loading = true;
             //历史消息
             let lastMessageTimeStamp = null;
@@ -514,11 +514,11 @@ export default {
                         this.history.allLoaded = true;
                     } else {
                         this.history.messages = messages.concat(this.history.messages);
-                        if (messages.length < 10) {
+                        if (messages.length < 9) {
                             this.history.allLoaded = true;
                         }
-                        if (scrollToBottom) {
-                            this.scrollToBottom(offsetHeight);
+                        if (scrollTo) {
+                            this.scrollTo(offsetHeight);
                             //收到的消息设置为已读
                             this.markPrivateMessageAsRead();
                         }
@@ -548,7 +548,7 @@ export default {
                 this.loadHistoryMessage(true,offsetHeight);
             }
         },
-        scrollToBottom(offsetHeight) {
+        scrollTo(offsetHeight) {
             /**
              * $nextTick：在下次DOM更新循环结束之后执行延迟回调。在修改数据之后立即使用这个方法，获取更新后的 DOM。
              *            vue执行dom更新是异步的，只要是观察到数据变化vue将会开启一个队列，并缓冲在同一事件循环中发生的所有数据改变。

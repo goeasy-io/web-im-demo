@@ -291,7 +291,7 @@ export default {
                 this.history.messages.push(message);
                 this.markGroupMessageAsRead();
             }
-            this.scrollToBottom();
+            this.scrollTo(0);
         },
         sendTextMessage() {
             if (!this.text.trim()) {
@@ -391,8 +391,8 @@ export default {
             this.sendMessage(customMessage);
         },
         sendMessage(message) {
-            this.messages.push(message);
-            this.scrollToBottom();
+            this.history.messages.push(message);
+            this.scrollTo(0);
             this.goEasy.im.sendMessage({
                 message: message,
                 onSuccess: (message) => {
@@ -488,7 +488,7 @@ export default {
                 }
             }
         },
-        loadHistoryMessage(scrollToBottom,offsetHeight) {
+        loadHistoryMessage(scrollTo,offsetHeight) {
             this.history.loading = true;
             //历史消息
             let lastMessageTimeStamp = null;
@@ -507,8 +507,8 @@ export default {
                         this.history.allLoaded = true;
                     } else {
                         this.history.messages = messages.concat(this.history.messages);
-                        if (scrollToBottom) {
-                            this.scrollToBottom(offsetHeight);
+                        if (scrollTo) {
+                            this.scrollTo(offsetHeight);
                             //收到的消息设置为已读
                             this.markGroupMessageAsRead();
                         }
@@ -538,7 +538,7 @@ export default {
                 this.loadHistoryMessage(true,offsetHeight);
             }
         },
-        scrollToBottom(offsetHeight) {
+        scrollTo(offsetHeight) {
             this.$nextTick(() => {
                 this.$refs.scrollView.scrollTop = this.$refs.messageList.scrollHeight - offsetHeight;
             });
