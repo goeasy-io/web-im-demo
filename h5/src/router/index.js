@@ -1,69 +1,54 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-const Home = () => import('@/views/Home/Home');
-const Login = () => import('@/views/Login/Login');
-const Conversations = () => import('@/views/Conversations/Conversations');
-const Contacts = () => import('@/views/Contacts/Contacts');
-const PrivateChat = () => import('@/views/Chat/PrivateChat');
-const GroupChat = () => import('@/views/Chat/GroupChat');
+const Home = () => import('@/views/Home');
+const Login = () => import('@/views/Login');
+const Conversations = () => import('@/views/Conversations');
+const Contacts = () => import('@/views/Contacts');
+const PrivateChat = () => import('@/views/PrivateChat');
+const GroupChat = () => import('@/views/GroupChat');
 Vue.use(VueRouter);
-
-//解决vue-router3.0以上版本，避免对当前位置冗余导航的警告信息：NavigationDuplicated: Avoided redundant navigation to current location
-const originalPush = VueRouter.prototype.push;
-VueRouter.prototype.push = function push(location) {
-	return originalPush.call(this, location).catch((err) => err);
-};
 
 const routes = [
     {
         path: '/',
         component: Home,
+        redirect: '/conversations',
         children: [
             {
-                path: '',
-                redirect: '/conversations',
-            },
-            {
-                path: '/conversations',
-                name: 'Conversations',
+                path: 'conversations',
 	            component: Conversations,
                 children: [
                     {
-                        path: '/privatechat/:id',
-                        name: 'PrivateChat',
+                        path: 'privatechat',
                         component: PrivateChat,
                     },
                     {
-                        path: '/groupchat/:id',
-                        name: 'GroupChat',
+                        path: 'groupchat',
 	                    component: GroupChat,
                     },
                 ],
             },
             {
-                path: '/contacts',
-                name: 'Contacts',
+                path: 'contacts',
 	            component: Contacts,
             },
         ],
     },
     {
         path: '/login',
-        name: 'Login',
 	    component: Login,
     },
 ];
 
 const router = new VueRouter({
+    mode: 'history',
     routes,
 });
 
 router.beforeEach((to, from, next) => {
-	const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-	if (to.name !== 'Login' && !currentUser) {
-		next({name: 'Login'})
-	}
-	else next()
+    if (to.path !== '/login' && !Vue.prototype.globalData.currentUser) {
+        next({path: '/login'})
+    } else next()
 })
 
 export default router;

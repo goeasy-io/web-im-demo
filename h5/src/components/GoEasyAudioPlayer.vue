@@ -33,27 +33,30 @@ export default {
 </script>
 
 <style scoped>
-.goeasy-audio-player{
-    -webkit-tap-highlight-color:rgba(0,0,0,0);
-}
-.audio-facade{
+  .goeasy-audio-player {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  }
+
+  .audio-facade {
     min-width: 12px;
-    background: #FFFFFF;
+    background: #eeeeee;
     border-radius: 7px;
     display: flex;
     font-size: 14px;
     padding: 8px;
-    margin: 5px 10px;
+    margin: 5px 0;
     line-height: 25px;
     cursor: pointer;
-}
-.audio-facade-bg{
-    background: url("../../assets/img/voice.png") no-repeat center;
+  }
+
+  .audio-facade-bg {
+    background: url("../assets/images/voice.png") no-repeat center;
     background-size: 15px;
     width: 20px;
-}
-.audio-facade-bg.play-icon{
-    background: url("../../assets/img/play.gif") no-repeat center;
+  }
+
+  .audio-facade-bg.play-icon {
+    background: url("../assets/images/play.gif") no-repeat center;
     background-size: 20px;
-}
+  }
 </style>

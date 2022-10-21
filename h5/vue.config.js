@@ -1,6 +1,6 @@
 module.exports = {
   lintOnSave : false,
-  publicPath: './',
+  publicPath: '/',
   //只有Https才能使用录音
   devServer : {
     https : true,

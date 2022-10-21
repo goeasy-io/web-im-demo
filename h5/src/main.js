@@ -3,12 +3,14 @@ import App from './App.vue';
 import router from './router/index';
 import GoEasy from 'goeasy'
 
-// 加载全局样式文件
-import './style/index.scss';
 // 引入阿里字体图标
 import './assets/iconfont/iconfont.css';
 
 Vue.config.productionTip = false;
+
+Vue.prototype.globalData = {
+    currentUser: null
+};
 
 new Vue({
     router,
@@ -26,15 +28,3 @@ const goEasy = GoEasy.getInstance({
 Vue.prototype.GoEasy = GoEasy;
 Vue.prototype.goEasy = goEasy;
 
-Vue.prototype.formatDate = function (t) {
-    t = t || Date.now();
-    let time = new Date(t);
-    let str = time.getMonth() < 9 ? '0' + (time.getMonth() + 1) : time.getMonth() + 1;
-    str += '-';
-    str += time.getDate() < 10 ? '0' + time.getDate() : time.getDate();
-    str += ' ';
-    str += time.getHours();
-    str += ':';
-    str += time.getMinutes() < 10 ? '0' + time.getMinutes() : time.getMinutes();
-    return str;
-};

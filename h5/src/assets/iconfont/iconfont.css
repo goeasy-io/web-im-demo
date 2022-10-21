@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 2486466 */
-  src: url('iconfont.woff2?t=1655187836862') format('woff2'),
-       url('iconfont.woff?t=1655187836862') format('woff'),
-       url('iconfont.ttf?t=1655187836862') format('truetype');
+  src: url('iconfont.woff2?t=1665561969993') format('woff2'),
+       url('iconfont.woff?t=1665561969993') format('woff'),
+       url('iconfont.ttf?t=1665561969993') format('truetype');
 }
 
 .iconfont {
@@ -13,28 +13,140 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-liebiao:before {
+  content: "\e62d";
+}
+
+.icon-dingdan1:before {
+  content: "\e63b";
+}
+
+.icon-biaoqing:before {
+  content: "\e659";
+}
+
+.icon-paizhao:before {
+  content: "\e8d1";
+}
+
+.icon-biaoqing1:before {
+  content: "\e60b";
+}
+
+.icon-tupian:before {
+  content: "\e730";
+}
+
+.icon-zengjia:before {
+  content: "\e8c0";
+}
+
+.icon-jianpan1:before {
+  content: "\e65b";
+}
+
+.icon-yuyin:before {
+  content: "\e66c";
+}
+
+.icon-wenjianjia:before {
+  content: "\e600";
+}
+
+.icon-shang:before {
+  content: "\e63c";
+}
+
+.icon-zhuanban:before {
+  content: "\e72e";
+}
+
+.icon-gengduo:before {
+  content: "\e605";
+}
+
+.icon-gengduo1:before {
+  content: "\e8a6";
+}
+
+.icon-end_chat:before {
+  content: "\e6f4";
+}
+
+.icon-quxiaogoutong:before {
+  content: "\e662";
+}
+
+.icon-luyin:before {
+  content: "\e610";
+}
+
+.icon-IMweb_news:before {
+  content: "\e619";
+}
+
+.icon-keyborad:before {
+  content: "\e91c";
+}
+
+.icon-haoyou:before {
+  content: "\e784";
+}
+
+.icon-haoyou1:before {
+  content: "\e626";
+}
+
+.icon-more:before {
+  content: "\e6a3";
+}
+
+.icon-xiaoxi-xiaoxi:before {
+  content: "\e60f";
+}
+
+.icon-h:before {
+  content: "\e819";
+}
+
+.icon-zaixiankefu:before {
+  content: "\e6f6";
+}
+
+.icon-zaixiankefu1:before {
+  content: "\e61c";
+}
+
+.icon-wj-wjj:before {
+  content: "\e7b8";
+}
+
+.icon-wenjianleixing-biaozhuntu-wenjianjia:before {
+  content: "\e6a5";
+}
+
+.icon-lianjie:before {
+  content: "\e63a";
+}
+
 .icon-dingdan:before {
   content: "\e634";
 }
 
-.icon-wenjianjia:before {
-  content: "\e60f";
-}
-
-.icon-lianxiren1:before {
-  content: "\e697";
-}
-
-.icon-tuichu:before {
-  content: "\e6bc";
-}
-
-.icon-jianpanqiehuan:before {
-  content: "\e7db";
-}
-
 .icon-zhanghu:before {
   content: "\e601";
+}
+
+.icon-dingdan2:before {
+  content: "\e898";
+}
+
+.icon-jianpan:before {
+  content: "\e608";
+}
+
+.icon-maikefeng:before {
+  content: "\e73b";
 }
 
 .icon-at:before {

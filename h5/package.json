@@ -9,9 +9,9 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
-    "goeasy": "^2.4.9",
+    "goeasy": "^2.5.7",
     "vue": "^2.6.11",
-    "vue-router": "^3.2.0"
+    "vue-router": "~3.0.7"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.15",
