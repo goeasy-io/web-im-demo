@@ -48,7 +48,7 @@
                     goods: this.goods,
                     price: this.price
                 }
-                this.$emit('createCustomMessage', order);
+                this.$emit('sendCustomMessage', order);
             },
             cancel () {
                 this.$emit('closeCustomMessageForm');

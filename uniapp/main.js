@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import App from './App';
-import GoEasy from './lib/goeasy-2.4.7.min';
+import GoEasy from './lib/goeasy-2.5.7.min';
 
 Vue.config.productionTip = false;
 App.mpType = 'app';
@@ -47,15 +47,3 @@ goEasy.onClickNotification((message) => {
 Vue.prototype.GoEasy = GoEasy;
 Vue.prototype.goEasy = goEasy;
 
-Vue.prototype.formatDate = function (t) {
-    t = t || Date.now();
-    let time = new Date(t);
-    let str = time.getMonth() < 9 ? ('0' + (time.getMonth() + 1)) : (time.getMonth() + 1);
-    str += '-';
-    str += time.getDate() < 10 ? ('0' + time.getDate()) : time.getDate();
-    str += ' ';
-    str += time.getHours();
-    str += ':';
-    str += time.getMinutes() < 10 ? ('0' + time.getMinutes()) : time.getMinutes();
-    return str;
-};

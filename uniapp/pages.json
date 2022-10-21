@@ -1,10 +1,10 @@
 {
 	"pages": [
 		{
-			"path": "pages/conversations/conversations",
+			"path": "pages/conversations",
 			"style": {
 				"navigationBarTitleText": "会话",
-				"navigationBarBackgroundColor" : "#F3F4F7",
+				"navigationBarBackgroundColor" : "#ffffff",
 				"navigationBarTextStyle" : "black",
 				"app-plus" : {
 					"titleNView" : true
@@ -12,7 +12,7 @@
 			}			
 		},
 		{
-			"path": "pages/login/login",
+			"path": "pages/login",
 			"style": {
 				"navigationBarTitleText": "登录",
 				"navigationBarBackgroundColor" : "#ffffff",
@@ -23,42 +23,43 @@
 			}
 		},
 		{
-			"path": "pages/contacts/contacts",
+			"path": "pages/contacts",
 			"style": {
 				"navigationBarTitleText": "通讯录",
-				"navigationBarBackgroundColor" : "#F3F4F7",
+				"navigationBarBackgroundColor" : "#ffffff",
 				"navigationBarTextStyle" : "black"
 			}			
 		},
 		{
-			"path": "pages/mine/mine",
+			"path": "pages/mine",
 			"style": {
 				"navigationBarTitleText": "我的",
-				"navigationBarBackgroundColor" : "#F3F4F7",
+				"navigationBarBackgroundColor" : "#ffffff",
 				"navigationBarTextStyle" : "black"
 			}			
 		},
 		{
-			"path": "pages/chat/privateChat/privateChat",
+			"path": "pages/privateChat",
 			"style": {
 				"navigationBarTitleText": "uni-app",
-				"navigationBarBackgroundColor" : "#F3F4F7",
+				"navigationBarBackgroundColor" : "#F1F1F1",
 				"enablePullDownRefresh": true
 			}			
 		},
 		{
-			"path": "pages/chat/groupChat/groupChat",
+			"path": "pages/groupChat",
 			"style": {
 				"navigationBarTitleText": "群",
-				"navigationBarBackgroundColor" : "#F3F4F7",
+				"navigationBarBackgroundColor" : "#F1F1F1",
 				"enablePullDownRefresh": true
 			}			
 		},
 		{
-			"path": "pages/chat/groupChat/member",
+			"path": "pages/member",
 			"style": {
 				"navigationBarTitleText": "群成员",
-				"navigationBarBackgroundColor" : "#F3F4F7"
+				"navigationBarBackgroundColor" : "#ffffff",
+                "navigationBarTextStyle" : "black"
 			}			
 		}
 	],
@@ -72,24 +73,21 @@
 		"color":"#454750",
 		"selectedColor":"#618DFF",
 		"borderStyle":"black",
-		"backgroundColor":"#F8F7F7",
+		"backgroundColor":"#ffffff",
 		"height" : "60px",
 		"list" : [
 			{
-				"pagePath" : "pages/conversations/conversations",
-				"text":"信息",
-				"iconPath":"static/images/chat.png",
-				"selectedIconPath":"static/images/chat-active.png"
+				"pagePath" : "pages/conversations",
+				"iconPath":"static/images/msg.png",
+				"selectedIconPath":"static/images/msg-active.png"
 			},
 			{
-				"pagePath" : "pages/contacts/contacts",
-				"text" : "通讯录",
+				"pagePath" : "pages/contacts",
 				"iconPath":"static/images/contacts.png",
 				"selectedIconPath":"static/images/contacts-active.png"
 			},
 			{
-				"pagePath" : "pages/mine/mine",
-				"text" : "我",
+				"pagePath" : "pages/mine",
 				"iconPath":"static/images/mine.png",
 				"selectedIconPath":"static/images/mine-active.png"
 			}
