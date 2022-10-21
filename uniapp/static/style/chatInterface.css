@@ -384,6 +384,84 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
     width: 100% !important;
 }
 
+.order-list {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    z-index: 10;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.orders-content {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    background: #F1F1F1;
+    z-index: 200;
+}
+
+.title {
+    font-weight: 600;
+    font-size: 30rpx;
+    color: #000000;
+    margin-left: 20rpx;
+    margin-right: 20rpx;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.close {
+    font-size: 50rpx;
+}
+
+.order-item {
+    padding: 20rpx;
+    background: #FFFFFF;
+    margin: 20rpx;
+    border-radius: 20rpx;
+}
+
+.order-id {
+    font-size: 24rpx;
+    color: #666666;
+    margin-bottom: 10rpx;
+}
+
+.order-body {
+    display: flex;
+    font-size: 28rpx;
+}
+
+.order-img {
+    width: 120rpx;
+    height: 120rpx;
+    border-radius: 10rpx;
+}
+
+.order-name {
+    margin-left: 20rpx;
+    width: 270rpx;
+}
+
+.order-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.order-price {
+    font-weight: bold;
+}
+
+.order-count {
+    font-size: 24rpx;
+    color: #666666;
+}
+
 .chatInterface .video-snapshot {
     position: relative;
     height: 300rpx;
@@ -435,40 +513,34 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
     text-align: center;
 }
 
-.chatInterface .custom-message {
-    width: 400rpx;
-    height: 260rpx;
+.chatInterface .order-content {
+    border-radius: 20rpx;
+    background: #FFFFFF;
+    padding: 16rpx;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
-    align-items: flex-start;
-    box-sizing: border-box;
-    padding: 10rpx 30rpx;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.1);
-    background-color: #FFFFFF;
-    border-radius: 20rpx;
 }
 
-.chatInterface .custom-message .title {
-    width: 100%;
+.scroll-view .content .order-id {
+    color: #333333;
+}
+
+.scroll-view .content .order-body {
+    padding: 10rpx;
+}
+
+.scroll-view .content .order-name {
+    font-weight: normal;
+}
+
+.scroll-view .content .order-info {
     display: flex;
-    align-items: center;
-    font-size: 30rpx;
+    justify-content: space-between;
+    padding: 10rpx;
 }
 
-.chatInterface .custom-message .title image {
-    width: 40rpx;
-    height: 40rpx;
-}
-
-.chatInterface .custom-message .custom-message-item {
-    text-align: left;
-    font-size: 28rpx;
-    overflow: hidden;
-    width: 100%;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+.scroll-view .content .order-info .order-price {
+    font-weight: normal;
 }
 
 .message-read {

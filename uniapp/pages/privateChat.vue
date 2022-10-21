@@ -42,14 +42,18 @@
                   </view>
                   <GoEasyAudioPlayer v-if="message.type ==='audio'" :src="message.payload.url"
                                      :duration="message.payload.duration"/>
-                  <view class="custom-message" v-if="message.type === 'order'">
-                    <view class="title">
-                      <image src="~@/static/images/order.png"></image>
-                      <text>自定义消息</text>
+                  <view v-if="message.type === 'order'" class="order-content">
+                    <view class="order-id">订单号：{{ message.payload.id }}</view>
+                    <view class="order-body">
+                      <image :src="message.payload.url" class="order-img"></image>
+                      <view>
+                        <view class="order-name">{{ message.payload.name }}</view>
+                        <view class="order-info">
+                          <view class="order-price">{{ message.payload.price }}</view>
+                          <view class="order-count">共{{ message.payload.count }}件</view>
+                        </view>
+                      </view>
                     </view>
-                    <view class="custom-message-item">编号：{{ message.payload.number }}</view>
-                    <view class="custom-message-item">商品: {{ message.payload.goods }}</view>
-                    <view class="custom-message-item">金额: {{ message.payload.price }}</view>
                   </view>
                 </view>
                 <view v-if="message.senderId === currentUser.id" :class="message.read ?'message-read':'message-unread'">
@@ -99,8 +103,8 @@
           <view class="operation-title">视频</view>
         </view>
         <view class="more-icon">
-          <image @click="showCustomMessageForm()" class="operation-icon" src="/static/images/order.png"></image>
-          <view class="operation-title">自定义消息</view>
+          <image @click="showOrderMessageList()" class="operation-icon" src="/static/images/order.png"></image>
+          <view class="operation-title">订单</view>
         </view>
       </view>
     </view>
@@ -119,14 +123,36 @@
     <view class="record-loading" v-if="audio.recording"></view>
     <video v-if="videoPlayer.visible" :src="videoPlayer.url" id="videoPlayer"
            @fullscreenchange="onVideoFullScreenChange"></video>
-    <CustomMessage v-if="customMessageFormVisible" @sendCustomMessage="sendCustomMessage"
-                   @closeCustomMessageForm="closeCustomMessageForm"></CustomMessage>
+    <view v-if="orderList.visible" class="order-list">
+      <view class="orders-content">
+        <view class="title">
+          <view>请选择一个订单</view>
+          <view class="close" @click="hideOrderMessageList">×</view>
+        </view>
+        <view class="orders">
+          <view
+            v-for="(order, index) in orderList.orders"
+            :key="index" class="order-item"
+            @click="sendOrderMessage(order)"
+          >
+            <view class="order-id">订单号：{{ order.id }}</view>
+            <view class="order-body">
+              <image :src="order.url" class="order-img"></image>
+              <view class="order-name">{{ order.name }}</view>
+              <view class="order-right">
+                <view class="order-price">{{ order.price }}</view>
+                <view class="order-count">共{{ order.count }}件</view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
   </view>
 </template>
 
 <script>
   import GoEasyAudioPlayer from '../components/GoEasyAudioPlayer/GoEasyAudioPlayer';
-  import CustomMessage from '../components/CustomMessage/CustomMessage';
   import EmojiDecoder from '../lib/EmojiDecoder';
   import restApi from '../lib/restapi';
   import {formatDate} from '../lib/utils';
@@ -135,8 +161,7 @@
   export default {
     name: 'privateChat',
     components: {
-      GoEasyAudioPlayer,
-      CustomMessage
+      GoEasyAudioPlayer
     },
     data() {
       const emojiUrl = 'https://imgcache.qq.com/open/qcloud/tim/assets/emoji/';
@@ -167,6 +192,10 @@
         },
         //是否展示‘其他消息类型面板’
         otherTypesMessagePanelVisible: false,
+        orderList: {
+          orders: [],
+          visible: false
+        },
         history: {
           messages: [],
           allLoaded: false,
@@ -185,8 +214,6 @@
           url: '',
           context: null
         },
-        // 展示自定义消息框
-        customMessageFormVisible: false,
 
         // 展示消息删除弹出框
         actionPopup: {
@@ -429,6 +456,26 @@
           }
         });
       },
+      sendOrderMessage(order) {
+        //GoEasyIM自定义消息,实现订单发送
+        this.goEasy.im.createCustomMessage({
+          type: 'order',
+          payload: order,
+          to: this.to,
+          notification: {
+            title: this.currentUser.name + '发来一个订单',
+            body: '[订单消息]'
+          },
+          onSuccess: (message) => {
+            this.otherTypesMessagePanelVisible = false;
+            this.sendMessage(message);
+          },
+          onFailed: (e) => {
+            console.log('error :', e);
+          }
+        });
+        this.orderList.visible = false;
+      },
       showActionPopup(message) {
         const MAX_RECALLABLE_TIME = 3 * 60 * 1000; //3分钟以内的消息才可以撤回
         this.messageSelector.messages = [message];
@@ -614,34 +661,12 @@
       chooseEmoji(emojiKey) {
         this.text += emojiKey;
       },
-      sendCustomMessage(data) {
-        this.goEasy.im.createCustomMessage({
-          type: 'order',
-          payload: {
-            number: data.number,
-            goods: data.goods,
-            price: data.price
-          },
-          to: this.to,
-          notification: {
-            title: this.currentUser.name + '发来一份订单',
-            body: '[订单消息]'     // 字段最长 50 字符
-          },
-          onSuccess: (message) => {
-            this.customMessageFormVisible = false;
-            this.otherTypesMessagePanelVisible = false;
-            this.sendMessage(message);
-          },
-          onFailed: (e) => {
-            console.log('error :', e);
-          }
-        });
+      showOrderMessageList() {
+        this.orderList.orders = restApi.getOrderList();
+        this.orderList.visible = true;
       },
-      showCustomMessageForm() {
-        this.customMessageFormVisible = true;
-      },
-      closeCustomMessageForm() {
-        this.customMessageFormVisible = false;
+      hideOrderMessageList() {
+        this.orderList.visible = false;
       },
       scrollToBottom() {
         setTimeout(() => {
