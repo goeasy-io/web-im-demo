@@ -107,7 +107,6 @@
 
 <style>
   .login {
-    padding-top: 160rpx;
     width: 100%;
     height: 100%;
     display: flex;
@@ -116,6 +115,7 @@
   }
 
   .title {
+    padding-top: 160rpx;
     height: 100rpx;
     font-size: 60rpx;
     text-align: center;

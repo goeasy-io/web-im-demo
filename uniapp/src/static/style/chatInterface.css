@@ -10,10 +10,12 @@ page {
 .chatInterface .scroll-view {
     padding-left: 20rpx;
     padding-right: 20rpx;
+    height: 100%;
     box-sizing: border-box;
     -webkit-overflow-scrolling: touch;
     padding-bottom: 140rpx;
     background-color: #F1F1F1;
+    overflow-y: auto;
 }
 
 .chatInterface .scroll-view .all-history-loaded {
@@ -113,8 +115,8 @@ page {
 }
 
 .chatInterface .scroll-view .content .file-content .file-info .file-name {
-    width: 420rpxrpx;
-    font-size: 13px;
+    width: 420rpx;
+    font-size: 30rpx;
     text-overflow: ellipsis;
     overflow: hidden;
     display: -webkit-box;
@@ -130,8 +132,8 @@ page {
 }
 
 .chatInterface .scroll-view .content .file-content .file-img {
-    width: 50rpx;
-    height: 50rpx;
+    width: 80rpx;
+    height: 80rpx;
 }
 
 .chatInterface .scroll-view .content .pending {

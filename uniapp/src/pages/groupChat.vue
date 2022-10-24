@@ -1,12 +1,19 @@
 <template>
   <view class="chatInterface">
     <image class="group-icon" src="/static/images/group-icon.png" @click="showMembers"/>
-    <view class="scroll-view">
-      <view class="all-history-loaded">
-        {{ allHistoryLoaded ? '已经没有更多的历史消息' : '下拉获取历史消息' }}
+    <scroll-view :scroll-y="true" :scroll-into-view="bottomView" class="scroll-view">
+      <!--  #ifdef  H5 -->
+      <view class="all-history-loaded" @click="loadHistoryMessage(false)">
+        {{ history.loaded ? '已经没有更多的历史消息' : '点击获取历史消息' }}
       </view>
+      <!--  #endif -->
+      <!--  #ifndef  H5 -->
+      <view class="all-history-loaded">
+        {{ history.loaded ? '已经没有更多的历史消息' : '下拉获取历史消息' }}
+      </view>
+      <!--  #endif -->
       <checkbox-group @change="selectMessages">
-        <view v-for="(message,index) in history.messages" :key="message.messageId">
+        <view :id="'item'+index" v-for="(message,index) in history.messages" :key="message.messageId">
           <!--时间显示，类似于微信，隔5分钟不发言，才显示时间-->
           <view class="time-lag">
             {{ renderMessageDate(message, index) }}
@@ -40,6 +47,13 @@
                     <image :src="message.payload.thumbnail.url" mode="aspectFit"></image>
                     <view class="video-play-icon"></view>
                   </view>
+                  <view class="file-content" v-if="message.type === 'file'">
+                    <view class="file-info">
+                      <span class="file-name">{{ message.payload.name }}</span>
+                      <span class="file-size">{{ (message.payload.size / 1024).toFixed(2) }}KB</span>
+                    </view>
+                    <image class="file-img" src="/static/images/file-icon.png"></image>
+                  </view>
                   <GoEasyAudioPlayer v-if="message.type ==='audio'" :src="message.payload.url"
                                      :duration="message.payload.duration"/>
                   <view v-if="message.type === 'order'" class="order-content">
@@ -61,16 +75,23 @@
           </view>
         </view>
       </checkbox-group>
-    </view>
+    </scroll-view>
     <view class="action-box" v-if="!videoPlayer.visible && !messageSelector.visible">
       <view class="action-top">
         <view @click="switchAudioKeyboard">
           <image class="more" v-if="audio.visible" src="/static/images/jianpan.png"></image>
           <image class="more" v-else src="/static/images/audio.png"></image>
         </view>
+        <!--  #ifdef  H5 -->
+        <view v-if="audio.visible" class="record-input" @click="onRecordStart">
+          {{ audio.recording ? '松开发送' : '按住录音' }}
+        </view>
+        <!--  #endif -->
+        <!--  #ifndef  H5 -->
         <view v-if="audio.visible" class="record-input" @touchend="onRecordEnd" @touchstart="onRecordStart">
           {{ audio.recording ? '松开发送' : '按住录音' }}
         </view>
+        <!--  #endif -->
         <!-- GoEasyIM最大支持3k的文本消息，如需发送长文本，需调整输入框maxlength值 -->
         <input v-else v-model="text" class="consult-input" maxlength="700" placeholder="发送消息" type="text" />
         <view @click="switchEmojiKeyboard">
@@ -177,9 +198,6 @@
         to: {},// 作为createMessage的参数
         currentUser: null,
 
-        //是否加载完所有历史消息
-        allHistoryLoaded: false,
-
         //定义表情列表
         emoji: {
           url: emojiUrl,
@@ -211,7 +229,7 @@
           url: '',
           context: null
         },
-
+        bottomView: '',
         // 展示消息删除弹出框
         actionPopup: {
           visible: false,
@@ -569,7 +587,7 @@
             uni.stopPullDownRefresh();
             let messages = result.content;
             if (messages.length === 0) {
-              this.allHistoryLoaded = true;
+              this.history.loaded = true;
             } else {
               this.history.messages = messages.concat(this.history.messages);
               if (scrollToBottom) {
@@ -692,11 +710,9 @@
       },
       scrollToBottom() {
         setTimeout(() => {
-          uni.pageScrollTo({
-            scrollTop: 2000000,
-            duration: 0
-          })
-        }, 500);
+          let index = this.history.messages.length - 1;
+          this.bottomView = `item${index}`;
+        },100);
       },
       markGroupMessageAsRead(groupId) {
         this.goEasy.im.markGroupMessageAsRead({
