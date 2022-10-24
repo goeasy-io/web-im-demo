@@ -3,12 +3,12 @@
     <image class="group-icon" src="/static/images/group-icon.png" @click="showMembers"/>
     <scroll-view :scroll-y="true" :scroll-into-view="bottomView" class="scroll-view">
       <!--  #ifdef  H5 -->
-      <view class="all-history-loaded" @click="loadHistoryMessage(false)">
+      <view class="history-loaded" @click="loadHistoryMessage(false)">
         {{ history.loaded ? '已经没有更多的历史消息' : '点击获取历史消息' }}
       </view>
       <!--  #endif -->
       <!--  #ifndef  H5 -->
-      <view class="all-history-loaded">
+      <view class="history-loaded">
         {{ history.loaded ? '已经没有更多的历史消息' : '下拉获取历史消息' }}
       </view>
       <!--  #endif -->
@@ -99,10 +99,10 @@
           <image class="more" v-else src="/static/images/emoji.png"></image>
         </view>
         <view>
-          <image @click="showOtherTypesMessagePanel()" class="more" src="/static/images/more.png"/>
+          <image @click="showOtherTypesMessagePanel" class="more" src="/static/images/more.png"/>
         </view>
         <view v-if="text" class="send-btn-box">
-          <text class="btn" @click="sendTextMessage()">发送</text>
+          <text class="btn" @click="sendTextMessage">发送</text>
         </view>
       </view>
       <view class="action-bottom action-bottom-emoji" v-if="emoji.visible">
@@ -112,15 +112,15 @@
       <!--其他类型消息面板-->
       <view v-if="otherTypesMessagePanelVisible" class="action-bottom">
         <view class="more-icon">
-          <image @click="sendImageMessage()" class="operation-icon" src="/static/images/picture.png"></image>
+          <image @click="sendImageMessage" class="operation-icon" src="/static/images/picture.png"></image>
           <view class="operation-title">图片</view>
         </view>
         <view class="more-icon">
-          <image @click="sendVideoMessage()" class="operation-icon" src="/static/images/video.png"></image>
+          <image @click="sendVideoMessage" class="operation-icon" src="/static/images/video.png"></image>
           <view class="operation-title">视频</view>
         </view>
         <view class="more-icon">
-          <image @click="showOrderMessageList()" class="operation-icon" src="/static/images/order.png"></image>
+          <image @click="showOrderMessageList" class="operation-icon" src="/static/images/order.png"></image>
           <view class="operation-title">订单</view>
         </view>
       </view>
@@ -131,7 +131,7 @@
         <view class="action-item" @click="deleteSingleMessage">删除</view>
         <view class="action-item" v-if="actionPopup.recallable" @click="recallMessage">撤回</view>
         <view class="action-item" @click="showCheckBox">多选</view>
-        <view class="action-item" @click="actionPopup.visible = false">取消</view>
+        <view class="action-item" @click="hideActionPopup">取消</view>
       </view>
     </view>
     <view class="messageSelector-box" v-if="messageSelector.visible">
@@ -498,6 +498,10 @@
           this.actionPopup.recallable = false;
         }
         this.actionPopup.visible = true;
+      },
+      hideActionPopup () {
+        this.actionPopup.visible = false;
+        this.actionPopup.message = null;
       },
       deleteSingleMessage() {
         uni.showModal({

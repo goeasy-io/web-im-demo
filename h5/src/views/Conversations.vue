@@ -59,7 +59,6 @@
                     <span v-else-if="conversation.lastMessage.type === 'file'">[文件消息]</span>
                     <span v-else-if="conversation.lastMessage.type === 'order'">[订单消息]</span>
                   </div>
-                  <div class="conversation-bottom-action" @click.stop="showAction(conversation)"></div>
                 </div>
               </div>
             </div>
@@ -152,10 +151,12 @@
         });
       },
       showRightClickMenu(e, conversation) {
-        this.rightClickMenu.conversation = conversation;
-        this.rightClickMenu.visible = true;
-        this.rightClickMenu.x = e.pageX;
-        this.rightClickMenu.y = e.pageY;
+        this.rightClickMenu = {
+          conversation: conversation,
+          visible: true,
+          x: e.pageX,
+          y: e.pageY,
+        }
       },
       hideRightClickMenu() {
         this.rightClickMenu.visible = false;
@@ -381,16 +382,6 @@
             border-radius: 5px;
           }
         }
-      }
-
-      .layer {
-        position: absolute;
-        top: 0;
-        left: 0;
-        background: rgba(51, 51, 51, 0.5);
-        width: 260px;
-        height: 100%;
-        z-index: 99;
       }
 
       .action-box {

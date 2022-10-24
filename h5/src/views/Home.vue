@@ -30,7 +30,7 @@
               <span v-if="unreadAmount" class="menu-unread">{{ unreadAmount}}</span>
             </div>
             <div class="menu-item">
-              <router-link to="/contacts">
+              <router-link to="/contacts" replace>
                 <i
                   class="iconfont icon-haoyou"
                   :class="{ selected: selectedTab === 'contacts' }"

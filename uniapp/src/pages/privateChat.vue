@@ -2,12 +2,12 @@
   <view class="chatInterface">
     <scroll-view :scroll-y="true" :scroll-into-view="bottomView" class="scroll-view">
       <!--  #ifdef  H5 -->
-      <view class="all-history-loaded" @click="loadHistoryMessage(false)">
+      <view class="history-loaded" @click="loadHistoryMessage(false)">
         {{ history.loaded ? '已经没有更多的历史消息' : '点击获取历史消息' }}
       </view>
       <!--  #endif -->
       <!--  #ifndef  H5 -->
-      <view class="all-history-loaded">
+      <view class="history-loaded">
         {{ history.loaded ? '已经没有更多的历史消息' : '下拉获取历史消息' }}
       </view>
       <!--  #endif -->
@@ -135,7 +135,7 @@
         <view class="action-item" @click="deleteSingleMessage">删除</view>
         <view class="action-item" v-if="actionPopup.recallable" @click="recallMessage">撤回</view>
         <view class="action-item" @click="showCheckBox">多选</view>
-        <view class="action-item" @click="actionPopup.visible = false">取消</view>
+        <view class="action-item" @click="hideActionPopup">取消</view>
       </view>
     </view>
     <view class="messageSelector-box" v-if="messageSelector.visible">
@@ -503,6 +503,10 @@
           this.actionPopup.recallable = false;
         }
         this.actionPopup.visible = true;
+      },
+      hideActionPopup () {
+        this.actionPopup.visible = false;
+        this.actionPopup.message = null;
       },
       deleteSingleMessage() {
         uni.showModal({

@@ -237,114 +237,109 @@
     .contact-main {
       flex: 1;
       background: #FFFFFF;
-    }
-  }
 
-  .profile-card {
-    padding: 20px 0;
+      .profile-card {
+        padding: 20px 0;
 
-    .card-title {
-      padding: 60px;
-      border-bottom: 1px solid #eeeeee;
-      display: flex;
-      justify-content: space-around;
+        .card-title {
+          padding: 60px;
+          border-bottom: 1px solid #eeeeee;
+          display: flex;
+          justify-content: space-around;
 
-      .profile-name {
-        width: 300px;
-        font-size: 18px;
-        display: flex;
-        align-items: center;
+          .profile-name {
+            width: 300px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
 
-        .icon-zhanghu {
-          font-size: 26px;
-          color: #eeeeee;
-          margin-right: 10px;
+            .icon-zhanghu {
+              font-size: 26px;
+              color: #eeeeee;
+              margin-right: 10px;
+            }
+
+          }
+
+          .profile-avatar img{
+            width: 80px;
+            height: 80px;
+            border-radius: 10%;
+          }
         }
 
-      }
+        .info-item {
+          padding: 10px 30px;
+          display: flex;
+          justify-content: space-around;
+          text-align: left;
+          font-size: 14px;
+          line-height: 45px;
 
-      .profile-avatar {
-        width: 80px;
+          .info-name {
+            width: 100px;
+          }
 
-        img {
-          width: 80px;
-          height: 80px;
-          border-radius: 10%;
+          .info-text {
+            width: 200px;
+          }
+
         }
 
-      }
-    }
-
-    .info-item {
-      padding: 10px 30px;
-      display: flex;
-      justify-content: space-around;
-      text-align: left;
-      font-size: 14px;
-      line-height: 45px;
-
-      .info-name {
-        width: 100px;
-      }
-
-      .info-text {
-        width: 200px;
-      }
-
-    }
-
-    .group-name {
-      font-size: 18px;
-      padding: 20px 70px;
-      border-bottom: 1px solid #eeeeee;
-    }
-
-    .group-members {
-      width: 400px;
-      min-height: 200px;
-      margin: 20px auto;
-      display: flex;
-      flex-wrap: wrap;
-      align-content: flex-start;
-
-      .member {
-        width: 25%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-
-        .member-avatar {
-          width: 58px;
-          margin-top: 20px;
-          border-radius: 5%;
+        .group-name {
+          font-size: 18px;
+          padding: 20px 70px;
+          border-bottom: 1px solid #eeeeee;
         }
 
-        .member-name {
-          color: gray;
-          margin-top: 10px;
-          font-size: 12px;
+        .group-members {
+          width: 400px;
+          min-height: 200px;
+          margin: 20px auto;
+          display: flex;
+          flex-wrap: wrap;
+          align-content: flex-start;
+
+          .member {
+            width: 25%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            .member-avatar {
+              width: 58px;
+              margin-top: 20px;
+              border-radius: 5%;
+            }
+
+            .member-name {
+              color: gray;
+              margin-top: 10px;
+              font-size: 12px;
+            }
+          }
+        }
+
+        .button-box {
+          padding: 40px 0;
+
+          .card-button {
+            background: #eeeeee;
+            color: #000000;
+            font-size: 14px;
+            border: none;
+            display: flex;
+            width: 120px;
+            height: 35px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 0 auto;
+            align-items: center;
+            justify-content: center;
+          }
+
         }
       }
     }
-  }
-
-  .button-box {
-    padding: 40px 0;
-
-    .card-button {
-      background: #eeeeee;
-      color: #000000;
-      font-size: 14px;
-      border: none;
-      display: flex;
-      width: 120px;
-      height: 35px;
-      cursor: pointer;
-      border-radius: 5px;
-      margin: 0 auto;
-      align-items: center;
-      justify-content: center;
-    }
-
   }
 </style>

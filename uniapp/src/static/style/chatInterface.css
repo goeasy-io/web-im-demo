@@ -7,7 +7,7 @@ page {
     background-color: #F1F1F1;
 }
 
-.chatInterface .scroll-view {
+.scroll-view {
     padding-left: 20rpx;
     padding-right: 20rpx;
     height: 100%;
@@ -18,7 +18,7 @@ page {
     overflow-y: auto;
 }
 
-.chatInterface .scroll-view .all-history-loaded {
+.history-loaded {
     font-size: 24rpx;
     height: 90rpx;
     line-height: 90rpx;
@@ -27,61 +27,61 @@ page {
     color: grey;
 }
 
-.chatInterface .scroll-view .message-item {
+.message-item {
     display: flex;
     margin: 20rpx 0;
 }
 
-.chatInterface .scroll-view .message-item .message-item-checkbox {
+.message-item-checkbox {
     height: 80rpx;
     display: flex;
     align-items: center;
 }
 
-.chatInterface .scroll-view .message-item .message-item-content {
+.message-item-content {
     flex: 1;
     overflow: hidden;
     display: flex;
 }
 
-.chatInterface .scroll-view .message-item .message-item-content.self {
+.message-item-content.self {
     overflow: hidden;
     display: flex;
     justify-content: flex-start;
     flex-direction: row-reverse;
 }
 
-.chatInterface .scroll-view .message-item .avatar {
+.message-item .avatar {
     width: 80rpx;
     height: 80rpx;
     flex-shrink: 0;
     flex-grow: 0;
 }
 
-.chatInterface .scroll-view .message-item .avatar image {
+.message-item .avatar image {
     width: 100%;
     height: 100%;
 }
 
-.chatInterface .scroll-view .content {
+.content {
     font-size: 34rpx;
     line-height: 44rpx;
     margin: 0 20rpx;
     max-width: 520rpx;
 }
 
-.chatInterface .scroll-view .content .message-payload {
+.message-payload {
     display: flex;
     align-items: center;
 }
 
-.chatInterface .scroll-view .content .image-content {
+.image-content {
     border-radius: 12rpx;
     width: 300rpx;
     height: 300rpx;
 }
 
-.chatInterface .scroll-view .content .text-content {
+.text-content {
     padding: 16rpx;
     border-radius: 12rpx;
     color: #000000;
@@ -92,12 +92,12 @@ page {
     display: block;
 }
 
-.chatInterface .scroll-view .content .text-content img {
+.text-content img {
     width: 50rpx;
     height: 50rpx;
 }
 
-.chatInterface .scroll-view .content .file-content {
+.file-content {
     width: 560rpx;
     height: 152rpx;
     font-size: 28rpx;
@@ -108,13 +108,13 @@ page {
     padding: 0 20rpx;
 }
 
-.chatInterface .scroll-view .content .file-content .file-info {
+.file-info {
     width: 424rpx;
     height: 132rpx;
     padding: 12rpx 0;
 }
 
-.chatInterface .scroll-view .content .file-content .file-info .file-name {
+.file-name {
     width: 420rpx;
     font-size: 30rpx;
     text-overflow: ellipsis;
@@ -125,18 +125,18 @@ page {
     -webkit-box-orient: vertical;
 }
 
-.chatInterface .scroll-view .content .file-content .file-info .file-size {
+.file-size {
     width: 200rpx;
     font-size: 24rpx;
     color: #ccc;
 }
 
-.chatInterface .scroll-view .content .file-content .file-img {
+.file-img {
     width: 80rpx;
     height: 80rpx;
 }
 
-.chatInterface .scroll-view .content .pending {
+.pending {
     background: url(".~@/static/images/pending.gif") no-repeat center;
     background-size: 30rpx;
     width: 30rpx;
@@ -144,7 +144,7 @@ page {
     margin-right: 10rpx;
 }
 
-.chatInterface .scroll-view .content .send-fail {
+.send-fail {
     background: url(".~@/static/images/failed.png") no-repeat center;
     background-size: 30rpx;
     width: 30rpx;
@@ -227,14 +227,14 @@ page {
     height: 100rpx;
 }
 
-.action-box .action-bottom .more-icon {
+.more-icon {
     display: flex;
     align-items: center;
     flex-direction: column;
     padding: 0 30rpx;
 }
 
-.action-box .action-bottom .operation-icon {
+.operation-icon {
     width: 60rpx;
     height: 60rpx;
     min-width: 60rpx;
@@ -243,13 +243,13 @@ page {
     border-radius: 20rpx;
     background: #FFFFFF;
 }
-.action-box .action-bottom .operation-title {
+.operation-title {
     font-size: 24rpx;
     line-height: 50rpx;
     color: #82868E;
 }
 
-.action-box .action-top .record-input {
+.record-input {
     flex: 1;
     width: 480rpx;
     height: 80rpx;
@@ -267,7 +267,7 @@ page {
     text-align: center;
 }
 
-.chatInterface .messageSelector-box {
+.messageSelector-box {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -283,7 +283,7 @@ page {
     font-size: 32rpx;
 }
 
-.chatInterface .messageSelector-box .messageSelector-btn {
+.messageSelector-btn {
     width: 80rpx;
     height: 80rpx;
 }
@@ -307,7 +307,7 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
 
 /* #endif */
 
-.chatInterface .action-popup {
+.action-popup {
     position: fixed;
     top: 0;
     left: 0;
@@ -318,7 +318,7 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
     align-items: center;
 }
 
-.chatInterface .action-popup .layer {
+.action-popup .layer {
     position: fixed;
     top: 0;
     left: 0;
@@ -328,7 +328,7 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
     z-index: 999;
 }
 
-.chatInterface .action-popup .action-list {
+.action-list {
     width: 350rpx;
     background: #434343;
     position: relative;
@@ -337,7 +337,7 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
     overflow: hidden;
 }
 
-.chatInterface .action-popup .action-item {
+.action-item {
     text-align: center;
     height: 100rpx;
     line-height: 100rpx;
@@ -346,11 +346,11 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
     border-bottom: 1px solid #EFEFEF;
 }
 
-.chatInterface .action-popup .action-item:last-child {
+.action-item:last-child {
     border: none;
 }
 
-.chatInterface .record-loading {
+.record-loading {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -363,7 +363,7 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
     border-radius: 40rpx;
 }
 
-.chatInterface .img-layer {
+.img-layer {
     position: absolute;
     top: 0;
     left: 0;
@@ -377,11 +377,11 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
     align-items: center;
 }
 
-.chatInterface .img-layer uni-image {
+.img-layer uni-image {
     height: 100% !important;
 }
 
-.chatInterface .img-layer {
+.img-layer {
     height: 100% !important;
     width: 100% !important;
 }
@@ -464,24 +464,24 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
     color: #666666;
 }
 
-.chatInterface .video-snapshot {
+.video-snapshot {
     position: relative;
     height: 300rpx;
     max-width: 400rpx;
     background: #000000;
 }
 
-.chatInterface .video-snapshot image {
+.video-snapshot image {
     max-height: 300rpx;
     max-width: 400rpx;
 }
 
-.chatInterface .video-snapshot video {
+.video-snapshot video {
     max-height: 300rpx;
     max-width: 400rpx;
 }
 
-.chatInterface .video-snapshot .video-play-icon {
+.video-play-icon {
     position: absolute;
     width: 40rpx;
     height: 40rpx;
@@ -493,7 +493,7 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
     margin: -20rpx;
 }
 
-.chatInterface .group-icon {
+.group-icon {
     right: 20rpx;
     width: 60rpx;
     height: 60rpx;
@@ -515,7 +515,7 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
     text-align: center;
 }
 
-.chatInterface .order-content {
+.order-content {
     border-radius: 20rpx;
     background: #FFFFFF;
     padding: 16rpx;
@@ -523,25 +523,25 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
     flex-direction: column;
 }
 
-.scroll-view .content .order-id {
+.content .order-id {
     color: #333333;
 }
 
-.scroll-view .content .order-body {
+.content .order-body {
     padding: 10rpx;
 }
 
-.scroll-view .content .order-name {
+.content .order-name {
     font-weight: normal;
 }
 
-.scroll-view .content .order-info {
+.content .order-info {
     display: flex;
     justify-content: space-between;
     padding: 10rpx;
 }
 
-.scroll-view .content .order-info .order-price {
+.content .order-info .order-price {
     font-weight: normal;
 }
 
@@ -569,11 +569,11 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
     color: grey;
 }
 
-.message-recalled .message-recalled-self {
+.message-recalled-self {
     display: flex;
 }
 
-.message-recalled .message-recalled-self span {
+.message-recalled-self span {
     margin-left: 10rpx;
     color: #d02129;
 }
