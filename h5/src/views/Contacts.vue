@@ -27,8 +27,8 @@
           :key="key"
           @click="handleListItem(group,'group')"
         >
-          <div class="group-avatar" :class="computedAvatar(getGroupAvatar(group.id))">
-            <img v-for="(avatar, index) in getGroupAvatar(group.id)" :src="avatar" :key="index"/>
+          <div class="group-avatar">
+            <img :src="group.avatar"/>
           </div>
           <div class="group">
             <span class="group-name"> {{ group.name }}({{ group.userList.length }}) </span>
@@ -120,20 +120,7 @@
             avatar: this.currentContact.data.avatar
           }
         });
-      },
-      getGroupAvatar(groupId) {
-        let avatarList = restApi.findGroupMemberAvatars(groupId);
-        return avatarList.slice(0, 9);
-      },
-      computedAvatar(avatarList) {
-        if (avatarList.length > 4) {
-          return 'avatarItem--3';
-        } else if (avatarList.length > 1) {
-          return 'avatarItem--2';
-        } else {
-          return 'avatarItem--1';
-        }
-      },
+      }
     },
   };
 </script>
@@ -231,27 +218,6 @@
           margin-left: 10px;
           overflow: hidden;
           display: flex;
-          justify-content: center;
-          align-items: center;
-          align-content: center;
-          flex-wrap: wrap-reverse;
-        }
-
-        .avatarItem--1 > img {
-          width: 98%;
-          height: 98%;
-        }
-
-        .avatarItem--2 > img {
-          width: 47%;
-          height: 47%;
-          margin: 1%;
-        }
-
-        .avatarItem--3 > img {
-          width: 31%;
-          height: 30%;
-          margin: 1%;
         }
 
         .group {

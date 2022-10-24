@@ -19,15 +19,7 @@
               }"
             >
               <div class="avatar">
-                <img v-if="conversation.userId" :src="conversation.data.avatar"/>
-                <div class="group-avatar" v-if="conversation.groupId">
-                  <img
-                    v-for="(avatar, index) in getGroupAvatar(conversation.groupId)"
-                    :src="avatar"
-                    :class="computedAvatar(getGroupAvatar(conversation.groupId))"
-                    :key="index"
-                  />
-                </div>
+                <img :src="conversation.data.avatar"/>
                 <div v-if="conversation.unread && currentUser.id !== conversation.lastMessage.senderId"
                      class="unread-count">
                   <span class="unread">{{ conversation.unread }}</span>
@@ -234,20 +226,7 @@
             avatar: conversation.data.avatar
           }
         });
-      },
-      getGroupAvatar(groupId) {
-        const avatarList = restApi.findGroupMemberAvatars(groupId);
-        return avatarList.slice(0, 9);
-      },
-      computedAvatar(avatarList) {
-        if (avatarList.length > 4) {
-          return 'avatarItem--3';
-        } else if (avatarList.length > 1) {
-          return 'avatarItem--2';
-        } else {
-          return 'avatarItem--1';
-        }
-      },
+      }
     },
   };
 </script>
@@ -394,23 +373,6 @@
               align-items: center;
               align-content: center;
               flex-wrap: wrap-reverse;
-
-              .avatarItem--1 {
-                width: 98%;
-                height: 98%;
-              }
-
-              .avatarItem--2 {
-                width: 47%;
-                height: 47%;
-                margin: 1%;
-              }
-
-              .avatarItem--3 {
-                width: 31%;
-                height: 30%;
-                margin: 1%;
-              }
             }
           }
 
