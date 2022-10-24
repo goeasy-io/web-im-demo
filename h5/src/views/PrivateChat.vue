@@ -1079,7 +1079,7 @@
       width: 850px;
       height: 650px;
       position: absolute;
-      left: -340px;
+      left: -341px;
       right: 0;
       top: 0;
       bottom: 0;

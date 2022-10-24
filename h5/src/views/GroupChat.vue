@@ -81,9 +81,6 @@
                     </div>
                   </div>
                 </div>
-                <div :class="message.read ?'message-read':'message-unread'">
-                  <div v-if="message.senderId === currentUser.id">{{ message.read ? '已读' : '未读' }}</div>
-                </div>
               </div>
             </div>
           </div>
@@ -721,22 +718,6 @@
               height: 15px;
             }
 
-            .message-read {
-              color: gray;
-              font-size: 12px;
-              text-align: end;
-              margin: 0 10px;
-              height: 16px;
-            }
-
-            .message-unread {
-              color: #d02129;
-              font-size: 12px;
-              text-align: end;
-              margin: 0 10px;
-              height: 16px;
-            }
-
             .content-text {
               display: flex;
               align-items: center;
@@ -1080,7 +1061,7 @@
       width: 850px;
       height: 650px;
       position: absolute;
-      left: -340px;
+      left: -341px;
       right: 0;
       top: 0;
       bottom: 0;
