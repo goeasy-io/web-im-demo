@@ -6,7 +6,7 @@ Page({
 	},
 	onShow () {
 		this.setData({
-			currentUser : wx.getStorageSync('currentUser')
+			currentUser : app.globalData.currentUser
 		});
 	},
 	logout () {

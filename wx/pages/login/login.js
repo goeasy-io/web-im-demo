@@ -1,27 +1,58 @@
 /* login.js */
-import restapi from '../../static/lib/restapi';
+import restApi from '../../static/lib/restapi';
+const app = getApp();
 Page({
 	data: {
+		userSelector: {
+			users: [],
+			visible: false,
+			index: 0,
+			selectedUser: null
+		},
+
 		username:'',
-		password:'',
-		showError:false,
+		password: {
+			visible: false,
+			value: '123'
+		},
+		errorVisible: false
+	},
+	onLoad () {
+		let users = restApi.findUsers();
+		this.setData({
+			['userSelector.users']: users
+		})
+	},
+	switchSelectorVisible() {
+		this.setData({
+			['userSelector.visible']: !this.data.userSelector.visible
+		})
+	},
+	selectUser(e) {
+		let user = e.currentTarget.dataset.user;
+		this.setData({
+			['userSelector.visible']: false,
+			['userSelector.selectedUser']: user,
+			['username']: user.name
+		})
+	},
+	switchPasswordVisible() {
+		this.setData({
+			['password.visible']: !this.data.password.visible
+		})
 	},
 	login: function(e) {
-		let username = e.detail.value.username;
-		let password = e.detail.value.password;
-		if (username.trim() !== '' && password.trim() !== '') {
-			let user = restapi.findUser(username,password);
+		if (this.data.username.trim() !== '' && this.data.password.value.trim() !== '') {
+			let user = restApi.findUser(this.data.username, this.data.password.value);
 			if (user) {
-				wx.setStorageSync('currentUser',user);
+				app.globalData.currentUser = user;
 				// 页面跳转
-				wx.switchTab({
-					url:'../conversations/conversations'
-				});
+				wx.switchTab({url:'../conversations/conversations'});
 				return;
 			}
 		}
 		this.setData({
-			showError:true
+			errorVisible:true
 		});
 	}
 })

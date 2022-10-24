@@ -8,7 +8,7 @@ Page({
 		friends:{},
 	},
 	onShow () {
-		let currentUser = wx.getStorageSync('currentUser');
+		let currentUser = app.globalData.currentUser;
 		let friends = restapi.findFriends(currentUser);
 		let groups = restapi.findGroups(currentUser);
 		this.setData({
@@ -16,17 +16,12 @@ Page({
 			groups:	groups,
 		});
 	},
-	onUnload(){
-		app.globalData.service.disconnect();
-	},
-	enterChat (e) {//进入私聊
-		let type = e.currentTarget.dataset.type;
-		let conversation = e.currentTarget.dataset.conversation;
-		let path = type === wx.GoEasy.IM_SCENE.PRIVATE?
-			'../chat/privateChat/privateChat?to='+conversation.uuid
-			:'../chat/groupChat/groupChat?to='+ conversation.uuid;
-		wx.navigateTo({
-			url : path
-		});
+	chat (e) {//进入私聊
+        let to = e.currentTarget.dataset.to;
+        let type = e.currentTarget.dataset.type;
+        let path = type === wx.GoEasy.IM_SCENE.PRIVATE?
+            '../chat/privateChat/privateChat?to='+JSON.stringify(to)
+            :'../chat/groupChat/groupChat?to='+ JSON.stringify(to);
+        wx.navigateTo({ url : path });
 	}
 })

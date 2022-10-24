@@ -1,5 +1,6 @@
 const app = getApp();
 import restApi from '../../static/lib/restapi.js';
+import {formatDate} from '../../static/lib/utils';
 Page({
 	data : {
 		conversations : [],
@@ -10,7 +11,7 @@ Page({
 		currentUser: null
 	},
 	onShow () {
-		let currentUser = wx.getStorageSync('currentUser');
+        let currentUser = app.globalData.currentUser;
 		if(!currentUser){
 			wx.redirectTo({
 				url : '../login/login'
@@ -34,7 +35,7 @@ Page({
 	},
 	connectGoEasy() {
 		wx.goEasy.connect({
-			id: this.data.currentUser.uuid,
+			id: this.data.currentUser.id,
 			data: {
 				name: this.data.currentUser.name,
 				avatar: this.data.currentUser.avatar
@@ -70,7 +71,7 @@ Page({
 	},
 	subscribeGroup() {
 		let groups = restApi.findGroups(this.data.currentUser);
-		let groupIds = groups.map(item => item.uuid);
+		let groupIds = groups.map(item => item.id);
 		wx.goEasy.im.subscribeGroup({
 			groupIds: groupIds,
 			onSuccess: function () {
@@ -146,7 +147,7 @@ Page({
 	renderConversations (conversations) {
 		conversations.conversations && conversations.conversations.map((item) => {
 			// 格式化时间格式
-			item.lastMessage.date = app.formatDate(item.lastMessage.timestamp)
+			item.lastMessage.date = formatDate(item.lastMessage.timestamp)
 		});
 		this.setData({
 			conversations : conversations.conversations
@@ -167,12 +168,23 @@ Page({
 	},
 	navigateToChat (e) {
 		let conversation = e.currentTarget.dataset.conversation;
-		let path = conversation.type === wx.GoEasy.IM_SCENE.PRIVATE?
-			'../chat/privateChat/privateChat?to='+conversation.userId
-			:'../chat/groupChat/groupChat?to='+ conversation.groupId;
-		wx.navigateTo({
-			url : path
-		});
+        let to,path
+        if (conversation.type === wx.GoEasy.IM_SCENE.PRIVATE) {
+            to = {
+                id: conversation.userId,
+                name: conversation.data.name,
+                avatar: conversation.data.avatar
+            }
+            path = '../chat/privateChat/privateChat?to='+JSON.stringify(to)
+        } else {
+            to = {
+                id: conversation.groupId,
+                name: conversation.data.name,
+                avatar: conversation.data.avatar
+            }
+            path = '../chat/groupChat/groupChat?to='+ JSON.stringify(to);
+        }
+		wx.navigateTo({ url : path });
 	},
 	showAction(e){
 		let conversation = e.currentTarget.dataset.conversation;

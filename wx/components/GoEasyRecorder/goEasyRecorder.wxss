@@ -2,6 +2,8 @@
 	height: 80rpx;
 	background-color: #ffffff;
 	flex: 1;
+    margin: 20rpx;
+    margin-left: 0;
 	display: flex;
 }
 

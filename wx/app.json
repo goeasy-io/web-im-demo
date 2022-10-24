@@ -17,26 +17,26 @@
 	"sitemapLocation": "sitemap.json",
 	"tabBar" : {
 		"color":"#454750",
-		"selectedColor":"#618DFF",
+		"selectedColor":"#d02129",
 		"borderStyle":"black",
 		"backgroundColor":"#F8F7F7",
 		"height" : "60px",
 		"list" : [
 			{
 				"pagePath" : "pages/conversations/conversations",
-				"text":"信息",
-				"iconPath":"static/images/chat.png",
-				"selectedIconPath":"static/images/chat-active.png"
+				"text":"",
+				"iconPath":"static/images/msg.png",
+				"selectedIconPath":"static/images/msg-active.png"
 			},
 			{
 				"pagePath" : "pages/contacts/contacts",
-				"text" : "通讯录",
+				"text" : "",
 				"iconPath":"static/images/contacts.png",
 				"selectedIconPath":"static/images/contacts-active.png"
 			},
 			{
 				"pagePath" : "pages/mine/mine",
-				"text" : "我",
+				"text" : "",
 				"iconPath":"static/images/mine.png",
 				"selectedIconPath":"static/images/mine-active.png"
 			}

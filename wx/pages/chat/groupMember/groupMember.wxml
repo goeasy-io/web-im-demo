@@ -1,8 +1,8 @@
 <!--groupMember.wxml-->
 <page-meta>
 	<navigation-bar
-		front-color="#FFFFFF"
-		background-color="#7484ad"
+		front-color="#000000"
+		background-color="#F1F1F1"
 		title="群成员({{groupMemberNum}})"
 	/>
 </page-meta>

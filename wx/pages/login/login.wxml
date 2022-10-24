@@ -1,13 +1,47 @@
 <!--login.wxml-->
 <view class="container">
-	<view class="login">
-		<form bindsubmit="login">
-			<view class="title">GoEasy IM</view>
-			<input class="input-box" type="text" placeholder="请输入账号" name="username" confirm-hold hold-keyboard="{{true}}" adjust-position="{{true}}"/>
-			<input class="input-box" type="password" placeholder="请输入密码" name= "password" />
-			<view wx:if="{{showError}}" class="error">请输入正确的用户名和密码</view>
-			<button class="login-btn" form-type="submit">登录</button>
-			<view class="login-tips">登录所需用户名和密码见 restapi.js</view>
-		</form>
-	</view>
+    <view class="login-container">
+        <view class="title">GoEasy IM</view>
+        <view class="user-selector">
+            <view class="selected-area" bindtap="switchSelectorVisible">
+                <view class="selected-content">
+                    <image wx:if="{{userSelector.selectedUser}}" src="{{userSelector.selectedUser.avatar}}"></image>
+                    <text>{{ userSelector.selectedUser ? userSelector.selectedUser.name : '请选择用户'}}</text>
+                </view>
+                <image
+                    class="{{userSelector.visible ? 'selected-icon' : 'selected-icon rotate'}}"
+                    src="/static/images/up.png"
+                ></image>
+            </view>
+            <view wx:if="{{userSelector.visible}}" class="dialog-area">
+                <view class="dialog-list">
+                    <view
+                        class="dialog-list-item"
+                        wx:for="{{userSelector.users}}" wx:for-item="user" wx:key="key" data-user="{{user}}"
+                        bind:tap="selectUser">
+                        <image class="dialog-list-item-avatar" src="{{user.avatar}}"></image>
+                        <view class="{{userSelector.selectedUser.id === user.id ? 'selected':''}}">{{user.name}}</view>
+                    </view>
+                </view>
+            </view>
+        </view>
+
+        <view class="password-box">
+            <input
+                value="{{password.value}}"
+                class="password-input"
+                placeholder="请输入密码"
+                password="{{!password.visible}}"
+                type="text"
+            ></input>
+            <image
+                class="password-image"
+                bindtap="switchPasswordVisible"
+                src="{{password.visible?'/static/images/invisible.png':'/static/images/visible.png'}}"
+            >
+            </image>
+        </view>
+        <view wx:if="{{errorVisible}}" class="error">请输入正确的用户名和密码</view>
+        <button class="login-btn" bindtap="login">登录</button>
+    </view>
 </view>

@@ -5,7 +5,6 @@
 	"usingComponents": {
 		"GoEasyRecorder": "/components/GoEasyRecorder/goEasyRecorder",
 		"GoEasyAudioPlayer": "/components/GoEasyAudioPlayer/goEasyAudioPlayer",
-		"GoEasyVideoPlayer": "/components/GoEasyVideoPlayer/goEasyVideoPlayer",
-		"GoEasyCustomMessage": "/components/GoEasyCustomMessage/customMessage"
+		"GoEasyVideoPlayer": "/components/GoEasyVideoPlayer/goEasyVideoPlayer"
 	}
 }

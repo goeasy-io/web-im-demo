@@ -6,22 +6,16 @@ page {
 	font-family: Source Han Sans CN;
 }
 
-.login {
+.login-container {
 	display: flex;
 	align-items: center;
 	flex-direction: column;
 	padding: 72rpx;
 }
 
-form{
-	width: 100%;
-	height: 100%;
-	overflow: hidden;
-}
-
 .title {
 	width: 100%;
-	font-size: 84rpx;
+	font-size: 64rpx;
 	font-style: normal;
 	font-weight: bold;
 	color: #D02129;
@@ -29,11 +23,113 @@ form{
 	margin-bottom: 140rpx;
 }
 
+.user-selector {
+	width: 100%;
+	margin-bottom: 40rpx;
+}
+
+.selected-area {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	width: 100%;
+	height: 100rpx;
+	border: 1px solid #cccccc;
+	box-sizing: border-box;
+	padding: 0 26rpx;
+}
+
+.selected-content {
+	display: flex;
+	align-items: center;
+	flex-grow: 1;
+	font-size: 30rpx;
+}
+
+.selected-content image {
+	width: 80rpx;
+	height: 80rpx;
+	margin-right: 30rpx;
+	border-radius: 50%;
+}
+
+.selected-icon {
+	width: 40rpx;
+	height: 40rpx;
+	margin-right: 10rpx;
+}
+
+.selected-icon.rotate {
+	transform-origin: center;
+	transform: rotate(180deg);
+}
+
+.dialog-area {
+	position: absolute;
+	width: 100%;
+	background: #E5E5E5;
+}
+
+.dialog-list {
+	position: absolute;
+	left: 0;
+	top: 8rpx;
+	width: 606rpx;
+	border: 1px solid #cccccc;
+	background: #ffffff;
+	box-shadow: 8rpx 8rpx 10rpx #e1e1e1;
+	padding: 30rpx 0;
+	z-index: 99;
+	font-size: 30rpx;
+}
+
+.dialog-list-item {
+	width: 100%;
+	margin: 20rpx 0;
+	padding-left: 40rpx;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+.dialog-list-item .selected {
+	font-weight: bold;
+}
+
+.dialog-list-item-avatar {
+	width: 80rpx;
+	height: 80rpx;
+	margin-right: 30rpx;
+	border-radius: 50%;
+}
+
+.password-box {
+	width: 100%;
+	position: relative;
+}
+
+.password-input {
+	flex: 1;
+	padding: 22rpx 28rpx;
+	border: 1px solid #cccccc;
+	margin-bottom: 40rpx;
+	font-size: 32rpx;
+}
+
+.password-image {
+	width: 50rpx;
+	height: 50rpx;
+	position: absolute;
+	top: 28rpx;
+	right: 28rpx;
+	z-index: 98;
+}
+
 .login-tips {
 	text-align: center;
 	margin-top: 40rpx;
-    color: #999999;
-    font-size: 32rpx;
+	color: #999999;
+	font-size: 32rpx;
 }
 
 .input-box {
@@ -64,5 +160,5 @@ form{
 	width: 100%;
 	height: 100rpx;
 	color: #FFFFFF;
-	background: #618DFF;
+	background: #D02129;
 }
