@@ -8,8 +8,8 @@
       <div class="contact-list" v-if="currentTab === 'friend'">
         <div
           v-for="(friend, key) in friends || []" :key="key"
-          :class="currentContact.data.id === friend.id? 'friend-item selected':'friend-item'"
-          @click="handleListItem(friend,'friend')"
+          :class="selectedContact.data.id === friend.id? 'friend-item selected':'friend-item'"
+          @click="showProfileCard(friend,'friend')"
         >
           <div class="friend-avatar">
             <img :src="friend.avatar"/>
@@ -23,46 +23,44 @@
       <div class="contact-list" v-if="currentTab === 'group'">
         <div
           v-for="(group, key) in groups || []"
-          :class="currentContact.data.id === group.id? 'group-item selected':'group-item'"
+          :class="selectedContact.data.id === group.id? 'group-item selected':'group-item'"
           :key="key"
-          @click="handleListItem(group,'group')"
+          @click="showProfileCard(group,'group')"
         >
           <div class="group-avatar">
             <img :src="group.avatar"/>
           </div>
-          <div class="group">
-            <span class="group-name"> {{ group.name }}({{ group.userList.length }}) </span>
-          </div>
+          <div class="group-name">{{ group.name }}({{ group.userList.length }})</div>
         </div>
       </div>
     </div>
     <div class="contact-main">
-      <div class="profile-card" v-if="currentContact.type === 'friend'">
+      <div class="profile-card" v-if="selectedContact.type === 'friend'">
         <div class="card-title">
           <div class="profile-name">
             <i class="iconfont icon-zhanghu"></i>
-            <div>{{ currentContact.data.name }}</div>
+            <div>{{ selectedContact.data.name }}</div>
           </div>
           <div class="profile-avatar">
-            <img :src="currentContact.data.avatar"/>
+            <img :src="selectedContact.data.avatar"/>
           </div>
         </div>
         <div class="info-item">
           <div class="info-name">邮 箱</div>
-          <div class="info-text">{{ currentContact.data.email }}</div>
+          <div class="info-text">{{ selectedContact.data.email }}</div>
         </div>
         <div class="info-item">
           <div class="info-name">手 机</div>
-          <div class="info-text">{{ currentContact.data.phone }}</div>
+          <div class="info-text">{{ selectedContact.data.phone }}</div>
         </div>
         <div class="button-box">
           <button class="card-button" @click="chat('privatechat')">发消息</button>
         </div>
       </div>
-      <div class="profile-card" v-else-if="currentContact.type === 'group'">
-        <div class="group-name">{{ currentContact.data.name }}</div>
+      <div class="profile-card" v-else-if="selectedContact.type === 'group'">
+        <div class="group-name">{{ selectedContact.data.name }}</div>
         <div class="group-members">
-          <div class="member" v-for="(member, index) in currentContact.data.userInfoList" :key="index">
+          <div class="member" v-for="(member, index) in selectedContact.data.userInfoList" :key="index">
             <img class="member-avatar" :src="member.avatar"/>
             <span class="member-name">{{ member.name }}</span>
           </div>
@@ -84,7 +82,7 @@
         friends: [],
         groups: [],
         currentTab: 'friend',
-        currentContact: {
+        selectedContact: {
           type: null,
           data: {}
         },
@@ -100,14 +98,14 @@
       switchTab(tab) {
         this.currentTab = tab;
       },
-      handleListItem(contact, type) {
-        this.currentContact.data = contact;
-        this.currentContact.type = type;
-        if (this.currentContact.type === 'group') {
-          this.currentContact.data.userInfoList = [];
-          this.currentContact.data.userList.map((item) => {
+      showProfileCard(contact, type) {
+        this.selectedContact.data = contact;
+        this.selectedContact.type = type;
+        if (this.selectedContact.type === 'group') {
+          this.selectedContact.data.userInfoList = [];
+          this.selectedContact.data.userList.map((item) => {
             const info = restApi.findUserById(item);
-            this.currentContact.data.userInfoList.push(info);
+            this.selectedContact.data.userInfoList.push(info);
           });
         }
       },
@@ -115,9 +113,9 @@
         this.$router.replace({
           path: `/conversations/${path}`,
           query: {
-            id: this.currentContact.data.id,
-            name: this.currentContact.data.name,
-            avatar: this.currentContact.data.avatar
+            id: this.selectedContact.data.id,
+            name: this.selectedContact.data.name,
+            avatar: this.selectedContact.data.avatar
           }
         });
       }
@@ -175,6 +173,7 @@
       .friend-item {
         display: flex;
         padding: 5px 10px;
+        cursor: pointer;
 
         .friend-avatar {
           width: 58px;
@@ -211,6 +210,8 @@
       .group-item {
         display: flex;
         padding: 5px 10px;
+        cursor: pointer;
+        align-items: center;
 
         .group-avatar {
           width: 50px;
@@ -220,16 +221,12 @@
           display: flex;
         }
 
-        .group {
-          width: 65%;
+        .group-name {
           margin-left: 10px;
-
-          .group-name {
-            width: 180px;
-            text-align: left;
-            font-size: 15px;
-            line-height: 40px;
-          }
+          width: 160px;
+          text-align: left;
+          font-size: 15px;
+          line-height: 40px;
         }
       }
     }

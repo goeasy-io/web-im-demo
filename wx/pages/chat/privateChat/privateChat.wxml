@@ -18,9 +18,9 @@
                         <view wx:if="{{message.senderId !== currentUser.id}}">{{friend.name}}撤回了一条消息</view>
                         <view wx:else class="message-recalled-self">
                             <view>你撤回了一条消息</view>
-                            <span wx:if="{{message.editable}}" data-text="{{message.payload.text}}"
+                            <view wx:if="{{message.editable}}" data-text="{{message.payload.text}}"
                                   bindtap="editRecalledMessage">重新编辑
-                            </span>
+                            </view>
                         </view>
                     </view>
                     <view class="message-item" wx:else>

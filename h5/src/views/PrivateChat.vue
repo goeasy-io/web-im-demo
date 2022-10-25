@@ -36,20 +36,22 @@
                 <div class="message-payload">
                   <div class="pending" v-if="message.status === 'sending'"></div>
                   <div class="send-fail" v-if="message.status === 'fail'"></div>
-                  <div class="content-text" v-if="message.type === 'text'"
+                  <div v-if="message.type === 'text'" class="content-text"
                        v-html="emoji.decoder.decode(message.payload.text)"></div>
                   <div v-if="message.type === 'image'" class="content-image"
                        @click="showImagePreviewPopup(message.payload.url)">
                     <img :src="message.payload.url"
                          :style="{height:getImageHeight(message.payload.width,message.payload.height)+'px'}"/>
                   </div>
-                  <div class="content-file" v-if="message.type ==='file'">
-                    <div class="file-info">
-                      <span class="file-name">{{ message.payload.name }}</span>
-                      <span class="file-size">{{ (message.payload.size / 1024).toFixed(2) }}KB</span>
+                  <a v-if="message.type === 'file'" :href="message.payload.url" target="_blank" download="download">
+                    <div class="content-file">
+                      <div class="file-info">
+                        <span class="file-name">{{ message.payload.name }}</span>
+                        <span class="file-size">{{ (message.payload.size / 1024).toFixed(2) }}KB</span>
+                      </div>
+                      <img class="file-img" src="../assets/images/file-icon.png"/>
                     </div>
-                    <img class="file-img" src="../assets/images/file-icon.png"/>
-                  </div>
+                  </a>
                   <goeasy-audio-player
                     v-if="message.type ==='audio'"
                     :src="message.payload.url"
@@ -119,7 +121,7 @@
           <!-- 文件 -->
           <div class="action-item">
             <label for="file-input">
-              <i class="iconfont icon-wj-wjj" title="文件"></i>
+              <i class="iconfont icon-wenjianjia" title="文件"></i>
             </label>
             <input v-show="false" id="file-input" type="file"
                    @change="sendFileMessage"/>
@@ -130,8 +132,9 @@
           </div>
         </div>
 
+        <!-- GoEasyIM最大支持3k的文本消息，如需发送长文本，需调整输入框maxlength值 -->
         <div class="input-box">
-          <textarea ref="input" v-model="text" autocomplete="off" class="input-content"></textarea>
+          <textarea ref="input" v-model="text" maxlength="700" autocomplete="off" class="input-content"></textarea>
         </div>
         <div class="send-box">
           <button class="send-button" @click="sendTextMessage">发送</button>
@@ -144,12 +147,12 @@
       <span class="close" @click="hideImagePreviewPopup">×</span>
     </div>
     <!-- 消息删除撤回弹窗 -->
-    <div class="action-popup" v-if="actionPopup.visible" @click="hideActionPopup">
+    <div class="action-popup" v-if="actionPopup.visible" @click="actionPopup.visible = false">
       <div class="action-popup-main">
         <div class="action-item" @click="deleteSingleMessage">删除</div>
         <div class="action-item" v-if="actionPopup.recallable" @click="recallMessage">撤回</div>
         <div class="action-item" @click="showCheckBox">多选</div>
-        <div class="action-item" @click="hideActionPopup">取消</div>
+        <div class="action-item" @click="actionPopup.visible = false">取消</div>
       </div>
     </div>
     <!-- 订单弹窗 -->
@@ -421,10 +424,6 @@
         }
         this.actionPopup.visible = true;
       },
-      hideActionPopup () {
-        this.actionPopup.visible = false;
-        this.actionPopup.message = null;
-      },
       deleteSingleMessage() {
         this.actionPopup.visible = false;
         this.deleteMessage();
@@ -612,7 +611,6 @@
       overflow-y: auto;
       flex: 1;
       scrollbar-width: thin;
-      padding: 0 15px;
 
       &::-webkit-scrollbar {
         width: 0;
@@ -650,33 +648,29 @@
             position: relative;
           }
 
-          input[type="checkbox"]:before, input[type="checkbox"]:checked:before {
+          input[type="checkbox"]::before, input[type="checkbox"]:checked::before {
             content: "";
             position: absolute;
-            top: -3px;
-            left: -3px;
+            top: 0;
+            left: 0;
             background: #FFFFFF;
             width: 18px;
             height: 18px;
             border: 1px solid #cccccc;
-            border-radius: 50%;
           }
 
-          input[type="checkbox"]:checked:before {
+          input[type="checkbox"]:checked::before {
             content: "\2713";
             background-color: #d02129;
             width: 18px;
-            height: 18px;
             color: #FFFFFF;
             text-align: center;
             font-weight: bold;
-            border-radius: 50%;
           }
         }
 
         .message-item-content {
           flex: 1;
-          max-height: 230px;
           margin: 5px 0;
           overflow: hidden;
           display: flex;
@@ -848,10 +842,23 @@
           justify-content: flex-start;
           flex-direction: row-reverse;
         }
-        .self::v-deep(.audio-facade) {
+
+        .self /deep/ .audio-facade {
           flex-direction: row-reverse;
         }
-        .self::v-deep(.audio-facade-bg) {
+        .self /deep/ .audio-facade-bg {
+          background: url("../assets/images/voice.png") no-repeat center;
+          background-size: 15px;
+          width: 20px;
+          -moz-transform: rotate(180deg);
+          -webkit-transform: rotate(180deg);
+          -o-transform: rotate(180deg);
+          transform: rotate(180deg);
+        }
+
+        .self /deep/ .play-icon {
+          background: url("../assets/images/play.gif") no-repeat center;
+          background-size: 20px;
           -moz-transform: rotate(180deg);
           -webkit-transform: rotate(180deg);
           -o-transform: rotate(180deg);
@@ -874,7 +881,7 @@
 
           span {
             margin-left: 5px;
-            color: #d02129;
+            color: #AC4E4E;
             cursor: pointer;
           }
         }
@@ -900,10 +907,9 @@
           width: 50px;
           height: 50px;
           border-radius: 50%;
-          background: url("../assets/images/delete.png") no-repeat center center #FFFFFF;
+          background: url("../assets/images/delete.png") no-repeat center center #E9E6EC;
           cursor: pointer;
           margin-bottom: 5px;
-          border: 1px solid #cccccc;
         }
       }
 
@@ -1010,7 +1016,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
 
       .action-popup-main {
         width: 150px;
@@ -1026,6 +1031,7 @@
           font-size: 15px;
           color: #262628;
           border-bottom: 1px solid #efefef;
+          cursor: pointer;
         }
       }
     }
