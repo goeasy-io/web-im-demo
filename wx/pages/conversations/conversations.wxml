@@ -1,12 +1,12 @@
 <view class="conversations-container">
     <scroll-view class="conversations" scroll-y="true" enable-flex="true">
-        <view wx:if="{{conversations.length !=0}}">
+        <view wx:if="{{conversations.length}}">
             <view class="scroll-item" wx:for="{{conversations}}" wx:for-item="conversation" wx:key="key">
                 <view class="item-head">
                     <image src="{{conversation.data.avatar}}" class="head-icon"></image>
                     <view wx:if="{{conversation.unread}}" class="item-head_unread">{{conversation.unread}}</view>
                 </view>
-                <view class="scroll-item_info" bindtap="navigateToChat" data-conversation="{{conversation}}">
+                <view class="scroll-item_info" bindtap="chat" data-conversation="{{conversation}}">
                     <view class="item-info-top">
                         <text class="item-info-top_name">{{conversation.data.name}}</text>
                         <view class="item-info-top_time">{{conversation.lastMessage.date}}</view>

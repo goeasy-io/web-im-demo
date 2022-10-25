@@ -158,16 +158,18 @@ Page({
 		if(unreadTotal >0){
 			wx.setTabBarBadge({
 				index: 0,
-				text: unreadTotal.toString()
+				text: unreadTotal.toString(),
+                fail:(e)=>{console.log(e)}
 			});
 		}else{
 			wx.hideTabBarRedDot({
-				index :0
+				index :0,
+                fail:(e)=>{console.log(e)}
 			});
 		}
 	},
-	navigateToChat (e) {
-		let conversation = e.currentTarget.dataset.conversation;
+	chat (e) {
+		const conversation = e.currentTarget.dataset.conversation;
         let to,path
         if (conversation.type === wx.GoEasy.IM_SCENE.PRIVATE) {
             to = {
@@ -187,7 +189,7 @@ Page({
 		wx.navigateTo({ url : path });
 	},
 	showAction(e){
-		let conversation = e.currentTarget.dataset.conversation;
+		const conversation = e.currentTarget.dataset.conversation;
 		this.setData({
 			['actionPopup.conversation']: conversation,
 			['actionPopup.visible']: true

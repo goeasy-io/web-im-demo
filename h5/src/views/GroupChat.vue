@@ -13,9 +13,7 @@
           {{ history.allLoaded ? '已经没有更多的历史消息' : '获取历史消息' }}
         </div>
         <div v-for="(message, index) in history.messages" :key="index">
-          <div class="time-tips">
-            {{ renderMessageDate(message, index) }}
-          </div>
+          <div class="time-tips">{{ renderMessageDate(message, index) }}</div>
           <div class="message-recalled" v-if="message.recalled">
             <div v-if="message.senderId !== currentUser.id">{{ message.senderData.name }}撤回了一条消息</div>
             <div v-else class="message-recalled-self">
@@ -38,19 +36,14 @@
                 <div class="message-payload">
                   <div class="pending" v-if="message.status === 'sending'"></div>
                   <div class="send-fail" v-if="message.status === 'fail'"></div>
-                  <div class="content-text" v-if="message.type === 'text'"
+                  <div v-if="message.type === 'text'" class="content-text"
                        v-html="emoji.decoder.decode(message.payload.text)"></div>
                   <div v-if="message.type === 'image'" class="content-image"
                        @click="showImagePreviewPopup(message.payload.url)">
                     <img :src="message.payload.url"
                          :style="{height:getImageHeight(message.payload.width,message.payload.height)+'px'}"/>
                   </div>
-                  <a
-                    v-if="message.type === 'file'"
-                    :href="message.payload.url"
-                    target="_blank"
-                    download="download"
-                  >
+                  <a v-if="message.type === 'file'" :href="message.payload.url" target="_blank" download="download">
                     <div class="content-file">
                       <div class="file-info">
                         <span class="file-name">{{ message.payload.name }}</span>
