@@ -10,7 +10,7 @@ const app = new Vue({
 app.$mount();
 const goEasy = GoEasy.getInstance({
     host: 'hangzhou.goeasy.io',//应用所在的区域地址: 【hangzhou.goeasy.io |singapore.goeasy.io】
-    appkey: 'BC-xxxx',	// common key,
+    appkey: process.env.VUE_APP_APPKEY,	// common key,
     modules: ['im'],
     // true表示支持通知栏提醒，false则表示不需要通知栏提醒
     allowNotification: true //仅有效于app,小程序和H5将会被自动忽略
