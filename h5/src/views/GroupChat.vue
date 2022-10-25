@@ -129,8 +129,9 @@
           </div>
         </div>
 
+        <!-- GoEasyIM最大支持3k的文本消息，如需发送长文本，需调整输入框maxlength值 -->
         <div class="input-box">
-          <textarea ref="input" v-model="text" autocomplete="off" class="input-content"></textarea>
+          <textarea ref="input" v-model="text" maxlength="700" autocomplete="off" class="input-content"></textarea>
         </div>
         <div class="send-box">
           <button class="send-button" @click="sendTextMessage">发送</button>
@@ -668,7 +669,6 @@
 
         .message-item-content {
           flex: 1;
-          max-height: 230px;
           margin: 5px 0;
           overflow: hidden;
           display: flex;
@@ -989,11 +989,11 @@
     }
 
     .action-popup {
-      width: 100%;
-      height: 450px;
+      width: 850px;
+      height: 650px;
       position: absolute;
       top: 0;
-      left: 0;
+      left: -341px;
       background: rgba(51, 51, 51, 0.5);
       display: flex;
       align-items: center;
@@ -1013,6 +1013,7 @@
           font-size: 15px;
           color: #262628;
           border-bottom: 1px solid #efefef;
+          cursor: pointer;
         }
       }
     }

@@ -30,9 +30,7 @@
           <div class="group-avatar">
             <img :src="group.avatar"/>
           </div>
-          <div class="group">
-            <span class="group-name"> {{ group.name }}({{ group.userList.length }}) </span>
-          </div>
+          <div class="group-name">{{ group.name }}({{ group.userList.length }})</div>
         </div>
       </div>
     </div>
@@ -175,6 +173,7 @@
       .friend-item {
         display: flex;
         padding: 5px 10px;
+        cursor: pointer;
 
         .friend-avatar {
           width: 58px;
@@ -211,6 +210,8 @@
       .group-item {
         display: flex;
         padding: 5px 10px;
+        cursor: pointer;
+        align-items: center;
 
         .group-avatar {
           width: 50px;
@@ -220,16 +221,12 @@
           display: flex;
         }
 
-        .group {
-          width: 65%;
+        .group-name {
           margin-left: 10px;
-
-          .group-name {
-            width: 180px;
-            text-align: left;
-            font-size: 15px;
-            line-height: 40px;
-          }
+          width: 160px;
+          text-align: left;
+          font-size: 15px;
+          line-height: 40px;
         }
       }
     }
