@@ -2,11 +2,11 @@
   "name": "goeasy-chat-demo-uni",
   "appid": "__UNI__EB91F2A",
   "description": "",
-  "versionName": "1.0.1-4",
+  "versionName": "1.0.1-5",
   "versionCode": "100",
   "transformPx": false,
   "h5": {
-    "publicPath": "/show-im/1.0.1-4/uniapp/",
+    "publicPath": "/show-im/1.0.1-5/uniapp/",
     "devServer": {
       "port": 9003,
       "disableHostCheck": true,
@@ -14,7 +14,7 @@
     },
     "router": {
       "mode": "history",
-      "base": "/show-im/1.0.1-4/uniapp/"
+      "base": "/show-im/1.0.1-5/uniapp/"
     }
   },
   "app-plus": {
