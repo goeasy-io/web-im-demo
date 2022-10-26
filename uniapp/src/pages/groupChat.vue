@@ -1,17 +1,15 @@
 <template>
-  <view class="chatInterface">
+  <view class="chatInterface" @contextmenu.prevent="">
     <image class="group-icon" src="/static/images/group-icon.png" @click="showMembers"/>
     <scroll-view :scroll-y="true" :scroll-into-view="bottomView" class="scroll-view">
       <!--  #ifdef  H5 -->
       <view class="all-history-loaded" @click="loadHistoryMessage(false)">
-        {{ history.loaded ? '已经没有更多的历史消息' : '点击获取历史消息' }}
-      </view>
       <!--  #endif -->
       <!--  #ifndef  H5 -->
       <view class="all-history-loaded">
-        {{ history.loaded ? '已经没有更多的历史消息' : '下拉获取历史消息' }}
-      </view>
       <!--  #endif -->
+        {{ history.loaded ? '已经没有更多的历史消息' : '点击获取历史消息' }}
+      </view>
       <checkbox-group @change="selectMessages">
         <view :id="'item'+index" v-for="(message,index) in history.messages" :key="message.messageId">
           <!--时间显示，类似于微信，隔5分钟不发言，才显示时间-->
@@ -35,7 +33,12 @@
               <view class="avatar">
                 <image :src="message.senderData.avatar"></image>
               </view>
-              <view @longpress="showActionPopup(message,index)" class="content">
+              <!--  #ifdef  H5 -->
+              <view class="content" @click.right="showActionPopup(message)">
+              <!--  #endif -->
+              <!--  #ifndef  H5 -->
+              <view class="content" @longpress="showActionPopup(message)">
+              <!--  #endif -->
                 <view class="message-payload">
                   <b class="pending" v-if="message.status === 'sending'"></b>
                   <b class="send-fail" v-if="message.status === 'fail'"></b>
