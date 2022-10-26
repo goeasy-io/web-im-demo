@@ -1,21 +1,21 @@
 <template>
   <div class="chat-container">
     <div class="chat-title">
-      <img :src="group.avatar" class="chat-avatar"/>
-      <div class="chat-name">{{ group.name }}</div>
+      <img :src="friend.avatar" class="chat-avatar"/>
+      <div class="chat-name">{{ friend.name }}</div>
     </div>
-    <div class="chat-main" ref="scrollView">
+    <div class="chat-main">
       <div class="message-list" ref="messageList">
         <div v-if="history.loading" class="history-loading">
           <img src="../assets/images/pending.gif"/>
         </div>
-        <div v-else class="history-loaded" @click="loadHistoryMessage(false,0)">
+        <div v-else class="history-loaded" @click="loadHistoryMessage(false)">
           {{ history.allLoaded ? '已经没有更多的历史消息' : '获取历史消息' }}
         </div>
         <div v-for="(message, index) in history.messages" :key="index">
           <div class="time-tips">{{ renderMessageDate(message, index) }}</div>
           <div class="message-recalled" v-if="message.recalled">
-            <div v-if="message.senderId !== currentUser.id">{{ message.senderData.name }}撤回了一条消息</div>
+            <div v-if="message.senderId !== currentUser.id">{{ friend.name }}撤回了一条消息</div>
             <div v-else class="message-recalled-self">
               <div>你撤回了一条消息</div>
               <span v-if="message.type === 'text' && Date.now()-message.timestamp< 60 * 1000 "
@@ -30,7 +30,7 @@
             <div class="message-item-content" :class="{ self: message.senderId === currentUser.id }">
               <div class="sender-info">
                 <img v-if="currentUser.id === message.senderId" :src="currentUser.avatar" class="sender-avatar"/>
-                <img v-else :src="message.senderData.avatar" class="sender-avatar"/>
+                <img v-else :src="friend.avatar" class="sender-avatar"/>
               </div>
               <div class="message-content" @click.right="showActionPopup(message)">
                 <div class="message-payload">
@@ -73,6 +73,9 @@
                       </div>
                     </div>
                   </div>
+                </div>
+                <div :class="message.read ?'message-read':'message-unread'">
+                  <div v-if="message.senderId === currentUser.id">{{ message.read ? '已读' : '未读' }}</div>
                 </div>
               </div>
             </div>
@@ -186,7 +189,7 @@
   const IMAGE_MAX_WIDTH = 200;
   const IMAGE_MAX_HEIGHT = 150;
   export default {
-    name: 'GroupChat',
+    name: 'PrivateChat',
     components: {
       GoeasyVideoPlayer,
       GoeasyAudioPlayer,
@@ -203,7 +206,7 @@
       };
       return {
         currentUser: null,
-        group: null,
+        friend: null,
 
         to: {},//用于创建消息时传入
 
@@ -246,32 +249,31 @@
       };
     },
     created() {
-      this.group = {
+      this.friend = {
         id: this.$route.query.id,
         name: this.$route.query.name,
         avatar: this.$route.query.avatar,
       };
       this.currentUser = this.globalData.currentUser;
       this.to = {
-        type: this.GoEasy.IM_SCENE.GROUP,
-        id: this.group.id,
-        data: {name: this.group.name, avatar: this.group.avatar},
+        type: this.GoEasy.IM_SCENE.PRIVATE,
+        id: this.friend.id,
+        data: {name: this.friend.name, avatar: this.friend.avatar},
       };
 
       this.loadHistoryMessage(true);
 
-      this.goEasy.im.on(this.GoEasy.IM_EVENT.GROUP_MESSAGE_RECEIVED, this.onReceivedGroupMessage);
+      this.goEasy.im.on(this.GoEasy.IM_EVENT.PRIVATE_MESSAGE_RECEIVED, this.onReceivedPrivateMessage);
     },
     beforeDestroy() {
-      this.goEasy.im.off(this.GoEasy.IM_EVENT.GROUP_MESSAGE_RECEIVED, this.onReceivedGroupMessage);
+      this.goEasy.im.off(this.GoEasy.IM_EVENT.PRIVATE_MESSAGE_RECEIVED, this.onReceivedPrivateMessage);
     },
     methods: {
       formatDate,
-      onReceivedGroupMessage(message) {
-        let groupId = message.groupId;
-        if (groupId === this.group.id) {
+      onReceivedPrivateMessage(message) {
+        if (message.senderId === this.friend.id) {
           this.history.messages.push(message);
-          this.markGroupMessageAsRead();
+          this.markPrivateMessageAsRead();
         }
         this.scrollToBottom();
       },
@@ -503,7 +505,7 @@
           }
         }
       },
-      loadHistoryMessage(scrollTo, offsetHeight) {
+      loadHistoryMessage(scrollTo) {
         this.history.loading = true;
         //历史消息
         let lastMessageTimeStamp = null;
@@ -512,7 +514,7 @@
           lastMessageTimeStamp = lastMessage.timestamp;
         }
         this.goEasy.im.history({
-          groupId: this.group.id,
+          userId: this.friend.id,
           lastTimestamp: lastMessageTimeStamp,
           limit: 10,
           onSuccess: (result) => {
@@ -528,7 +530,7 @@
               if (scrollTo) {
                 this.scrollToBottom();
                 //收到的消息设置为已读
-                this.markGroupMessageAsRead();
+                this.markPrivateMessageAsRead();
               }
             }
           },
@@ -539,14 +541,15 @@
           },
         });
       },
-      markGroupMessageAsRead() {
-        this.goEasy.im.markGroupMessageAsRead({
-          groupId: this.group.id,
+      markPrivateMessageAsRead() {
+        this.goEasy.im.markMessageAsRead({
+          id: this.to.id,
+          type: this.to.type,
           onSuccess: function () {
-            console.log('标记群聊已读成功');
+            console.log('标记私聊已读成功');
           },
           onFailed: function (error) {
-            console.log('标记群聊已读失败', error);
+            console.log('标记私聊已读失败', error);
           },
         });
       },
@@ -566,7 +569,7 @@
           }
         }
         return '';
-      }
+      },
     },
   };
 </script>
@@ -709,6 +712,22 @@
               background-size: 13px;
               width: 15px;
               height: 15px;
+            }
+
+            .message-read {
+              color: gray;
+              font-size: 12px;
+              text-align: end;
+              margin: 0 10px;
+              height: 16px;
+            }
+
+            .message-unread {
+              color: #d02129;
+              font-size: 12px;
+              text-align: end;
+              margin: 0 10px;
+              height: 16px;
             }
 
             .content-text {

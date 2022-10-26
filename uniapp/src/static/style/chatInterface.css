@@ -466,14 +466,6 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
 
 .chatInterface .video-snapshot {
     position: relative;
-    height: 300rpx;
-    max-width: 400rpx;
-    background: #000000;
-}
-
-.chatInterface .video-snapshot image {
-    max-height: 300rpx;
-    max-width: 400rpx;
 }
 
 .chatInterface .video-snapshot video {

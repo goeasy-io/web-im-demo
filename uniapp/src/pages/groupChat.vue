@@ -40,11 +40,21 @@
                   <b class="pending" v-if="message.status === 'sending'"></b>
                   <b class="send-fail" v-if="message.status === 'fail'"></b>
                   <view v-if="message.type === 'text'" v-html="renderTextMessage(message)"></view>
-                  <image class="image-content" v-if="message.type === 'image'" :src="message.payload.url"
-                         :data-url="message.payload.url" @click="showImageFullScreen" mode="widthFix"></image>
+                  <image v-if="message.type === 'image'"
+                     :data-url="message.payload.url"
+                     :src="message.payload.url"
+                     :style="{height: getImageHeight(message.payload.width,message.payload.height)+'rpx' }"
+                     class="image-content"
+                     mode="heightFix"
+                     @click="showImageFullScreen"
+                  ></image>
                   <view class="video-snapshot" v-if="message.type === 'video'" :data-url="message.payload.video.url"
                         @click="playVideo">
-                    <image :src="message.payload.thumbnail.url" mode="aspectFit"></image>
+                    <image
+                      :src="message.payload.thumbnail.url"
+                      :style="{height: getImageHeight(message.payload.thumbnail.width,message.payload.thumbnail.height)+'rpx' }"
+                      mode="heightFix"
+                    ></image>
                     <view class="video-play-icon"></view>
                   </view>
                   <view class="file-content" v-if="message.type === 'file'">
@@ -174,6 +184,8 @@
   import restApi from '../lib/restapi';
   import {formatDate} from '../lib/utils';
 
+  const IMAGE_MAX_WIDTH = 200;
+  const IMAGE_MAX_HEIGHT = 150;
   const recorderManager = uni.getRecorderManager();
   export default {
     name: 'groupChat',
@@ -243,16 +255,6 @@
         }
       }
     },
-    onReady() {
-      this.videoPlayer.context = uni.createVideoContext('videoPlayer', this);
-      uni.setNavigationBarTitle({
-        title: this.group.name + '（' + Object.keys(this.groupMembers).length + '）'
-      });
-    },
-    onShow() {
-      this.otherTypesMessagePanelVisible = false;
-      this.emoji.visible = false;
-    },
     onLoad(options) {
       //聊天对象
       let groupId = options.to;
@@ -270,10 +272,20 @@
       };
 
       this.initialGoEasyListeners();
-      this.loadHistoryMessage(true);
       // 录音监听器
       this.initRecorderListeners();
 
+    },
+    onShow() {
+      this.otherTypesMessagePanelVisible = false;
+      this.emoji.visible = false;
+    },
+    onReady() {
+      this.loadHistoryMessage(true);
+      this.videoPlayer.context = uni.createVideoContext('videoPlayer', this);
+      uni.setNavigationBarTitle({
+        title: this.group.name + '（' + Object.keys(this.groupMembers).length + '）'
+      });
     },
     onPullDownRefresh(e) {
       this.loadHistoryMessage(false);
@@ -313,7 +325,7 @@
         if (groupId === this.group.id) {
           this.history.messages.push(message);
           //聊天时，收到消息标记为已读
-          this.markGroupMessageAsRead(groupId);
+          this.markGroupMessageAsRead();
           //收到新消息，是滚动到最底部
           this.scrollToBottom();
         }
@@ -377,6 +389,28 @@
             duration: 1000
           });
         })
+      },
+      /**
+       * 核心就是设置高度，产生明确占位
+       *
+       * 小  (宽度和高度都小于预设尺寸)
+       *    设高=原始高度
+       * 宽 (宽度>高度)
+       *    高度= 根据宽度等比缩放
+       * 窄  (宽度<高度)或方(宽度=高度)
+       *    设高=MAX height
+       *
+       * @param width,height
+       * @returns number
+       */
+      getImageHeight(width, height) {
+        if (width < IMAGE_MAX_WIDTH && height < IMAGE_MAX_HEIGHT) {
+          return height * 2;
+        } else if (width > height) {
+          return (IMAGE_MAX_WIDTH / width * height) * 2;
+        } else if (width === height || width < height) {
+          return IMAGE_MAX_HEIGHT * 2;
+        }
       },
       sendMessage(message) {
         this.history.messages.push(message);
@@ -593,7 +627,7 @@
               if (scrollToBottom) {
                 this.scrollToBottom();
                 //收到的消息设置为已读
-                this.markGroupMessageAsRead(this.group.id);
+                this.markGroupMessageAsRead();
               }
             }
           },
@@ -709,14 +743,15 @@
         this.orderList.visible = false;
       },
       scrollToBottom() {
-        setTimeout(() => {
+        this.$nextTick(() => {
           let index = this.history.messages.length - 1;
           this.bottomView = `item${index}`;
-        },100);
+        })
       },
-      markGroupMessageAsRead(groupId) {
-        this.goEasy.im.markGroupMessageAsRead({
-          groupId: groupId,
+      markGroupMessageAsRead() {
+        this.goEasy.im.markMessageAsRead({
+          id: this.to.id,
+          type: this.to.type,
           onSuccess: function () {
             console.log('标记群聊已读成功');
           },
