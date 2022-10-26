@@ -83,7 +83,7 @@
     </div>
     <div class="chat-footer">
       <div class="action-delete" v-if="messageSelector.visible">
-        <div class="delete-btn" @click="deleteMultipleMessages"></div>
+        <img class="delete-btn" src="../assets/images/delete.png" @click="deleteMultipleMessages"/>
         <div>删除</div>
       </div>
       <div class="action-box" v-else>
@@ -144,12 +144,12 @@
       <span class="close" @click="hideImagePreviewPopup">×</span>
     </div>
     <!-- 消息删除撤回弹窗 -->
-    <div class="action-popup" v-if="actionPopup.visible" @click="hideActionPopup">
+    <div class="action-popup" v-if="actionPopup.visible" @click="actionPopup.visible = false">
       <div class="action-popup-main">
         <div class="action-item" @click="deleteSingleMessage">删除</div>
         <div class="action-item" v-if="actionPopup.recallable" @click="recallMessage">撤回</div>
         <div class="action-item" @click="showCheckBox">多选</div>
-        <div class="action-item" @click="hideActionPopup">取消</div>
+        <div class="action-item" @click="actionPopup.visible = false">取消</div>
       </div>
     </div>
     <!-- 订单弹窗 -->
@@ -422,10 +422,6 @@
         }
         this.actionPopup.visible = true;
       },
-      hideActionPopup () {
-        this.actionPopup.visible = false;
-        this.actionPopup.message = null;
-      },
       deleteSingleMessage() {
         this.actionPopup.visible = false;
         this.deleteMessage();
@@ -613,7 +609,6 @@
       overflow-y: auto;
       flex: 1;
       scrollbar-width: thin;
-      padding: 0 15px;
 
       &::-webkit-scrollbar {
         width: 0;
@@ -651,27 +646,24 @@
             position: relative;
           }
 
-          input[type="checkbox"]:before, input[type="checkbox"]:checked:before {
+          input[type="checkbox"]::before, input[type="checkbox"]:checked::before {
             content: "";
             position: absolute;
-            top: -3px;
-            left: -3px;
+            top: 0;
+            left: 0;
             background: #FFFFFF;
             width: 18px;
             height: 18px;
             border: 1px solid #cccccc;
-            border-radius: 50%;
           }
 
-          input[type="checkbox"]:checked:before {
+          input[type="checkbox"]:checked::before {
             content: "\2713";
             background-color: #d02129;
             width: 18px;
-            height: 18px;
             color: #FFFFFF;
             text-align: center;
             font-weight: bold;
-            border-radius: 50%;
           }
         }
 
@@ -717,22 +709,6 @@
               background-size: 13px;
               width: 15px;
               height: 15px;
-            }
-
-            .message-read {
-              color: gray;
-              font-size: 12px;
-              text-align: end;
-              margin: 0 10px;
-              height: 16px;
-            }
-
-            .message-unread {
-              color: #d02129;
-              font-size: 12px;
-              text-align: end;
-              margin: 0 10px;
-              height: 16px;
             }
 
             .content-text {
@@ -848,10 +824,23 @@
           justify-content: flex-start;
           flex-direction: row-reverse;
         }
-        .self::v-deep(.audio-facade) {
+
+        .self /deep/ .audio-facade {
           flex-direction: row-reverse;
         }
-        .self::v-deep(.audio-facade-bg) {
+        .self /deep/ .audio-facade-bg {
+          background: url("../assets/images/voice.png") no-repeat center;
+          background-size: 15px;
+          width: 20px;
+          -moz-transform: rotate(180deg);
+          -webkit-transform: rotate(180deg);
+          -o-transform: rotate(180deg);
+          transform: rotate(180deg);
+        }
+
+        .self /deep/ .play-icon {
+          background: url("../assets/images/play.gif") no-repeat center;
+          background-size: 20px;
           -moz-transform: rotate(180deg);
           -webkit-transform: rotate(180deg);
           -o-transform: rotate(180deg);
@@ -874,7 +863,7 @@
 
           span {
             margin-left: 5px;
-            color: #d02129;
+            color: #AC4E4E;
             cursor: pointer;
           }
         }
@@ -894,16 +883,16 @@
         align-items: center;
         width: 100%;
         height: 100%;
-        background-color: white;
+        background-color: #FFFFFF;
 
         .delete-btn {
-          width: 50px;
-          height: 50px;
+          width: 25px;
+          height: 25px;
+          padding: 10px;
+          background: #f5f5f5;
           border-radius: 50%;
-          background: url("../assets/images/delete.png") no-repeat center center #FFFFFF;
           cursor: pointer;
-          margin-bottom: 5px;
-          border: 1px solid #cccccc;
+          margin-bottom: 10px;
         }
       }
 
@@ -1010,7 +999,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
 
       .action-popup-main {
         width: 150px;
