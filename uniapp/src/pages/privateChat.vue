@@ -148,7 +148,7 @@
         <view class="action-item" @click="deleteSingleMessage">删除</view>
         <view class="action-item" v-if="actionPopup.recallable" @click="recallMessage">撤回</view>
         <view class="action-item" @click="showCheckBox">多选</view>
-        <view class="action-item" @click="actionPopup.visible = false">取消</view>
+        <view class="action-item" @click="hideActionPopup">取消</view>
       </view>
     </view>
     <view class="messageSelector-box" v-if="messageSelector.visible">
@@ -539,6 +539,10 @@
           this.actionPopup.recallable = false;
         }
         this.actionPopup.visible = true;
+      },
+      hideActionPopup () {
+        this.actionPopup.visible = false;
+        this.actionPopup.message = null;
       },
       deleteSingleMessage() {
         uni.showModal({
