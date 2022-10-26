@@ -1,148 +1,148 @@
 {
-    "name" : "goeasy-chat-demo-uni",
-    "appid" : "__UNI__EB91F2A",
-    "description" : "",
-    "versionName" : "1.0.0",
-    "versionCode" : "100",
-    "transformPx" : false,
-    "h5": {
-        "publicPath": "/",
-        "devServer": {
-            "port": 9003,
-            "disableHostCheck": true,
-            "https": false
-        },
-        "router": {
-            "mode": "history",
-            "base": "/"
-        }
+  "name": "goeasy-chat-demo-uni",
+  "appid": "__UNI__EB91F2A",
+  "description": "",
+  "versionName": "1.0.13-1",
+  "versionCode": "100",
+  "transformPx": false,
+  "h5": {
+    "publicPath": "/show-im/1.0.13-1/h5/",
+    "devServer": {
+      "port": 9003,
+      "disableHostCheck": true,
+      "https": false
     },
-    "app-plus" : {
-        "usingComponents" : true,
-        "nvueCompiler" : "uni-app",
-        "splashscreen" : {
-            "alwaysShowBeforeRender" : true,
-            "waiting" : true,
-            "autoclose" : false,
-            "delay" : 0
-        },
-		"compatible": {
-			"ignoreVersion": true
-		},
-        "modules" : {
-            "VideoPlayer" : {},
-            "Push" : {}
-        },
-        "distribute" : {
-            "android" : {
-                "permissions" : [
-                    "<uses-feature android:name=\"android.hardware.camera\"/>",
-                    "<uses-feature android:name=\"android.hardware.camera.autofocus\"/>",
-                    "<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\"/>",
-                    "<uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\"/>",
-                    "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>",
-                    "<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\"/>",
-                    "<uses-permission android:name=\"android.permission.BIND_NOTIFICATION_LISTENER_SERVICE\"/>",
-                    "<uses-permission android:name=\"android.permission.CALL_PHONE\"/>",
-                    "<uses-permission android:name=\"android.permission.CAMERA\"/>",
-                    "<uses-permission android:name=\"android.permission.CHANGE_NETWORK_STATE\"/>",
-                    "<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\"/>",
-                    "<uses-permission android:name=\"android.permission.FLASHLIGHT\"/>",
-                    "<uses-permission android:name=\"android.permission.GET_ACCOUNTS\"/>",
-                    "<uses-permission android:name=\"android.permission.MODIFY_AUDIO_SETTINGS\"/>",
-                    "<uses-permission android:name=\"android.permission.MOUNT_UNMOUNT_FILESYSTEMS\"/>",
-                    "<uses-permission android:name=\"android.permission.READ_LOGS\"/>",
-                    "<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>",
-                    "<uses-permission android:name=\"android.permission.RECORD_AUDIO\"/>",
-                    "<uses-permission android:name=\"android.permission.VIBRATE\"/>",
-                    "<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>",
-                    "<uses-permission android:name=\"android.permission.WRITE_CONTACTS\"/>",
-                    "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
-                ]
-            },
-            "ios" : {},
-            "sdkConfigs" : {
-                "ad" : {},
-                "push" : {},
-                "maps" : {}
-            },
-            "icons" : {
-                "android" : {
-                    "hdpi" : "",
-                    "xhdpi" : "",
-                    "xxhdpi" : "",
-                    "xxxhdpi" : ""
-                },
-                "ios" : {
-                    "appstore" : "",
-                    "ipad" : {
-                        "app" : "",
-                        "app@2x" : "",
-                        "notification" : "",
-                        "notification@2x" : "",
-                        "proapp@2x" : "",
-                        "settings" : "",
-                        "settings@2x" : "",
-                        "spotlight" : "",
-                        "spotlight@2x" : ""
-                    },
-                    "iphone" : {
-                        "app@2x" : "",
-                        "app@3x" : "",
-                        "notification@2x" : "",
-                        "notification@3x" : "",
-                        "settings@2x" : "",
-                        "settings@3x" : "",
-                        "spotlight@2x" : "",
-                        "spotlight@3x" : ""
-                    }
-                }
-            },
-            "splashscreen" : {
-                "androidStyle" : "common",
-                "android" : {
-                    "xxhdpi" : "",
-                    "xhdpi" : "",
-                    "hdpi" : ""
-                },
-                "iosStyle" : "common",
-                "ios" : {
-                    "iphone" : {
-                        "portrait-896h@3x" : "",
-                        "landscape-896h@3x" : "",
-                        "portrait-896h@2x" : "",
-                        "landscape-896h@2x" : "",
-                        "iphonex" : "",
-                        "iphonexl" : "",
-                        "retina55" : "",
-                        "retina55l" : "",
-                        "retina47" : "",
-                        "retina47l" : "",
-                        "retina40" : "",
-                        "retina40l" : "",
-                        "retina35" : ""
-                    }
-                }
-            }
-        },
-        "compilerVersion" : 3,
-        "nativePlugins" : {}
-    },
-    "quickapp" : {},
-    "mp-weixin" : {
-        "appid" : "",
-        "setting" : {
-            "urlCheck" : false
-        },
-        "usingComponents" : true
-    },
-    "mp-alipay" : {
-        "usingComponents" : true
-    },
-    "mp-baidu" : {
-        "usingComponents" : true
-    },
-    "mp-toutiao" : {
-        "usingComponents" : true
+    "router": {
+      "mode": "history",
+      "base": "/show-im/1.0.13-1/h5/"
     }
+  },
+  "app-plus": {
+    "usingComponents": true,
+    "nvueCompiler": "uni-app",
+    "splashscreen": {
+      "alwaysShowBeforeRender": true,
+      "waiting": true,
+      "autoclose": false,
+      "delay": 0
+    },
+    "compatible": {
+      "ignoreVersion": true
+    },
+    "modules": {
+      "VideoPlayer": {},
+      "Push": {}
+    },
+    "distribute": {
+      "android": {
+        "permissions": [
+          "<uses-feature android:name=\"android.hardware.camera\"/>",
+          "<uses-feature android:name=\"android.hardware.camera.autofocus\"/>",
+          "<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\"/>",
+          "<uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\"/>",
+          "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>",
+          "<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\"/>",
+          "<uses-permission android:name=\"android.permission.BIND_NOTIFICATION_LISTENER_SERVICE\"/>",
+          "<uses-permission android:name=\"android.permission.CALL_PHONE\"/>",
+          "<uses-permission android:name=\"android.permission.CAMERA\"/>",
+          "<uses-permission android:name=\"android.permission.CHANGE_NETWORK_STATE\"/>",
+          "<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\"/>",
+          "<uses-permission android:name=\"android.permission.FLASHLIGHT\"/>",
+          "<uses-permission android:name=\"android.permission.GET_ACCOUNTS\"/>",
+          "<uses-permission android:name=\"android.permission.MODIFY_AUDIO_SETTINGS\"/>",
+          "<uses-permission android:name=\"android.permission.MOUNT_UNMOUNT_FILESYSTEMS\"/>",
+          "<uses-permission android:name=\"android.permission.READ_LOGS\"/>",
+          "<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>",
+          "<uses-permission android:name=\"android.permission.RECORD_AUDIO\"/>",
+          "<uses-permission android:name=\"android.permission.VIBRATE\"/>",
+          "<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>",
+          "<uses-permission android:name=\"android.permission.WRITE_CONTACTS\"/>",
+          "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
+        ]
+      },
+      "ios": {},
+      "sdkConfigs": {
+        "ad": {},
+        "push": {},
+        "maps": {}
+      },
+      "icons": {
+        "android": {
+          "hdpi": "",
+          "xhdpi": "",
+          "xxhdpi": "",
+          "xxxhdpi": ""
+        },
+        "ios": {
+          "appstore": "",
+          "ipad": {
+            "app": "",
+            "app@2x": "",
+            "notification": "",
+            "notification@2x": "",
+            "proapp@2x": "",
+            "settings": "",
+            "settings@2x": "",
+            "spotlight": "",
+            "spotlight@2x": ""
+          },
+          "iphone": {
+            "app@2x": "",
+            "app@3x": "",
+            "notification@2x": "",
+            "notification@3x": "",
+            "settings@2x": "",
+            "settings@3x": "",
+            "spotlight@2x": "",
+            "spotlight@3x": ""
+          }
+        }
+      },
+      "splashscreen": {
+        "androidStyle": "common",
+        "android": {
+          "xxhdpi": "",
+          "xhdpi": "",
+          "hdpi": ""
+        },
+        "iosStyle": "common",
+        "ios": {
+          "iphone": {
+            "portrait-896h@3x": "",
+            "landscape-896h@3x": "",
+            "portrait-896h@2x": "",
+            "landscape-896h@2x": "",
+            "iphonex": "",
+            "iphonexl": "",
+            "retina55": "",
+            "retina55l": "",
+            "retina47": "",
+            "retina47l": "",
+            "retina40": "",
+            "retina40l": "",
+            "retina35": ""
+          }
+        }
+      }
+    },
+    "compilerVersion": 3,
+    "nativePlugins": {}
+  },
+  "quickapp": {},
+  "mp-weixin": {
+    "appid": "",
+    "setting": {
+      "urlCheck": false
+    },
+    "usingComponents": true
+  },
+  "mp-alipay": {
+    "usingComponents": true
+  },
+  "mp-baidu": {
+    "usingComponents": true
+  },
+  "mp-toutiao": {
+    "usingComponents": true
+  }
 }
