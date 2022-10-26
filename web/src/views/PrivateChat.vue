@@ -44,7 +44,7 @@
                          :style="{height:getImageHeight(message.payload.width,message.payload.height)+'px'}"/>
                   </div>
                   <a v-if="message.type === 'file'" :href="message.payload.url" target="_blank" download="download">
-                    <div class="content-file">
+                    <div class="content-file" title="点击下载">
                       <div class="file-info">
                         <span class="file-name">{{ message.payload.name }}</span>
                         <span class="file-size">{{ (message.payload.size / 1024).toFixed(2) }}KB</span>
@@ -121,7 +121,7 @@
           <!-- 文件 -->
           <div class="action-item">
             <label for="file-input">
-              <i class="iconfont icon-wenjianjia" title="文件"></i>
+              <i class="iconfont icon-wj-wjj" title="文件"></i>
             </label>
             <input v-show="false" id="file-input" type="file"
                    @change="sendFileMessage"/>
@@ -592,7 +592,6 @@
       .chat-avatar {
         width: 40px;
         height: 40px;
-        border-radius: 50%;
       }
 
       .chat-name {
@@ -806,7 +805,7 @@
               cursor: pointer;
 
               &:hover {
-                background: #f6f2f2;
+                background: #f1f1f1;
               }
 
               .file-info {

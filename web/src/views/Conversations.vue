@@ -2,9 +2,6 @@
   <div class="conversations">
     <div class="conversation-list">
       <div class="conversation-list-container">
-        <div class="conversation-list-title">
-          <div class="input"></div>
-        </div>
         <div class="conversation-list-content">
           <div v-if="conversations.length">
             <div
@@ -225,23 +222,10 @@
         background-color: white;
         border-right: #dbd6d6 1px solid;
 
-        .conversation-list-title {
-          margin-bottom: 15px;
-          padding: 20px;
-
-          .input {
-            background-color: #FFF;
-            border-radius: 4px;
-            border: 1px solid #DCDFE6;
-            padding: 0 15px;
-            height: 32px;
-          }
-        }
-
         .conversation-list-content {
           flex: 1;
           overflow-y: auto;
-          padding: 5px;
+          padding: 20px 0;
 
           &::-webkit-scrollbar { // Chrome Safari
             display: none;
@@ -297,7 +281,7 @@
 
                 .conversation-time {
                   width: 75px;
-                  color: #666;
+                  color: #B9B9B9;
                   display: flex;
                   flex-direction: column;
                 }
@@ -318,7 +302,6 @@
                     flex: 1;
                     white-space: nowrap;
                     word-break: break-all;
-                    color: #606266;
                   }
                 }
 
@@ -354,7 +337,6 @@
 
           .checked {
             background: #eeeeee;
-            border-radius: 5px;
           }
         }
       }

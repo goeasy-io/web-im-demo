@@ -1,17 +1,15 @@
 <template>
-  <view class="chatInterface">
+  <view class="chatInterface" @contextmenu.prevent="">
     <image class="group-icon" src="/static/images/group-icon.png" @click="showMembers"/>
     <scroll-view :scroll-y="true" :scroll-into-view="bottomView" class="scroll-view">
       <!--  #ifdef  H5 -->
-      <view class="history-loaded" @click="loadHistoryMessage(false)">
-        {{ history.loaded ? '已经没有更多的历史消息' : '点击获取历史消息' }}
-      </view>
+      <view class="all-history-loaded" @click="loadHistoryMessage(false)">
       <!--  #endif -->
       <!--  #ifndef  H5 -->
-      <view class="history-loaded">
-        {{ history.loaded ? '已经没有更多的历史消息' : '下拉获取历史消息' }}
-      </view>
+      <view class="all-history-loaded">
       <!--  #endif -->
+        {{ history.loaded ? '已经没有更多的历史消息' : '点击获取历史消息' }}
+      </view>
       <checkbox-group @change="selectMessages">
         <view :id="'item'+index" v-for="(message,index) in history.messages" :key="message.messageId">
           <!--时间显示，类似于微信，隔5分钟不发言，才显示时间-->
@@ -35,7 +33,12 @@
               <view class="avatar">
                 <image :src="message.senderData.avatar"></image>
               </view>
-              <view @longpress="showActionPopup(message,index)" class="content">
+              <!--  #ifdef  H5 -->
+              <view class="content" @click.right="showActionPopup(message)">
+              <!--  #endif -->
+              <!--  #ifndef  H5 -->
+              <view class="content" @longpress="showActionPopup(message)">
+              <!--  #endif -->
                 <view class="message-payload">
                   <b class="pending" v-if="message.status === 'sending'"></b>
                   <b class="send-fail" v-if="message.status === 'fail'"></b>
@@ -109,10 +112,10 @@
           <image class="more" v-else src="/static/images/emoji.png"></image>
         </view>
         <view>
-          <image @click="showOtherTypesMessagePanel" class="more" src="/static/images/more.png"/>
+          <image @click="showOtherTypesMessagePanel()" class="more" src="/static/images/more.png"/>
         </view>
         <view v-if="text" class="send-btn-box">
-          <text class="btn" @click="sendTextMessage">发送</text>
+          <text class="btn" @click="sendTextMessage()">发送</text>
         </view>
       </view>
       <view class="action-bottom action-bottom-emoji" v-if="emoji.visible">
@@ -122,15 +125,15 @@
       <!--其他类型消息面板-->
       <view v-if="otherTypesMessagePanelVisible" class="action-bottom">
         <view class="more-icon">
-          <image @click="sendImageMessage" class="operation-icon" src="/static/images/picture.png"></image>
+          <image @click="sendImageMessage()" class="operation-icon" src="/static/images/picture.png"></image>
           <view class="operation-title">图片</view>
         </view>
         <view class="more-icon">
-          <image @click="sendVideoMessage" class="operation-icon" src="/static/images/video.png"></image>
+          <image @click="sendVideoMessage()" class="operation-icon" src="/static/images/video.png"></image>
           <view class="operation-title">视频</view>
         </view>
         <view class="more-icon">
-          <image @click="showOrderMessageList" class="operation-icon" src="/static/images/order.png"></image>
+          <image @click="showOrderMessageList()" class="operation-icon" src="/static/images/order.png"></image>
           <view class="operation-title">订单</view>
         </view>
       </view>
