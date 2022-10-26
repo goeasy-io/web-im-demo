@@ -6,7 +6,7 @@
           <image :src="conversation.data.avatar" class="head-icon"></image>
           <view class="item-head_unread" v-if="conversation.unread">{{ conversation.unread }}</view>
         </view>
-        <view class="scroll-item_info" @click="navigateToChat(conversation)">
+        <view class="scroll-item_info" @click="chat(conversation)">
           <view class="item-info-top">
             <text class="item-info-top_name">{{ conversation.data.name }}</text>
             <view class="item-info-top_time">{{ formatDate(conversation.lastMessage.timestamp) }}</view>
@@ -163,35 +163,19 @@
         this.actionPopup.visible = false;
         let conversation = this.actionPopup.conversation;
         let description = conversation.top ? '取消置顶' : '置顶';
-        if (conversation.type === this.GoEasy.IM_SCENE.PRIVATE) {
-          this.goEasy.im.topPrivateConversation({
-            userId: conversation.userId,
-            top: !conversation.top,
-            onSuccess: function () {
-              uni.showToast({
-                title: description + '成功',
-                icon: 'none'
-              });
-            },
-            onFailed: function (error) {
-              console.log(description, '失败：', error);
-            }
-          });
-        } else {
-          this.goEasy.im.topGroupConversation({
-            groupId: conversation.groupId,
-            top: !conversation.top,
-            onSuccess: function () {
-              uni.showToast({
-                title: description + '成功',
-                icon: 'none'
-              });
-            },
-            onFailed: function (error) {
-              console.log(description, '失败：', error);
-            }
-          });
-        }
+        this.goEasy.im.topConversation({
+          conversation: conversation,
+          top: !conversation.top,
+          onSuccess: function () {
+            uni.showToast({
+              title: description + '成功',
+              icon: 'none'
+            });
+          },
+          onFailed: function (error) {
+            console.log(description, '失败：', error);
+          }
+        });
       },
       deleteConversation() {
         uni.showModal({
@@ -200,40 +184,22 @@
             if (res.confirm) {
               let conversation = this.actionPopup.conversation;
               this.actionPopup.visible = false;
-              if (conversation.type === this.GoEasy.IM_SCENE.PRIVATE) {
-                this.goEasy.im.removePrivateConversation({
-                  userId: conversation.userId,
-                  onSuccess: () => {
-                    uni.showToast({
-                      title: '删除成功',
-                      icon: 'none'
-                    });
-                  },
-                  onFailed: function (error) {
-                    console.log('删除失败，error:', error);
-                  },
-                });
-              } else {
-                this.goEasy.im.removeGroupConversation({
-                  groupId: conversation.groupId,
-                  onSuccess: () => {
-                    uni.showToast({
-                      title: '删除成功',
-                      icon: 'none'
-                    });
-                  },
-                  onFailed: function (error) {
-                    console.log('删除失败，error:', error);
-                  },
-                });
-              }
+              this.goEasy.im.removeConversation({
+                conversation: conversation,
+                onSuccess: function () {
+                  console.log('删除会话成功');
+                },
+                onFailed: function (error) {
+                  console.log(error);
+                },
+              });
             } else {
               this.actionPopup.visible = false;
             }
           },
         })
       },
-      navigateToChat(conversation) {
+      chat(conversation) {
         let path = conversation.type === this.GoEasy.IM_SCENE.PRIVATE
           ? './privateChat?to=' + conversation.userId
           : './groupChat?to=' + conversation.groupId;

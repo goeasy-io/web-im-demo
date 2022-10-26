@@ -542,8 +542,9 @@
         });
       },
       markPrivateMessageAsRead() {
-        this.goEasy.im.markPrivateMessageAsRead({
-          userId: this.friend.id,
+        this.goEasy.im.markMessageAsRead({
+          id: this.to.id,
+          type: this.to.type,
           onSuccess: function () {
             console.log('标记私聊已读成功');
           },

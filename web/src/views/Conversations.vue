@@ -164,29 +164,16 @@
       topConversation() {
         let conversation = this.rightClickMenu.conversation;
         let description = conversation.top ? '取消置顶' : '置顶';
-        if (conversation.type === this.GoEasy.IM_SCENE.PRIVATE) {
-          this.goEasy.im.topPrivateConversation({
-            userId: conversation.userId,
-            top: !conversation.top,
-            onSuccess: function () {
-              console.log(description, '成功');
-            },
-            onFailed: function (error) {
-              console.log(description, '失败：', error);
-            },
-          });
-        } else if (conversation.type === this.GoEasy.IM_SCENE.GROUP) {
-          this.goEasy.im.topGroupConversation({
-            groupId: conversation.groupId,
-            top: !conversation.top,
-            onSuccess: function () {
-              console.log(description, '成功');
-            },
-            onFailed: function (error) {
-              console.log(description, '失败：', error);
-            },
-          });
-        }
+        this.goEasy.im.topPrivateConversation({
+          conversation: conversation,
+          top: !conversation.top,
+          onSuccess: function () {
+            console.log(description, '成功');
+          },
+          onFailed: function (error) {
+            console.log(description, '失败：', error);
+          },
+        });
       },
       deleteConversation() {
         let confirmResult = confirm('确认要删除这条会话吗？');
@@ -194,27 +181,15 @@
           return
         }
         let conversation = this.rightClickMenu.conversation;
-        if (conversation.type === this.GoEasy.IM_SCENE.PRIVATE) {
-          this.goEasy.im.removePrivateConversation({
-            userId: conversation.userId,
-            onSuccess: function () {
-              console.log('删除会话成功');
-            },
-            onFailed: function (error) {
-              console.log(error);
-            },
-          });
-        } else if (conversation.type === this.GoEasy.IM_SCENE.GROUP) {
-          this.goEasy.im.removeGroupConversation({
-            groupId: conversation.groupId,
-            onSuccess: function () {
-              console.log('删除会话成功');
-            },
-            onFailed: function (error) {
-              console.log(error);
-            },
-          });
-        }
+        this.goEasy.im.removeConversation({
+          conversation: conversation,
+          onSuccess: function () {
+            console.log('删除会话成功');
+          },
+          onFailed: function (error) {
+            console.log(error);
+          },
+        });
       },
       chat(conversation) {
         let path = conversation.type === 'private' ? 'privatechat' : 'groupchat';

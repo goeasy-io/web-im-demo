@@ -7,7 +7,7 @@ page {
     background-color: #F1F1F1;
 }
 
-.scroll-view {
+.chatInterface .scroll-view {
     padding-left: 20rpx;
     padding-right: 20rpx;
     height: 100%;
@@ -18,7 +18,7 @@ page {
     overflow-y: auto;
 }
 
-.history-loaded {
+.chatInterface .scroll-view .all-history-loaded {
     font-size: 24rpx;
     height: 90rpx;
     line-height: 90rpx;
@@ -27,61 +27,61 @@ page {
     color: grey;
 }
 
-.message-item {
+.chatInterface .scroll-view .message-item {
     display: flex;
     margin: 20rpx 0;
 }
 
-.message-item-checkbox {
+.chatInterface .scroll-view .message-item .message-item-checkbox {
     height: 80rpx;
     display: flex;
     align-items: center;
 }
 
-.message-item-content {
+.chatInterface .scroll-view .message-item .message-item-content {
     flex: 1;
     overflow: hidden;
     display: flex;
 }
 
-.message-item-content.self {
+.chatInterface .scroll-view .message-item .message-item-content.self {
     overflow: hidden;
     display: flex;
     justify-content: flex-start;
     flex-direction: row-reverse;
 }
 
-.message-item .avatar {
+.chatInterface .scroll-view .message-item .avatar {
     width: 80rpx;
     height: 80rpx;
     flex-shrink: 0;
     flex-grow: 0;
 }
 
-.message-item .avatar image {
+.chatInterface .scroll-view .message-item .avatar image {
     width: 100%;
     height: 100%;
 }
 
-.content {
+.chatInterface .scroll-view .content {
     font-size: 34rpx;
     line-height: 44rpx;
     margin: 0 20rpx;
     max-width: 520rpx;
 }
 
-.message-payload {
+.chatInterface .scroll-view .content .message-payload {
     display: flex;
     align-items: center;
 }
 
-.image-content {
+.chatInterface .scroll-view .content .image-content {
     border-radius: 12rpx;
     width: 300rpx;
     height: 300rpx;
 }
 
-.text-content {
+.chatInterface .scroll-view .content .text-content {
     padding: 16rpx;
     border-radius: 12rpx;
     color: #000000;
@@ -92,12 +92,12 @@ page {
     display: block;
 }
 
-.text-content img {
+.chatInterface .scroll-view .content .text-content img {
     width: 50rpx;
     height: 50rpx;
 }
 
-.file-content {
+.chatInterface .scroll-view .content .file-content {
     width: 560rpx;
     height: 152rpx;
     font-size: 28rpx;
@@ -108,13 +108,13 @@ page {
     padding: 0 20rpx;
 }
 
-.file-info {
+.chatInterface .scroll-view .content .file-content .file-info {
     width: 424rpx;
     height: 132rpx;
     padding: 12rpx 0;
 }
 
-.file-name {
+.chatInterface .scroll-view .content .file-content .file-info .file-name {
     width: 420rpx;
     font-size: 30rpx;
     text-overflow: ellipsis;
@@ -125,18 +125,18 @@ page {
     -webkit-box-orient: vertical;
 }
 
-.file-size {
+.chatInterface .scroll-view .content .file-content .file-info .file-size {
     width: 200rpx;
     font-size: 24rpx;
     color: #ccc;
 }
 
-.file-img {
+.chatInterface .scroll-view .content .file-content .file-img {
     width: 80rpx;
     height: 80rpx;
 }
 
-.pending {
+.chatInterface .scroll-view .content .pending {
     background: url(".~@/static/images/pending.gif") no-repeat center;
     background-size: 30rpx;
     width: 30rpx;
@@ -144,7 +144,7 @@ page {
     margin-right: 10rpx;
 }
 
-.send-fail {
+.chatInterface .scroll-view .content .send-fail {
     background: url(".~@/static/images/failed.png") no-repeat center;
     background-size: 30rpx;
     width: 30rpx;
@@ -227,14 +227,14 @@ page {
     height: 100rpx;
 }
 
-.more-icon {
+.action-box .action-bottom .more-icon {
     display: flex;
     align-items: center;
     flex-direction: column;
     padding: 0 30rpx;
 }
 
-.operation-icon {
+.action-box .action-bottom .operation-icon {
     width: 60rpx;
     height: 60rpx;
     min-width: 60rpx;
@@ -243,13 +243,13 @@ page {
     border-radius: 20rpx;
     background: #FFFFFF;
 }
-.operation-title {
+.action-box .action-bottom .operation-title {
     font-size: 24rpx;
     line-height: 50rpx;
     color: #82868E;
 }
 
-.record-input {
+.action-box .action-top .record-input {
     flex: 1;
     width: 480rpx;
     height: 80rpx;
@@ -267,7 +267,7 @@ page {
     text-align: center;
 }
 
-.messageSelector-box {
+.chatInterface .messageSelector-box {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -283,7 +283,7 @@ page {
     font-size: 32rpx;
 }
 
-.messageSelector-btn {
+.chatInterface .messageSelector-box .messageSelector-btn {
     width: 80rpx;
     height: 80rpx;
 }
@@ -307,7 +307,7 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
 
 /* #endif */
 
-.action-popup {
+.chatInterface .action-popup {
     position: fixed;
     top: 0;
     left: 0;
@@ -318,7 +318,7 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
     align-items: center;
 }
 
-.action-popup .layer {
+.chatInterface .action-popup .layer {
     position: fixed;
     top: 0;
     left: 0;
@@ -328,7 +328,7 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
     z-index: 999;
 }
 
-.action-list {
+.chatInterface .action-popup .action-list {
     width: 350rpx;
     background: #434343;
     position: relative;
@@ -337,7 +337,7 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
     overflow: hidden;
 }
 
-.action-item {
+.chatInterface .action-popup .action-item {
     text-align: center;
     height: 100rpx;
     line-height: 100rpx;
@@ -346,11 +346,11 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
     border-bottom: 1px solid #EFEFEF;
 }
 
-.action-item:last-child {
+.chatInterface .action-popup .action-item:last-child {
     border: none;
 }
 
-.record-loading {
+.chatInterface .record-loading {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -363,7 +363,7 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
     border-radius: 40rpx;
 }
 
-.img-layer {
+.chatInterface .img-layer {
     position: absolute;
     top: 0;
     left: 0;
@@ -377,11 +377,11 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
     align-items: center;
 }
 
-.img-layer uni-image {
+.chatInterface .img-layer uni-image {
     height: 100% !important;
 }
 
-.img-layer {
+.chatInterface .img-layer {
     height: 100% !important;
     width: 100% !important;
 }
@@ -464,24 +464,16 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
     color: #666666;
 }
 
-.video-snapshot {
+.chatInterface .video-snapshot {
     position: relative;
-    height: 300rpx;
-    max-width: 400rpx;
-    background: #000000;
 }
 
-.video-snapshot image {
+.chatInterface .video-snapshot video {
     max-height: 300rpx;
     max-width: 400rpx;
 }
 
-.video-snapshot video {
-    max-height: 300rpx;
-    max-width: 400rpx;
-}
-
-.video-play-icon {
+.chatInterface .video-snapshot .video-play-icon {
     position: absolute;
     width: 40rpx;
     height: 40rpx;
@@ -493,7 +485,7 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
     margin: -20rpx;
 }
 
-.group-icon {
+.chatInterface .group-icon {
     right: 20rpx;
     width: 60rpx;
     height: 60rpx;
@@ -515,7 +507,7 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
     text-align: center;
 }
 
-.order-content {
+.chatInterface .order-content {
     border-radius: 20rpx;
     background: #FFFFFF;
     padding: 16rpx;
@@ -523,25 +515,25 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
     flex-direction: column;
 }
 
-.content .order-id {
+.scroll-view .content .order-id {
     color: #333333;
 }
 
-.content .order-body {
+.scroll-view .content .order-body {
     padding: 10rpx;
 }
 
-.content .order-name {
+.scroll-view .content .order-name {
     font-weight: normal;
 }
 
-.content .order-info {
+.scroll-view .content .order-info {
     display: flex;
     justify-content: space-between;
     padding: 10rpx;
 }
 
-.content .order-info .order-price {
+.scroll-view .content .order-info .order-price {
     font-weight: normal;
 }
 
@@ -569,11 +561,11 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
     color: grey;
 }
 
-.message-recalled-self {
+.message-recalled .message-recalled-self {
     display: flex;
 }
 
-.message-recalled-self span {
+.message-recalled .message-recalled-self span {
     margin-left: 10rpx;
     color: #d02129;
 }

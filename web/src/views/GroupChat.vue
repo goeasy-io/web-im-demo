@@ -544,8 +544,9 @@
         });
       },
       markGroupMessageAsRead() {
-        this.goEasy.im.markGroupMessageAsRead({
-          groupId: this.group.id,
+        this.goEasy.im.markMessageAsRead({
+          id: this.to.id,
+          type: this.to.type,
           onSuccess: function () {
             console.log('标记群聊已读成功');
           },
