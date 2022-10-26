@@ -83,7 +83,7 @@
     </div>
     <div class="chat-footer">
       <div class="action-delete" v-if="messageSelector.visible">
-        <div class="delete-btn" @click="deleteMultipleMessages"></div>
+        <img class="delete-btn" src="../assets/images/delete.png" @click="deleteMultipleMessages"/>
         <div>删除</div>
       </div>
       <div class="action-box" v-else>
@@ -883,15 +883,16 @@
         align-items: center;
         width: 100%;
         height: 100%;
-        background-color: white;
+        background-color: #FFFFFF;
 
         .delete-btn {
-          width: 50px;
-          height: 50px;
+          width: 25px;
+          height: 25px;
+          padding: 10px;
+          background: #f5f5f5;
           border-radius: 50%;
-          background: url("../assets/images/delete.png") no-repeat center center #E9E6EC;
           cursor: pointer;
-          margin-bottom: 5px;
+          margin-bottom: 10px;
         }
       }
 

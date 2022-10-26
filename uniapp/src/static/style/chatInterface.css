@@ -109,13 +109,13 @@ page {
 }
 
 .chatInterface .scroll-view .content .file-content .file-info {
-    width: 424rpx;
+    width: 386rpx;
     height: 132rpx;
-    padding: 12rpx 0;
 }
 
 .chatInterface .scroll-view .content .file-content .file-info .file-name {
-    width: 420rpx;
+    width: 400rpx;
+    margin-top: 15rpx;
     font-size: 30rpx;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -132,8 +132,8 @@ page {
 }
 
 .chatInterface .scroll-view .content .file-content .file-img {
-    width: 80rpx;
-    height: 80rpx;
+    width: 100rpx;
+    height: 100rpx;
 }
 
 .chatInterface .scroll-view .content .pending {
@@ -277,15 +277,15 @@ page {
     bottom: 0;
     left: 0;
     border-radius: 12rpx;
-    background: #EFEFEF;
-    height: 80rpx;
+    background: #F6F6F6;
+    height: 150rpx;
     padding: 20rpx 0;
     font-size: 32rpx;
 }
 
 .chatInterface .messageSelector-box .messageSelector-btn {
-    width: 80rpx;
-    height: 80rpx;
+    width: 60rpx;
+    height: 60rpx;
 }
 
 uni-checkbox:not([disabled]) .uni-checkbox-input:hover {
