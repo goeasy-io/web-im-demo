@@ -18,7 +18,7 @@ confirm_version() {
 
     if [ "$ACTION" = "r" ]; then
         # release 版本
-        cd h5
+        cd web
         currentVersion=$(npm version patch --no-git-tag-version)
         vesionDir=${currentVersion:1}
         git add .
@@ -37,12 +37,12 @@ confirm_version() {
 
     elif [ "$ACTION" = "b" ]; then
         # build 版本
-        cd h5
+        cd web
         currentVersion=$(npm run env | grep npm_package_version | cut -d '=' -f 2)
         vesionDir=$currentVersion
     else
         # 本地开发 版本
-        cd h5
+        cd web
         currentVersion=$(npm run env | grep npm_package_version | cut -d '=' -f 2)
         vesionDir="show-im/"$currentVersion
     fi
@@ -65,19 +65,19 @@ make_build_folder() {
 }
 # 构建web服务
 build_web() {
-    cd h5
+    cd web
     npm install
     npm run build --appkey=$config_appkey
-    mv dist ../build/$vesionDir/agent
+    mv dist ../build/$vesionDir/web
     cd ../
 }
 
 # 构建custiner服务
-build_customer() {
+build_uniapp() {
     cd uniapp
     npm install
     npm run build -- --appkey=$config_appkey
-    mv dist/build/h5 ../build/$vesionDir/customer
+    mv dist/build/h5 ../build/$vesionDir/uniapp
     rm -rf dist
     cd ../
 }
@@ -92,7 +92,7 @@ upgrade_versions() {
     if [ "$ACTION" = "r" ]; then
         git checkout -f $originBranch
     fi
-    cd h5
+    cd web
     nextVersion=$(npm version prerelease --no-git-tag-version)
     git add .
     cd ../uniapp
@@ -143,13 +143,13 @@ clear_file() {
     rm -rf show-im
     rm -rf build
     rm -rf uniapp/node_modules
-    rm -rf h5/node_modules
+    rm -rf web/node_modules
 }
 
 confirm_version
 make_build_folder
 build_web
-build_customer
+build_uniapp
 copy_html
 if [ "$ACTION" != "" ]; then
     deploy
