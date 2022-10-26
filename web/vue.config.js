@@ -12,7 +12,7 @@ if (argv) {
 const config = require('./package.json');
 module.exports = {
   lintOnSave : false,
-  publicPath: `/show-im/${config.version}/h5`,
+  publicPath: `/show-im/${config.version}/web`,
   //只有Https才能使用录音
   devServer : {
     https : true,

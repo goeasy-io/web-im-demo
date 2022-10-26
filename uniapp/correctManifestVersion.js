@@ -6,7 +6,7 @@ const manifestJSON = require('./src/manifest.json');
 
 let version = packageJSON.version;
 manifestJSON.versionName = version;
-manifestJSON.h5.publicPath = `/show-im/${version}/h5/`;
+manifestJSON.h5.publicPath = `/show-im/${version}/uniapp/`;
 manifestJSON.h5.router.base = manifestJSON.h5.publicPath;
 
 fs.writeFile(`${__dirname}/src/manifest.json`, JSON.stringify(manifestJSON, null, 2), {
