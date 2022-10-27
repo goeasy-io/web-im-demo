@@ -9,8 +9,8 @@
         <div v-if="history.loading" class="history-loading">
           <img src="../assets/images/pending.gif"/>
         </div>
-        <div v-else class="history-loaded" @click="loadHistoryMessage(false,0)">
-          {{ history.allLoaded ? '已经没有更多的历史消息' : '获取历史消息' }}
+        <div v-else :class="history.loaded ? 'history-loaded':'load'" @click="loadHistoryMessage(false)">
+          {{ history.loaded ? '已经没有更多的历史消息' : '获取历史消息' }}
         </div>
         <div v-for="(message, index) in history.messages" :key="index">
           <div class="time-tips">{{ renderMessageDate(message, index) }}</div>
@@ -209,7 +209,7 @@
 
         history: {
           messages: [],
-          allLoaded: false,
+          loaded: false,
           loading: true
         },
 
@@ -503,7 +503,7 @@
           }
         }
       },
-      loadHistoryMessage(scrollTo, offsetHeight) {
+      loadHistoryMessage(scrollToBottom) {
         this.history.loading = true;
         //历史消息
         let lastMessageTimeStamp = null;
@@ -519,13 +519,13 @@
             this.history.loading = false;
             let messages = result.content;
             if (messages.length === 0) {
-              this.history.allLoaded = true;
+              this.history.loaded = true;
             } else {
               this.history.messages = messages.concat(this.history.messages);
               if (messages.length < 9) {
-                this.history.allLoaded = true;
+                this.history.loaded = true;
               }
-              if (scrollTo) {
+              if (scrollToBottom) {
                 this.scrollToBottom();
                 //收到的消息设置为已读
                 this.markGroupMessageAsRead();
@@ -617,9 +617,16 @@
       .history-loaded {
         text-align: center;
         font-size: 12px;
-        color: #d02129;
-        cursor: pointer;
+        color: #cccccc;
         line-height: 20px;
+      }
+
+      .load {
+        text-align: center;
+        font-size: 12px;
+        color: #d02129;
+        line-height: 20px;
+        cursor: pointer;
       }
 
       .history-loading {
