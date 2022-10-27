@@ -18,13 +18,22 @@ page {
     overflow-y: auto;
 }
 
-.chatInterface .scroll-view .all-history-loaded {
+.chatInterface .scroll-view .history-loaded {
     font-size: 24rpx;
     height: 90rpx;
     line-height: 90rpx;
     width: 100%;
     text-align: center;
-    color: grey;
+    color: #cccccc;
+}
+
+.chatInterface .scroll-view .load {
+    font-size: 24rpx;
+    height: 90rpx;
+    line-height: 90rpx;
+    width: 100%;
+    text-align: center;
+    color: #d02129;
 }
 
 .chatInterface .scroll-view .message-item {

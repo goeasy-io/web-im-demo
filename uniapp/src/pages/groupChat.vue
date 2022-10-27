@@ -3,10 +3,10 @@
     <image class="group-icon" src="/static/images/group-icon.png" @click="showMembers"/>
     <scroll-view :scroll-y="true" :scroll-into-view="bottomView" class="scroll-view">
       <!--  #ifdef  H5 -->
-      <view class="all-history-loaded" @click="loadHistoryMessage(false)">
+      <view :class="history.loaded ? 'history-loaded':'load'" @click="loadHistoryMessage(false)">
       <!--  #endif -->
       <!--  #ifndef  H5 -->
-      <view class="all-history-loaded">
+      <view :class="history.loaded ? 'history-loaded':'load'">
       <!--  #endif -->
         {{ history.loaded ? '已经没有更多的历史消息' : '点击获取历史消息' }}
       </view>
@@ -631,6 +631,9 @@
               this.history.loaded = true;
             } else {
               this.history.messages = messages.concat(this.history.messages);
+              if (messages.length < 9) {
+                this.history.loaded = true;
+              }
               if (scrollToBottom) {
                 this.scrollToBottom();
                 //收到的消息设置为已读
