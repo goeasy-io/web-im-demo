@@ -161,7 +161,7 @@
       topConversation() {
         let conversation = this.rightClickMenu.conversation;
         let description = conversation.top ? '取消置顶' : '置顶';
-        this.goEasy.im.topPrivateConversation({
+        this.goEasy.im.topConversation({
           conversation: conversation,
           top: !conversation.top,
           onSuccess: function () {
