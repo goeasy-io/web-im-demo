@@ -10,10 +10,7 @@
             <div class="selected-area" @click="switchSelectorVisible">
               <div class="selected-content">
                 <img v-if="userSelector.selectedUser" :src="userSelector.selectedUser.avatar"/>
-                <div>{{
-                    userSelector.selectedUser ? userSelector.selectedUser.name : '请选择用户'
-                  }}
-                </div>
+                <div>{{userSelector.selectedUser ? userSelector.selectedUser.name : '请选择用户'}}</div>
               </div>
               <img
                 :class="userSelector.visible ? 'selected-icon' : 'selected-icon rotate'"
@@ -108,154 +105,152 @@
   };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
   .login {
     width: 100%;
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-
-    .login-container {
-      width: 1000px;
-      height: 600px;
-      border-radius: 12px;
-
-      .login-main {
-        width: 600px;
-        margin: 130px auto;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-
-        .login-header {
-          margin: 20px auto;
-          width: 300px;
-          text-align: center;
-          font-size: 30px;
-          font-weight: 500;
-          color: #d02129;
-        }
-
-        .login-form {
-          width: 300px;
-
-          .form-item {
-            position: relative;
-            margin: 30px 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-
-            .selected-area {
-              width: 280px;
-              display: flex;
-              align-items: center;
-              padding: 5px 10px;
-              border: 1px solid #DCDFE6;
-              border-radius: 4px;
-
-              .selected-content {
-                display: flex;
-                align-items: center;
-                flex-grow: 1;
-                height: 37px;
-
-                img {
-                  width: 35px;
-                  height: 35px;
-                  margin-right: 15px;
-                  border-radius: 50%;
-                }
-              }
-
-              .selected-icon {
-                width: 20px;
-                height: 20px;
-                margin-right: 5px;
-              }
-
-              .rotate {
-                transform-origin: center;
-                transform: rotate(180deg);
-              }
-
-            }
-
-            .dialog-area {
-              position: absolute;
-              top: 55px;
-              left: 0;
-              width: 300px;
-              background: #FFFFFF;
-              border: 1px solid #DCDFE6;
-              z-index: 99;
-
-              .dialog-list-item {
-                width: 100%;
-                margin: 15px 0;
-                padding-left: 10px;
-                display: flex;
-                align-items: center;
-              }
-
-              .selected {
-                font-weight: bold;
-              }
-
-              .dialog-list-item-avatar {
-                width: 35px;
-                height: 35px;
-                margin-right: 15px;
-                border-radius: 50%;
-              }
-            }
-
-            .password-input {
-              width: 280px;
-              height: 37px;
-              display: flex;
-              align-items: center;
-              padding: 5px 10px;
-              border: 1px solid #DCDFE6;
-              border-radius: 4px;
-            }
-
-            .password-image {
-              width: 25px;
-              height: 25px;
-              position: absolute;
-              top: 15px;
-              right: 15px;
-            }
-
-            .form-item-btn {
-              width: 100%;
-              color: #FFFFFF;
-              background-color: #d02129;
-              border: none;
-              height: 35px;
-              cursor: pointer;
-              text-align: center;
-              font-size: 14px;
-              border-radius: 4px;
-            }
-
-          }
-
-          .form-error {
-            color: #d02129;
-            margin-bottom: 22px;
-          }
-
-        }
-
-        .version {
-          color: #FFFFFF;
-        }
-      }
-    }
   }
+
+  .login-container {
+    width: 1000px;
+    height: 600px;
+    border-radius: 12px;
+  }
+
+  .login-main {
+    width: 600px;
+    margin: 130px auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .login-header {
+    margin: 20px auto;
+    width: 300px;
+    text-align: center;
+    font-size: 30px;
+    font-weight: 500;
+    color: #d02129;
+  }
+
+  .login-form {
+    width: 300px;
+  }
+
+  .form-item {
+    position: relative;
+    margin: 30px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .selected-area {
+    width: 280px;
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+    border: 1px solid #DCDFE6;
+    border-radius: 4px;
+  }
+
+  .selected-area .selected-content {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    height: 37px;
+  }
+
+  .selected-area .selected-content img {
+    width: 35px;
+    height: 35px;
+    margin-right: 15px;
+    border-radius: 50%;
+  }
+
+  .selected-area .selected-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+  }
+
+  .selected-area .rotate {
+    transform-origin: center;
+    transform: rotate(180deg);
+  }
+
+  .dialog-area {
+    position: absolute;
+    top: 55px;
+    left: 0;
+    width: 300px;
+    background: #FFFFFF;
+    border: 1px solid #DCDFE6;
+    z-index: 99;
+  }
+
+  .dialog-list-item {
+    width: 100%;
+    margin: 15px 0;
+    padding-left: 10px;
+    display: flex;
+    align-items: center;
+  }
+
+  .dialog-area .selected {
+    font-weight: bold;
+  }
+
+  .dialog-list-item-avatar {
+    width: 35px;
+    height: 35px;
+    margin-right: 15px;
+    border-radius: 50%;
+  }
+
+  .password-input {
+    width: 280px;
+    height: 37px;
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+    border: 1px solid #DCDFE6;
+    border-radius: 4px;
+  }
+
+  .password-image {
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+  }
+
+  .form-item-btn {
+    width: 100%;
+    color: #FFFFFF;
+    background-color: #d02129;
+    border: none;
+    height: 35px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 14px;
+    border-radius: 4px;
+  }
+
+  .form-error {
+    color: #d02129;
+    margin-bottom: 22px;
+  }
+
+  .login-main .version {
+    color: #FFFFFF;
+  }
+
 </style>
