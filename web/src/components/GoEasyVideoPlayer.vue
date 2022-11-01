@@ -49,31 +49,29 @@
   };
 </script>
 
-<style lang="scss">
+<style scoped>
   .content-video {
     display: block;
-    margin: 0 10px;
     cursor: pointer;
     position: relative;
     height: 100%;
+  }
 
-    img {
-      height: 100%;
-    }
+  .content-video img {
+    height: 100%;
+  }
 
-    .icon {
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      background: url('../assets/images/play.png') no-repeat center;
-      background-size: 100%;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      margin: auto;
-    }
-
+  .content-video .icon {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: url('../assets/images/play.png') no-repeat center;
+    background-size: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
   }
 
   .video-player {
@@ -91,23 +89,22 @@
     left: 0;
     right: 0;
     z-index: 9999;
+  }
 
-    video {
-      max-width: 750px;
-      max-height: 500px;
-    }
+  .video-player video {
+    max-width: 750px;
+    max-height: 500px;
+  }
 
-    .close-player {
-      padding: 0 8px;
-      background: #f6f2f2;
-      border: 1px solid #eeeeee;
-      font-size: 15px;
-      cursor: pointer;
-      color: #333333;
-      position: absolute;
-      top: 4px;
-      right: 10px;
-    }
-
+  .video-player .close-player {
+    padding: 0 8px;
+    background: #f6f2f2;
+    border: 1px solid #eeeeee;
+    font-size: 15px;
+    cursor: pointer;
+    color: #333333;
+    position: absolute;
+    top: 4px;
+    right: 10px;
   }
 </style>

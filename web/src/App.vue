@@ -4,7 +4,7 @@
     </div>
 </template>
 
-<style lang="scss">
+<style>
   #app {
     height: 100%;
   }

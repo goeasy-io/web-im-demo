@@ -58,7 +58,7 @@
         </div>
       </div>
       <div class="profile-card" v-else-if="selectedContact.type === 'group'">
-        <div class="group-name">{{ selectedContact.data.name }}</div>
+        <div class="group-profile-name">{{ selectedContact.data.name }}</div>
         <div class="group-members">
           <div class="member" v-for="(member, index) in selectedContact.data.userInfoList" :key="index">
             <img class="member-avatar" :src="member.avatar"/>
@@ -123,225 +123,222 @@
   };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
   .contact {
     width: 100%;
     height: 100%;
     display: flex;
     background: #F7F7F7;
     color: #333333;
+  }
 
-    .contact-left {
-      width: 260px;
-      height: 100%;
-      border-right: #dbd6d6 1px solid;
+  .contact-left {
+    width: 260px;
+    height: 100%;
+    border-right: #dbd6d6 1px solid;
+  }
 
-      .tab-list {
-        padding: 20px;
-        display: flex;
+  .tab-list {
+    padding: 20px;
+    display: flex;
+  }
 
-        .tab-item {
-          flex: 1;
-          text-align: center;
-          color: #403a3a;
-          height: 40px;
-          box-sizing: border-box;
-          line-height: 40px;
-          font-size: 14px;
-          font-weight: 500;
-          position: relative;
-          cursor: pointer;
-          margin-bottom: 10px;
-        }
+  .tab-item {
+    flex: 1;
+    text-align: center;
+    color: #403a3a;
+    height: 40px;
+    box-sizing: border-box;
+    line-height: 40px;
+    font-size: 14px;
+    font-weight: 500;
+    position: relative;
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
 
-        .selected {
-          border-bottom: 2px solid #606266;
-        }
-      }
+  .tab-list .selected {
+    border-bottom: 2px solid #606266;
+  }
 
-      .contact-list {
-        display: flex;
-        flex-direction: column;
+  .contact-list {
+    display: flex;
+    flex-direction: column;
+  }
 
-        .selected {
-          background: #FFFFFF;
-          border-radius: 10px;
-          box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.1);
-        }
-      }
+  .contact-list .selected {
+    background: #FFFFFF;
+    border-radius: 10px;
+    box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.1);
+  }
 
-      .friend-item {
-        display: flex;
-        padding: 5px 10px;
-        cursor: pointer;
+  .friend-item {
+    display: flex;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
 
-        .friend-avatar {
-          width: 58px;
+  .friend-avatar {
+    width: 58px;
+  }
 
-          img {
-            width: 50px;
-            height: 50px;
-            border-radius: 10%;
-            margin-left: 10px;
-          }
-        }
+  .friend-avatar img {
+    width: 50px;
+    height: 50px;
+    border-radius: 10%;
+    margin-left: 10px;
+  }
 
-        .friend {
-          width: 65%;
-          margin: 0;
-          display: flex;
-          flex-direction: column;
-          text-align: left;
-          padding-left: 10px;
+  .friend {
+    width: 65%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    padding-left: 10px;
+  }
 
-          .friend-name {
-            margin: 0;
-            font-size: 16px;
-            font-weight: 400;
-          }
+  .friend-name {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 400;
+  }
 
-          .friend-mail {
-            line-height: 30px;
-            color: #888888;
-          }
-        }
-      }
+  .friend-mail {
+    line-height: 30px;
+    color: #888888;
+  }
 
-      .group-item {
-        display: flex;
-        padding: 5px 10px;
-        cursor: pointer;
-        align-items: center;
+  .group-item {
+    display: flex;
+    padding: 5px 10px;
+    cursor: pointer;
+    align-items: center;
+  }
 
-        .group-avatar {
-          width: 50px;
-          height: 50px;
-          margin-left: 10px;
-          overflow: hidden;
-          display: flex;
-        }
+  .group-avatar {
+    width: 50px;
+    height: 50px;
+    margin-left: 10px;
+    overflow: hidden;
+    display: flex;
+  }
 
-        .group-name {
-          margin-left: 10px;
-          width: 160px;
-          text-align: left;
-          font-size: 15px;
-          line-height: 40px;
-        }
-      }
-    }
+  .group-name {
+    margin-left: 10px;
+    width: 160px;
+    text-align: left;
+    font-size: 15px;
+    line-height: 40px;
+  }
 
-    .contact-main {
-      flex: 1;
-      background: #FFFFFF;
-    }
+  .contact-main {
+    flex: 1;
+    background: #FFFFFF;
   }
 
   .profile-card {
     padding: 20px 0;
+  }
 
-    .card-title {
-      padding: 60px;
-      border-bottom: 1px solid #eeeeee;
-      display: flex;
-      justify-content: space-around;
+  .card-title {
+    padding: 60px;
+    border-bottom: 1px solid #eeeeee;
+    display: flex;
+    justify-content: space-around;
+  }
 
-      .profile-name {
-        width: 300px;
-        font-size: 18px;
-        display: flex;
-        align-items: center;
+  .profile-name {
+    width: 300px;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+  }
 
-        .icon-zhanghu {
-          font-size: 26px;
-          color: #eeeeee;
-          margin-right: 10px;
-        }
+  .icon-zhanghu {
+    font-size: 26px;
+    color: #eeeeee;
+    margin-right: 10px;
+  }
 
-      }
+  .profile-avatar {
+    width: 80px;
+  }
 
-      .profile-avatar {
-        width: 80px;
+  .profile-avatar img {
+    width: 80px;
+    height: 80px;
+    border-radius: 10%;
+  }
 
-        img {
-          width: 80px;
-          height: 80px;
-          border-radius: 10%;
-        }
+  .info-item {
+    padding: 10px 30px;
+    display: flex;
+    justify-content: space-around;
+    text-align: left;
+    font-size: 14px;
+    line-height: 45px;
+  }
 
-      }
-    }
+  .info-name {
+    width: 100px;
+  }
 
-    .info-item {
-      padding: 10px 30px;
-      display: flex;
-      justify-content: space-around;
-      text-align: left;
-      font-size: 14px;
-      line-height: 45px;
+  .info-text {
+    width: 200px;
+  }
 
-      .info-name {
-        width: 100px;
-      }
+  .group-profile-name {
+    font-size: 18px;
+    padding: 20px 70px;
+    border-bottom: 1px solid #eeeeee;
+  }
 
-      .info-text {
-        width: 200px;
-      }
+  .group-members {
+    width: 400px;
+    min-height: 200px;
+    margin: 20px auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+  }
 
-    }
+  .group-members .member {
+    width: 25%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
-    .group-name {
-      font-size: 18px;
-      padding: 20px 70px;
-      border-bottom: 1px solid #eeeeee;
-    }
+  }
 
-    .group-members {
-      width: 400px;
-      min-height: 200px;
-      margin: 20px auto;
-      display: flex;
-      flex-wrap: wrap;
-      align-content: flex-start;
+  .group-members .member-avatar {
+    width: 58px;
+    margin-top: 20px;
+    border-radius: 5%;
+  }
 
-      .member {
-        width: 25%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-
-        .member-avatar {
-          width: 58px;
-          margin-top: 20px;
-          border-radius: 5%;
-        }
-
-        .member-name {
-          color: gray;
-          margin-top: 10px;
-          font-size: 12px;
-        }
-      }
-    }
+  .group-members .member-name {
+    color: gray;
+    margin-top: 10px;
+    font-size: 12px;
   }
 
   .button-box {
     padding: 40px 0;
+  }
 
-    .card-button {
-      background: #eeeeee;
-      color: #000000;
-      font-size: 14px;
-      border: none;
-      display: flex;
-      width: 120px;
-      height: 35px;
-      cursor: pointer;
-      border-radius: 5px;
-      margin: 0 auto;
-      align-items: center;
-      justify-content: center;
-    }
-
+  .card-button {
+    background: #eeeeee;
+    color: #000000;
+    font-size: 14px;
+    border: none;
+    display: flex;
+    width: 120px;
+    height: 35px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 0 auto;
+    align-items: center;
+    justify-content: center;
   }
 </style>
