@@ -67,8 +67,15 @@
                     </view>
                     <image class="file-img" src="/static/images/file-icon.png"></image>
                   </view>
-                  <GoEasyAudioPlayer v-if="message.type ==='audio'" :src="message.payload.url"
-                                     :duration="message.payload.duration"/>
+                  <div v-if="message.type ==='audio'" class="audio-content" @click="playAudio(message)">
+                    <div class="audio-facade" :style="{width:Math.ceil(message.payload.duration)*7 + 50 + 'px'}">
+                      <div
+                        class="audio-facade-bg"
+                        :class="{'play-icon':audioPlayer.playingMessage && audioPlayer.playingMessage.messageId === message.messageId}"
+                      ></div>
+                      <div>{{Math.ceil(message.payload.duration) || 1}}<span>"</span></div>
+                    </div>
+                  </div>
                   <view v-if="message.type === 'order'" class="order-content">
                     <view class="order-id">订单号：{{ message.payload.id }}</view>
                     <view class="order-body">
@@ -182,7 +189,6 @@
 </template>
 
 <script>
-  import GoEasyAudioPlayer from '../components/GoEasyAudioPlayer/GoEasyAudioPlayer';
   import EmojiDecoder from '../lib/EmojiDecoder';
   import restApi from '../lib/restapi';
   import {formatDate} from '../lib/utils';
@@ -192,9 +198,6 @@
   const recorderManager = uni.getRecorderManager();
   export default {
     name: 'groupChat',
-    components: {
-      GoEasyAudioPlayer
-    },
     data() {
       // 定义表情
       const emojiUrl = 'https://imgcache.qq.com/open/qcloud/tim/assets/emoji/';
@@ -238,7 +241,10 @@
           //录音按钮展示
           visible: false
         },
-
+        audioPlayer: {
+          innerAudioContext: null,
+          playingMessage: null,
+        },
         videoPlayer: {
           visible: false,
           url: '',
@@ -275,6 +281,8 @@
       };
 
       this.initialGoEasyListeners();
+      // 语音播放器
+      this.initialAudioPlayer();
       // 录音监听器
       this.initRecorderListeners();
 
@@ -342,6 +350,15 @@
               this.history.messages.splice(index, 1);
             }
           }
+        });
+      },
+      initialAudioPlayer () {
+        this.audioPlayer.innerAudioContext = uni.createInnerAudioContext();
+        this.audioPlayer.innerAudioContext.onEnded(() => {
+          this.audioPlayer.playingMessage = null;
+        });
+        this.audioPlayer.innerAudioContext.onStop(() => {
+          this.audioPlayer.playingMessage = null;
         });
       },
       initRecorderListeners() {
@@ -700,6 +717,20 @@
           });
           this.videoPlayer.context.play();
         });
+      },
+      playAudio (audioMessage) {
+        let playingMessage = this.audioPlayer.playingMessage;
+
+        if (playingMessage) {
+          this.audioPlayer.innerAudioContext.stop();
+          // 如果点击的消息正在播放，就认为是停止播放操作
+          if (playingMessage === audioMessage) {
+            return;
+          }
+        }
+        this.audioPlayer.playingMessage = audioMessage;
+        this.audioPlayer.innerAudioContext.src = audioMessage.payload.url;
+        this.audioPlayer.innerAudioContext.play();
       },
       onVideoFullScreenChange(e) {
         //当退出全屏播放时，隐藏播放器
