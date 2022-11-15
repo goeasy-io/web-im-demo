@@ -516,6 +516,33 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
     text-align: center;
 }
 
+.chatInterface .audio-content {
+    height: 86rpx;
+    -webkit-tap-highlight-color:rgba(0,0,0,0);
+}
+
+.chatInterface .audio-facade{
+    min-width: 20rpx;
+    padding: 6rpx 10rpx;
+    line-height: 72rpx;
+    background: #FFFFFF;
+    font-size: 24rpx;
+    border-radius: 14rpx;
+    color: #000000;
+    display: flex;
+}
+
+.chatInterface .audio-facade-bg{
+    background: url("/static/images/voice.png") no-repeat center;
+    background-size: 30rpx;
+    width: 40rpx;
+}
+
+.chatInterface .audio-facade-bg.play-icon{
+    background: url("/static/images/play.gif") no-repeat center;
+    background-size: 30rpx;
+}
+
 .chatInterface .order-content {
     border-radius: 20rpx;
     background: #FFFFFF;
