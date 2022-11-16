@@ -67,15 +67,15 @@
                     </view>
                     <image class="file-img" src="/static/images/file-icon.png"></image>
                   </view>
-                  <div v-if="message.type ==='audio'" class="audio-content" @click="playAudio(message)">
-                    <div class="audio-facade" :style="{width:Math.ceil(message.payload.duration)*7 + 50 + 'px'}">
-                      <div
+                  <view v-if="message.type ==='audio'" class="audio-content" @click="playAudio(message)">
+                    <view class="audio-facade" :style="{width:Math.ceil(message.payload.duration)*7 + 50 + 'px'}">
+                      <view
                         class="audio-facade-bg"
                         :class="{'play-icon':audioPlayer.playingMessage && audioPlayer.playingMessage.messageId === message.messageId}"
-                      ></div>
-                      <div>{{Math.ceil(message.payload.duration) || 1}}<span>"</span></div>
-                    </div>
-                  </div>
+                      ></view>
+                      <view>{{Math.ceil(message.payload.duration) || 1}}<span>"</span></view>
+                    </view>
+                  </view>
                   <view v-if="message.type === 'order'" class="order-content">
                     <view class="order-id">订单号：{{ message.payload.id }}</view>
                     <view class="order-body">
