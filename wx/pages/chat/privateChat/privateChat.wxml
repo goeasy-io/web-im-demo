@@ -47,10 +47,15 @@
                                     <image class="image-content" wx:if="{{message.type === 'image'}}"
                                            src="{{message.payload.url}}" bindtap="previewImage"
                                            data-src="{{message.payload.url}}" mode="widthFix"/>
-                                    <GoEasyAudioPlayer id="goEasyAudio" wx:if="{{message.type =='audio'}}"
-                                                       selfSent="{{message.senderId === currentUser.id}}"
-                                                       src="{{message.payload.url}}"
-                                                       duration="{{message.payload.duration}}"/>
+                                    <view wx:if="{{message.type ==='audio'}}" class="audio-content"
+                                          bindtap="playAudio" data-message="{{message}}">
+                                        <view class="audio-facade" style="width:{{message.width}}">
+                                            <image wx:if="{{audioPlayer.playingMessage.messageId === message.messageId}}"
+                                                   class="audio-facade-bg audio-play-icon" src="/static/images/play.gif"></image>
+                                            <image wx:else class="audio-facade-bg" src="/static/images/voice.png"></image>
+                                            <view class="record-second">{{message.finalDuration}}"</view>
+                                        </view>
+                                    </view>
                                     <view class="video-snapshot" bindtap="playVideo"
                                           data-url="{{message.payload.video.url}}"
                                           data-duration="{{message.payload.video.duration}}"

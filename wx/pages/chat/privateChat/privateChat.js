@@ -41,6 +41,11 @@ Page({
             //录音按钮展示
             visible: false
         },
+        // 语音播放器
+        audioPlayer: {
+            innerAudioContext: null,
+            playingMessage: null,
+        },
         // 展示消息删除弹出框
         actionPopup: {
             visible: false,
@@ -73,6 +78,7 @@ Page({
             }
         });
 
+        this.initialAudioPlayer();
         this.initialGoEasyListeners();
         this.loadHistoryMessage(true);
     },
@@ -133,6 +139,21 @@ Page({
     },
     onMessageRecalled(recalledMessages) {
         this.renderMessages(this.data.history.messages);
+    },
+    initialAudioPlayer () {
+        this.setData({
+            ['audioPlayer.innerAudioContext']: wx.createInnerAudioContext(),
+        });
+        this.data.audioPlayer.innerAudioContext.onEnded(() => {
+            this.setData({
+                ['audioPlayer.playingMessage']: null,
+            });
+        });
+        this.data.audioPlayer.innerAudioContext.onStop(() => {
+            this.setData({
+                ['audioPlayer.playingMessage']: null,
+            });
+        });
     },
     onRecordStop(res) {
         // 发送语音
@@ -475,6 +496,10 @@ Page({
                 // 渲染文件消息
                 message.size = (message.payload.size / 1024).toFixed(2);
             }
+            if (message.type === 'audio') {
+                message.width = Math.ceil(message.payload.duration)*7+80+'rpx';
+                message.finalDuration = Math.ceil(message.payload.duration)
+            }
         });
         this.setData({
             ['history.messages']: messages
@@ -515,6 +540,23 @@ Page({
                 }
             });
         }
+    },
+    playAudio(e) {
+        let audioMessage = e.currentTarget.dataset.message;
+        let playingMessage = this.data.audioPlayer.playingMessage;
+
+        if (playingMessage) {
+            this.data.audioPlayer.innerAudioContext.stop();
+            // 如果点击的消息正在播放，就认为是停止播放操作
+            if (playingMessage.messageId === audioMessage.messageId) {
+                return;
+            }
+        }
+        this.setData({
+            ['audioPlayer.playingMessage']: audioMessage
+        });
+        this.data.audioPlayer.innerAudioContext.src = audioMessage.payload.url;
+        this.data.audioPlayer.innerAudioContext.play();
     },
     playVideo(e) {
         //播放视频

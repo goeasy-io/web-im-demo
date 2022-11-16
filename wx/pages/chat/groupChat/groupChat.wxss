@@ -140,6 +140,35 @@ page {
 	width: 300rpx;
 }
 
+.audio-content .audio-facade {
+    display: flex;
+    align-items: center;
+    min-width: 80rpx;
+    max-width: 300rpx;
+    height: 60rpx;
+    padding: 6rpx 10rpx;
+    border-radius: 14rpx;
+    line-height: 30rpx;
+    background: #ffffff;
+    font-size: 24rpx;
+    color: #000000;
+}
+.audio-content .audio-facade.self-sent {
+    background: #FFFFFF;
+    color: #ffffff;
+    flex-direction: row-reverse;
+}
+
+.audio-content .audio-facade-bg {
+    width: 40rpx;
+    height: 35rpx;
+}
+
+.audio-content .record-second {
+    padding-left: 10rpx;
+    padding-right: 10rpx;
+}
+
 .image-content image {
     width: 100%;
     height: 100%;
