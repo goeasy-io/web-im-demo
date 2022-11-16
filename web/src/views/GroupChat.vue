@@ -183,15 +183,11 @@
   import {formatDate} from '../utils/utils.js'
   import restApi from '../api/restapi';
   import EmojiDecoder from '../utils/EmojiDecoder';
-  import GoeasyVideoPlayer from "../components/GoEasyVideoPlayer";
 
   const IMAGE_MAX_WIDTH = 200;
   const IMAGE_MAX_HEIGHT = 150;
   export default {
     name: 'GroupChat',
-    components: {
-      GoeasyVideoPlayer,
-    },
     data() {
       const emojiUrl = 'https://imgcache.qq.com/open/qcloud/tim/assets/emoji/';
       const emojiMap = {
