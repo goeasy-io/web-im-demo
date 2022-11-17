@@ -151,6 +151,7 @@
     padding: 5px 10px;
     border: 1px solid #DCDFE6;
     border-radius: 4px;
+    cursor: pointer;
   }
 
   .selected-area .selected-content {
@@ -194,10 +195,7 @@
     padding-left: 10px;
     display: flex;
     align-items: center;
-  }
-
-  .dialog-area .selected {
-    font-weight: bold;
+    cursor: pointer;
   }
 
   .dialog-list-item-avatar {
@@ -223,6 +221,7 @@
     position: absolute;
     top: 15px;
     right: 15px;
+    cursor: pointer;
   }
 
   .form-item-btn {
