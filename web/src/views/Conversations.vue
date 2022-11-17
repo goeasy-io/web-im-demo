@@ -9,7 +9,7 @@
               class="conversation"
               @click="chat(conversation)"
               @contextmenu.prevent.stop="e => showRightClickMenu(e,conversation)"
-              :class="{ actived: conversation === activeConversation }"
+              :class="{ actived: isActiveConversation(conversation) }"
             >
               <div class="avatar">
                 <img :src="conversation.data.avatar"/>
@@ -89,7 +89,11 @@
         currentUser: {},
         conversations: [],
 
-        activeConversation: null,
+        activeConversation: {
+          type: null,
+          id: null,
+          data: null,
+        },
         // Conversation右键菜单
         rightClickMenu: {
           conversation: null,
@@ -105,6 +109,12 @@
         this.hideRightClickMenu();
       });
       this.currentUser = this.globalData.currentUser;
+      this.activeConversation = {
+        type: this.$route.query.type,
+        id: this.$route.query.id,
+        data: this.$route.query.id,
+      };
+
       this.listenConversationUpdate(); //监听会话列表变化
       this.loadConversations(); //加载会话列表
       this.subscribeGroup();  //订阅群消息
@@ -118,22 +128,12 @@
         this.goEasy.im.latestConversations({
           onSuccess: (result) => {
             let content = result.content;
-            this.findActiveConversation(content);
             this.renderConversations(content);
           },
           onFailed: (error) => {
             console.log('获取最新会话列表失败, code:' + error.code + 'content:' + error.content);
           },
         });
-      },
-      findActiveConversation (content) {
-        let type = this.$route.path === '/conversations/privatechat' ? 'private' : 'group';
-        let key = this.$route.path === '/conversations/privatechat' ? 'userId' : 'groupId';
-        content.conversations.forEach((conversation) => {
-          if (conversation.type===type && conversation[key] === this.$route.query.id) {
-            this.activeConversation = conversation;
-          }
-        })
       },
       listenConversationUpdate() {
         // 监听会话列表变化
@@ -192,16 +192,25 @@
           });
         }
       },
-      chat(conversation) {
-        this.activeConversation = conversation;
-        let path = conversation.type === 'private' ? 'privatechat' : 'groupchat';
+
+
+      isActiveConversation(conversation) {
         let id = conversation.type === 'private' ? conversation.userId : conversation.groupId;
+        return id = this.activeConversation.id===conversation && this.conversations.type === conversation.type;
+      },
+
+      chat(conversation) {
+
+        this.activeConversation.type = conversation.type;
+        this.activeConversation.id = conversation.type === 'private' ? conversation.userId : conversation.groupId;
+        this.activeConversation.data = conversation.data;
+
         this.$router.replace({
           path: `/conversations/${path}`,
           query: {
-            id: id,
-            name: conversation.data.name,
-            avatar: conversation.data.avatar
+            id: this.activeConversation.id,
+            name: this.activeConversation.data.name,
+            avatar: this.activeConversation.data.avatar
           }
         });
       }
