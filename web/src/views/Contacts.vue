@@ -8,8 +8,8 @@
       <div class="contact-list" v-if="currentTab === 'friend'">
         <div
           v-for="(friend, key) in friends || []" :key="key"
-          :class="selectedContact.data.id === friend.id? 'friend-item selected':'friend-item'"
-          @click="showProfileCard(friend,'friend')"
+          :class="profile&&profile.id === friend.id? 'friend-item selected':'friend-item'"
+          @click="showFriendProfile(friend)"
         >
           <div class="friend-avatar">
             <img :src="friend.avatar"/>
@@ -23,9 +23,9 @@
       <div class="contact-list" v-if="currentTab === 'group'">
         <div
           v-for="(group, key) in groups || []"
-          :class="selectedContact.data.id === group.id? 'group-item selected':'group-item'"
+          :class="profile&&profile.id === group.id? 'group-item selected':'group-item'"
           :key="key"
-          @click="showProfileCard(group,'group')"
+          @click="showGroupProfile(group)"
         >
           <div class="group-avatar">
             <img :src="group.avatar"/>
@@ -35,32 +35,32 @@
       </div>
     </div>
     <div class="contact-main">
-      <div class="profile-card" v-if="selectedContact.type === 'friend'">
+      <div class="profile-card" v-if="profile&&!profile.userInfoList">
         <div class="card-title">
           <div class="profile-name">
             <i class="iconfont icon-zhanghu"></i>
-            <div>{{ selectedContact.data.name }}</div>
+            <div>{{ profile.name }}</div>
           </div>
           <div class="profile-avatar">
-            <img :src="selectedContact.data.avatar"/>
+            <img :src="profile.avatar"/>
           </div>
         </div>
         <div class="info-item">
           <div class="info-name">邮 箱</div>
-          <div class="info-text">{{ selectedContact.data.email }}</div>
+          <div class="info-text">{{ profile.email }}</div>
         </div>
         <div class="info-item">
           <div class="info-name">手 机</div>
-          <div class="info-text">{{ selectedContact.data.phone }}</div>
+          <div class="info-text">{{ profile.phone }}</div>
         </div>
         <div class="button-box">
           <button class="card-button" @click="chat('privatechat')">发消息</button>
         </div>
       </div>
-      <div class="profile-card" v-else-if="selectedContact.type === 'group'">
-        <div class="group-profile-name">{{ selectedContact.data.name }}</div>
+      <div class="profile-card" v-else-if="profile&&profile.userInfoList">
+        <div class="group-profile-name">{{ profile.name }}</div>
         <div class="group-members">
-          <div class="member" v-for="(member, index) in selectedContact.data.userInfoList" :key="index">
+          <div class="member" v-for="(member, index) in profile.userInfoList" :key="index">
             <img class="member-avatar" :src="member.avatar"/>
             <span class="member-name">{{ member.name }}</span>
           </div>
@@ -82,11 +82,7 @@
         friends: [],
         groups: [],
         currentTab: 'friend',
-        profile: {
-          id: null,
-          type: null,
-          data: {}
-        },
+        profile: {},
         groupMembers: [],
       };
     },
@@ -99,27 +95,24 @@
       switchTab(tab) {
         this.currentTab = tab;
       },
-      showFriendProfile() {
-
+      showFriendProfile(profile) {
+        this.profile = profile;
       },
-      showGroupProfileCard(contact, type) {
-        this.selectedContact.data = contact;
-        this.selectedContact.type = type;
-        if (this.selectedContact.type === 'group') {
-          this.selectedContact.data.userInfoList = [];
-          this.selectedContact.data.userList.map((item) => {
-            const info = restApi.findUserById(item);
-            this.selectedContact.data.userInfoList.push(info);
-          });
-        }
+      showGroupProfile(profile) {
+        this.profile = profile;
+        this.profile.userInfoList = [];
+        this.profile.userList.map((item) => {
+          const info = restApi.findUserById(item);
+          this.profile.userInfoList.push(info);
+        });
       },
       chat(path) {
         this.$router.replace({
           path: `/conversations/${path}`,
           query: {
-            id: this.selectedContact.data.id,
-            name: this.selectedContact.data.name,
-            avatar: this.selectedContact.data.avatar
+            id: this.profile.id,
+            name: this.profile.name,
+            avatar: this.profile.avatar
           }
         });
       }

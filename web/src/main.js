@@ -3,9 +3,6 @@ import App from './App.vue';
 import router from './router/index';
 import GoEasy from 'goeasy'
 
-// 引入阿里字体图标
-import './assets/iconfont/iconfont.css'; //todo：是否要在这里做？index.html或者app vue?
-
 Vue.config.productionTip = false;
 
 Vue.prototype.globalData = {

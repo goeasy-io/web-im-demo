@@ -9,11 +9,7 @@
               class="conversation"
               @click="chat(conversation)"
               @contextmenu.prevent.stop="e => showRightClickMenu(e,conversation)"
-              :class="{
-                checked:  // todo: 增加一个chattingConversation属性？
-                  $route.path === '/conversations/privatechat' && conversation.userId === $route.query.id ||
-                  $route.path === '/conversations/groupchat' && conversation.groupId === $route.query.id
-              }"
+              :class="{ actived: conversation === activeConversation }"
             >
               <div class="avatar">
                 <img :src="conversation.data.avatar"/>
@@ -93,7 +89,7 @@
         currentUser: {},
         conversations: [],
 
-        activeConversation:null
+        activeConversation: null,
         // Conversation右键菜单
         rightClickMenu: {
           conversation: null,
@@ -122,12 +118,22 @@
         this.goEasy.im.latestConversations({
           onSuccess: (result) => {
             let content = result.content;
+            this.findActiveConversation(content);
             this.renderConversations(content);
           },
           onFailed: (error) => {
             console.log('获取最新会话列表失败, code:' + error.code + 'content:' + error.content);
           },
         });
+      },
+      findActiveConversation (content) {
+        let type = this.$route.path === '/conversations/privatechat' ? 'private' : 'group';
+        let key = this.$route.path === '/conversations/privatechat' ? 'userId' : 'groupId';
+        content.conversations.forEach((conversation) => {
+          if (conversation.type===type && conversation[key] === this.$route.query.id) {
+            this.activeConversation = conversation;
+          }
+        })
       },
       listenConversationUpdate() {
         // 监听会话列表变化
@@ -187,6 +193,7 @@
         }
       },
       chat(conversation) {
+        this.activeConversation = conversation;
         let path = conversation.type === 'private' ? 'privatechat' : 'groupchat';
         let id = conversation.type === 'private' ? conversation.userId : conversation.groupId;
         this.$router.replace({
@@ -327,7 +334,7 @@
     border-radius: 10%;
   }
 
-  .conversation-list-content .checked {
+  .conversation-list-content .actived {
     background: #eeeeee;
   }
 
