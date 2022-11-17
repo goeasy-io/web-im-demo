@@ -95,19 +95,17 @@
         this.unreadAmount = content.unreadTotal;
       },
       logout() {
-        let confirmResult = confirm('确认要退出登录吗？');
-        if (confirmResult===false) {
-          return
+        if (confirm('确认要退出登录吗？')) {
+          this.goEasy.disconnect({
+            onSuccess: () => {
+              this.globalData.currentUser = null;
+              this.$router.replace({path: './login'});
+            },
+            onFailed: (error) => {
+              console.log("Failed to disconnect GoEasy, code:" + error.code + ",error:" + error.content);
+            }
+          });
         }
-        this.goEasy.disconnect({
-          onSuccess: () => {
-            this.globalData.currentUser = null;
-            this.$router.replace({path: './login'});
-          },
-          onFailed: (error) => {
-            console.log("Failed to disconnect GoEasy, code:" + error.code + ",error:" + error.content);
-          }
-        });
       },
     },
   };

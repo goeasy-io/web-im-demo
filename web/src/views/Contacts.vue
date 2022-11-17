@@ -82,7 +82,8 @@
         friends: [],
         groups: [],
         currentTab: 'friend',
-        selectedContact: {
+        profile: {
+          id: null,
           type: null,
           data: {}
         },
@@ -98,7 +99,10 @@
       switchTab(tab) {
         this.currentTab = tab;
       },
-      showProfileCard(contact, type) {
+      showFriendProfile() {
+
+      },
+      showGroupProfileCard(contact, type) {
         this.selectedContact.data = contact;
         this.selectedContact.type = type;
         if (this.selectedContact.type === 'group') {

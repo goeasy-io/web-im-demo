@@ -10,14 +10,14 @@
               @click="chat(conversation)"
               @contextmenu.prevent.stop="e => showRightClickMenu(e,conversation)"
               :class="{
-                checked:
+                checked:  // todo: 增加一个chattingConversation属性？
                   $route.path === '/conversations/privatechat' && conversation.userId === $route.query.id ||
                   $route.path === '/conversations/groupchat' && conversation.groupId === $route.query.id
               }"
             >
               <div class="avatar">
                 <img :src="conversation.data.avatar"/>
-                <div v-if="conversation.unread && currentUser.id !== conversation.lastMessage.senderId"
+                <div v-if="conversation.unread>0"
                      class="unread-count">
                   <span class="unread">{{ conversation.unread }}</span>
                 </div>
@@ -92,6 +92,8 @@
       return {
         currentUser: {},
         conversations: [],
+
+        activeConversation:null
         // Conversation右键菜单
         rightClickMenu: {
           conversation: null,
@@ -171,20 +173,18 @@
         });
       },
       deleteConversation() {
-        let confirmResult = confirm('确认要删除这条会话吗？');
-        if (confirmResult===false) {
-          return
+        if (confirm('确认要删除这条会话吗？')) {
+          let conversation = this.rightClickMenu.conversation;
+          this.goEasy.im.removeConversation({
+            conversation: conversation,
+            onSuccess: function () {
+              console.log('删除会话成功');
+            },
+            onFailed: function (error) {
+              console.log(error);
+            },
+          });
         }
-        let conversation = this.rightClickMenu.conversation;
-        this.goEasy.im.removeConversation({
-          conversation: conversation,
-          onSuccess: function () {
-            console.log('删除会话成功');
-          },
-          onFailed: function (error) {
-            console.log(error);
-          },
-        });
       },
       chat(conversation) {
         let path = conversation.type === 'private' ? 'privatechat' : 'groupchat';

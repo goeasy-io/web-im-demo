@@ -60,7 +60,7 @@
         userSelector: {
           users: [],
           visible: false,
-          index: 0,
+          index: 0,  //todo:这个必要嘛？
           selectedUser: null
         },
 
