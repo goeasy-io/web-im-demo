@@ -34,8 +34,8 @@
         </div>
       </div>
     </div>
-    <div class="contact-main">
-      <div class="profile-card" v-if="profile&&!profile.userInfoList">
+    <div class="contact-main" v-if="profile.id">
+      <div class="profile-card" v-if="!profile.members">
         <div class="card-title">
           <div class="profile-name">
             <i class="iconfont icon-zhanghu"></i>
@@ -54,19 +54,19 @@
           <div class="info-text">{{ profile.phone }}</div>
         </div>
         <div class="button-box">
-          <button class="card-button" @click="chat('privatechat')">发消息</button>
+          <button class="card-button" @click="privateChat">发消息</button>
         </div>
       </div>
-      <div class="profile-card" v-else-if="profile&&profile.userInfoList">
+      <div class="profile-card" v-else>
         <div class="group-profile-name">{{ profile.name }}</div>
         <div class="group-members">
-          <div class="member" v-for="(member, index) in profile.userInfoList" :key="index">
+          <div class="member" v-for="(member, index) in profile.members" :key="index">
             <img class="member-avatar" :src="member.avatar"/>
             <span class="member-name">{{ member.name }}</span>
           </div>
         </div>
         <div class="button-box">
-          <button class="card-button" @click="chat('groupchat')">发消息</button>
+          <button class="card-button" @click="groupChat">发消息</button>
         </div>
       </div>
     </div>
@@ -82,7 +82,11 @@
         friends: [],
         groups: [],
         currentTab: 'friend',
-        profile: {},
+        profile: {
+          id: null,
+          name: null,
+          avatar: null
+        },
         groupMembers: [],
       };
     },
@@ -95,22 +99,31 @@
       switchTab(tab) {
         this.currentTab = tab;
       },
-      showFriendProfile(profile) {
-        this.profile = profile;
+      showFriendProfile(friend) {
+        this.profile = friend;
       },
-      showGroupProfile(profile) {
-        this.profile = profile;
-        this.profile.userInfoList = [];
-        this.profile.userList.map((item) => {
+      showGroupProfile(group) {
+        this.profile = group;
+        this.profile.members = [];
+
+        group.userList.map((item) => {
           const info = restApi.findUserById(item);
-          this.profile.userInfoList.push(info);
+          this.profile.members.push(info);
         });
       },
-      chat(path) {
+      privateChat () {
         this.$router.replace({
-          path: `/conversations/${path}`,
+          path: '/conversations/privatechat/'+this.profile.id,
           query: {
-            id: this.profile.id,
+            name: this.profile.name,
+            avatar: this.profile.avatar
+          }
+        });
+      },
+      groupChat () {
+        this.$router.replace({
+          path: '/conversations/groupchat/'+this.profile.id,
+          query: {
             name: this.profile.name,
             avatar: this.profile.avatar
           }

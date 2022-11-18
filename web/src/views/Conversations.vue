@@ -4,12 +4,11 @@
       <div class="conversation-list-container">
         <div class="conversation-list-content">
           <div v-if="conversations.length">
-            <div
+            <router-link
+              tag="div" class="conversation" replace
               v-for="(conversation, key) in conversations" :key="key"
-              class="conversation"
-              @click="chat(conversation)"
+              :to="chatLocation(conversation)"
               @contextmenu.prevent.stop="e => showRightClickMenu(e,conversation)"
-              :class="{ actived: isActiveConversation(conversation) }"
             >
               <div class="avatar">
                 <img :src="conversation.data.avatar"/>
@@ -54,7 +53,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </router-link>
           </div>
           <div v-else class="no-conversation">- 当前没有会话 -</div>
         </div>
@@ -66,24 +65,17 @@
       </div>
     </div>
     <div class="chat">
-      <private-chat :key="$route.query.id" v-if="$route.path === '/conversations/privatechat'"/>
-      <group-chat :key="$route.query.id" v-if="$route.path === '/conversations/groupchat'"/>
+      <router-view :key="$route.params.id"/>
     </div>
   </div>
 </template>
 
 <script>
-  import PrivateChat from './PrivateChat';
-  import GroupChat from './GroupChat';
   import restApi from "../api/restapi";
   import {formatDate} from '../utils/utils.js'
 
   export default {
     name: 'Conversations',
-    components: {
-      PrivateChat,
-      GroupChat,
-    },
     data() {
       return {
         currentUser: {},
@@ -109,11 +101,6 @@
         this.hideRightClickMenu();
       });
       this.currentUser = this.globalData.currentUser;
-      this.activeConversation = {
-        type: this.$route.query.type,
-        id: this.$route.query.id,
-        data: this.$route.query.id,
-      };
 
       this.listenConversationUpdate(); //监听会话列表变化
       this.loadConversations(); //加载会话列表
@@ -192,27 +179,17 @@
           });
         }
       },
-
-
-      isActiveConversation(conversation) {
-        let id = conversation.type === 'private' ? conversation.userId : conversation.groupId;
-        return id = this.activeConversation.id===conversation && this.conversations.type === conversation.type;
-      },
-
-      chat(conversation) {
-
-        this.activeConversation.type = conversation.type;
-        this.activeConversation.id = conversation.type === 'private' ? conversation.userId : conversation.groupId;
-        this.activeConversation.data = conversation.data;
-
-        this.$router.replace({
-          path: `/conversations/${path}`,
+      chatLocation (conversation) {
+        let path = conversation.type === 'private' ?
+          '/conversations/privatechat/'+conversation.userId :
+          '/conversations/groupchat/'+conversation.groupId
+        return {
+          path: path,
           query: {
-            id: this.activeConversation.id,
-            name: this.activeConversation.data.name,
-            avatar: this.activeConversation.data.avatar
+            name: conversation.data.name,
+            avatar: conversation.data.avatar
           }
-        });
+        }
       }
     },
   };
@@ -343,7 +320,7 @@
     border-radius: 10%;
   }
 
-  .conversation-list-content .actived {
+  .router-link-active {
     background: #eeeeee;
   }
 

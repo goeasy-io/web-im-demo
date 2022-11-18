@@ -254,7 +254,7 @@
     },
     created() {
       this.friend = {
-        id: this.$route.query.id,
+        id: this.$route.params.id,
         name: this.$route.query.name,
         avatar: this.$route.query.avatar,
       };
