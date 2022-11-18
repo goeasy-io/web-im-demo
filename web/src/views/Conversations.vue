@@ -80,12 +80,6 @@
       return {
         currentUser: {},
         conversations: [],
-
-        activeConversation: {
-          type: null,
-          id: null,
-          data: null,
-        },
         // Conversation右键菜单
         rightClickMenu: {
           conversation: null,

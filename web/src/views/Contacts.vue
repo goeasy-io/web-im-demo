@@ -1,14 +1,24 @@
 <template>
   <div class="contact">
     <div class="contact-left">
-      <div class="tab-list">
-        <div :class="currentTab === 'friend'? 'tab-item selected' : 'tab-item'" @click="switchTab('friend')">好友</div>
-        <div :class="currentTab === 'group'? 'tab-item selected' : 'tab-item'" @click="switchTab('group')">群组</div>
-      </div>
-      <div class="contact-list" v-if="currentTab === 'friend'">
+      <div class="contact-list-title">群组</div>
+      <div class="group-list">
         <div
-          v-for="(friend, key) in friends || []" :key="key"
-          :class="profile&&profile.id === friend.id? 'friend-item selected':'friend-item'"
+          v-for="(group, key) in groups || []" :key="key" class="group-item"
+          :class="{actived: profile.group && profile.group.id === group.id}"
+          @click="showGroupProfile(group)"
+        >
+          <div class="group-avatar">
+            <img :src="group.avatar"/>
+          </div>
+          <div class="group-name">{{ group.name }}({{ group.userList.length }})</div>
+        </div>
+      </div>
+      <div class="contact-list-title">好友</div>
+      <div class="friend-list">
+        <div
+          v-for="(friend, key) in friends || []" :key="key" class="friend-item"
+          :class="{actived: profile.friend && profile.friend.id === friend.id}"
           @click="showFriendProfile(friend)"
         >
           <div class="friend-avatar">
@@ -20,47 +30,34 @@
           </div>
         </div>
       </div>
-      <div class="contact-list" v-if="currentTab === 'group'">
-        <div
-          v-for="(group, key) in groups || []"
-          :class="profile&&profile.id === group.id? 'group-item selected':'group-item'"
-          :key="key"
-          @click="showGroupProfile(group)"
-        >
-          <div class="group-avatar">
-            <img :src="group.avatar"/>
-          </div>
-          <div class="group-name">{{ group.name }}({{ group.userList.length }})</div>
-        </div>
-      </div>
     </div>
-    <div class="contact-main" v-if="profile.id">
-      <div class="profile-card" v-if="!profile.members">
-        <div class="card-title">
+    <div class="contact-main">
+      <div class="profile-card" v-if="profile.friend">
+        <div class="profile-card-title">
           <div class="profile-name">
             <i class="iconfont icon-zhanghu"></i>
-            <div>{{ profile.name }}</div>
+            <div>{{ profile.friend.name }}</div>
           </div>
           <div class="profile-avatar">
-            <img :src="profile.avatar"/>
+            <img :src="profile.friend.avatar"/>
           </div>
         </div>
-        <div class="info-item">
+        <div class="friend-info">
           <div class="info-name">邮 箱</div>
-          <div class="info-text">{{ profile.email }}</div>
+          <div class="info-text">{{ profile.friend.email }}</div>
         </div>
-        <div class="info-item">
+        <div class="friend-info">
           <div class="info-name">手 机</div>
-          <div class="info-text">{{ profile.phone }}</div>
+          <div class="info-text">{{ profile.friend.phone }}</div>
         </div>
         <div class="button-box">
           <button class="card-button" @click="privateChat">发消息</button>
         </div>
       </div>
-      <div class="profile-card" v-else>
-        <div class="group-profile-name">{{ profile.name }}</div>
+      <div class="profile-card" v-if="profile.group">
+        <div class="group-profile-name">{{ profile.group.name }}</div>
         <div class="group-members">
-          <div class="member" v-for="(member, index) in profile.members" :key="index">
+          <div class="member" v-for="(member, index) in profile.group.members" :key="index">
             <img class="member-avatar" :src="member.avatar"/>
             <span class="member-name">{{ member.name }}</span>
           </div>
@@ -81,13 +78,10 @@
       return {
         friends: [],
         groups: [],
-        currentTab: 'friend',
         profile: {
-          id: null,
-          name: null,
-          avatar: null
+          friend: null,
+          group: null
         },
-        groupMembers: [],
       };
     },
     mounted() {
@@ -96,36 +90,35 @@
       this.groups = restApi.findGroups(currentUser);
     },
     methods: {
-      switchTab(tab) {
-        this.currentTab = tab;
-      },
       showFriendProfile(friend) {
-        this.profile = friend;
+        this.profile.group = null;
+        this.profile.friend = friend;
       },
       showGroupProfile(group) {
-        this.profile = group;
-        this.profile.members = [];
+        this.profile.friend = null;
+        this.profile.group = group;
+        this.profile.group.members = [];
 
         group.userList.map((item) => {
           const info = restApi.findUserById(item);
-          this.profile.members.push(info);
+          this.profile.group.members.push(info);
         });
       },
       privateChat () {
         this.$router.replace({
-          path: '/conversations/privatechat/'+this.profile.id,
+          path: '/conversations/privatechat/'+this.profile.friend.id,
           query: {
-            name: this.profile.name,
-            avatar: this.profile.avatar
+            name: this.profile.friend.name,
+            avatar: this.profile.friend.avatar
           }
         });
       },
       groupChat () {
         this.$router.replace({
-          path: '/conversations/groupchat/'+this.profile.id,
+          path: '/conversations/groupchat/'+this.profile.group.id,
           query: {
-            name: this.profile.name,
-            avatar: this.profile.avatar
+            name: this.profile.group.name,
+            avatar: this.profile.group.avatar
           }
         });
       }
@@ -148,35 +141,22 @@
     border-right: #dbd6d6 1px solid;
   }
 
-  .tab-list {
-    padding: 20px;
-    display: flex;
-  }
-
-  .tab-item {
-    flex: 1;
-    text-align: center;
-    color: #403a3a;
-    height: 40px;
-    box-sizing: border-box;
-    line-height: 40px;
+  .contact-list-title {
+    margin: 10px 20px;
     font-size: 14px;
-    font-weight: 500;
-    position: relative;
-    cursor: pointer;
-    margin-bottom: 10px;
   }
 
-  .tab-list .selected {
-    border-bottom: 2px solid #606266;
-  }
-
-  .contact-list {
+  .friend-list {
     display: flex;
     flex-direction: column;
   }
 
-  .contact-list .selected {
+  .group-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .actived {
     background: #FFFFFF;
     border-radius: 10px;
     box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.1);
@@ -186,10 +166,6 @@
     display: flex;
     padding: 5px 10px;
     cursor: pointer;
-  }
-
-  .friend-avatar {
-    width: 58px;
   }
 
   .friend-avatar img {
@@ -215,20 +191,20 @@
   }
 
   .friend-mail {
-    line-height: 30px;
+    line-height: 21px;
     color: #888888;
   }
 
   .group-item {
     display: flex;
-    padding: 5px 10px;
+    padding: 8px 10px;
     cursor: pointer;
     align-items: center;
   }
 
   .group-avatar {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     margin-left: 10px;
     overflow: hidden;
     display: flex;
@@ -251,7 +227,7 @@
     padding: 20px 0;
   }
 
-  .card-title {
+  .profile-card-title {
     padding: 60px;
     border-bottom: 1px solid #eeeeee;
     display: flex;
@@ -281,7 +257,7 @@
     border-radius: 10%;
   }
 
-  .info-item {
+  .friend-info {
     padding: 10px 30px;
     display: flex;
     justify-content: space-around;
