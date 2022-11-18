@@ -9,6 +9,9 @@
       <!--  #endif -->
         {{ history.loaded ? '已经没有更多的历史消息' : '点击获取历史消息' }}
       </view>
+
+        //todo: 这么多判断是有必要吗？
+
       <checkbox-group @change="selectMessages">
         <!--消息记录-->
         <view :id="'item'+index" v-for="(message,index) in history.messages" :key="message.messageId">
@@ -33,8 +36,10 @@
               <view class="avatar">
                 <image :src="message.senderId === currentUser.id? currentUser.avatar : friend.avatar"></image>
               </view>
+              //todo:是不是为demo服务的，本地浏览器里预览的时候，人家其实有手机这些事件的？
+
               <!--  #ifdef  H5 -->
-              <view class="content" @click.right="showActionPopup(message)">
+              <view class="content" @click.right="showActionPopup(message)"  @longpress="showActionPopup(message)">
               <!--  #endif -->
               <!--  #ifndef  H5 -->
               <view class="content" @longpress="showActionPopup(message)">
@@ -105,6 +110,7 @@
           <image class="more" v-if="audio.visible" src="/static/images/jianpan.png"></image>
           <image class="more" v-else src="/static/images/audio.png"></image>
         </view>
+<!--        todo:有必要吗？-->
         <!--  #ifdef  H5 -->
         <view v-if="audio.visible" class="record-input" @click="onRecordStart">
           {{ audio.recording ? '松开发送' : '按住录音' }}
