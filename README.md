@@ -1,8 +1,9 @@
 # GoEasy IM Demo
 
-GoEasy IM是GoEasy专门为Web前端开发者打造, 天生支持H5、Uniapp和各种小程序的IM即时通讯, 快速实现私聊、群聊、在线客服!
-
-## 免注册体验在线示例
+[GoEasy IM](https://goeasy.io/im.html)是[GoEasy](https://goeasy.io/)专门为Web前端开发者打造, 天生支持H5、Uniapp和各种小程序的IM即时通讯, 快速实现私聊、群聊、在线客服!
+### 官网
+https://goeasy.io/im.html
+## 体验在线示例(免注册)
 * [IM示例体验](https://baidu.com)
 * [在线客服示例体验](https://baidu.com)
 
