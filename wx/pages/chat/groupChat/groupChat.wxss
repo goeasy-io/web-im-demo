@@ -25,15 +25,27 @@ page {
     padding: 0 20rpx 130rpx 20rpx;
 }
 
-.header {
-	display: flex;
-	align-items: center;
-	flex-direction: column;
-	justify-content: center;
-	height: 90rpx;
-	font-size: 24rpx;
-	color: gray !important;
-	text-decoration: none !important;
+.history-loaded {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    height: 60rpx;
+    line-height: 60rpx;
+    margin: 15rpx 0;
+    font-size: 24rpx;
+    color: gray !important;
+    text-decoration: none !important;
+}
+
+.load {
+    font-size: 24rpx;
+    height: 60rpx;
+    line-height: 60rpx;
+    margin: 15rpx 0;
+    width: 100%;
+    text-align: center;
+    color: #d02129;
 }
 
 .time-lag{

@@ -1,14 +1,11 @@
 <template>
   <view class="chatInterface" @contextmenu.prevent="">
-    <scroll-view :scroll-y="true" :scroll-into-view="bottomView" class="scroll-view">
-      <!--  #ifdef  H5 -->
-      <view :class="history.loaded ? 'history-loaded':'load'" @click="loadHistoryMessage(false)">
-      <!--  #endif -->
-      <!--  #ifndef  H5 -->
-      <view :class="history.loaded ? 'history-loaded':'load'">
-      <!--  #endif -->
-        {{ history.loaded ? '已经没有更多的历史消息' : '点击获取历史消息' }}
+    <view class="scroll-view">
+      <image v-if="history.loading" class="history-loaded" src="/static/images/loading.svg"/>
+      <view v-else :class="history.loaded ? 'history-loaded':'load'" @click="loadHistoryMessage(false)">
+        <view>{{ history.loaded ? '已经没有更多的历史消息' : '点击获取历史消息' }}</view>
       </view>
+
       <checkbox-group @change="selectMessages">
         <!--消息记录-->
         <view :id="'item'+index" v-for="(message,index) in history.messages" :key="message.messageId">
@@ -33,12 +30,8 @@
               <view class="avatar">
                 <image :src="message.senderId === currentUser.id? currentUser.avatar : friend.avatar"></image>
               </view>
-              <!--  #ifdef  H5 -->
-              <view class="content" @click.right="showActionPopup(message)">
-              <!--  #endif -->
-              <!--  #ifndef  H5 -->
-              <view class="content" @longpress="showActionPopup(message)">
-              <!--  #endif -->
+
+              <view class="content" @click.right="showActionPopup(message)" @longpress="showActionPopup(message)">
                 <view class="message-payload">
                   <b class="pending" v-if="message.status === 'sending'"></b>
                   <b class="send-fail" v-if="message.status === 'fail'"></b>
@@ -98,23 +91,16 @@
           </view>
         </view>
       </checkbox-group>
-    </scroll-view>
+    </view>
     <view class="action-box" v-if="!videoPlayer.visible && !messageSelector.visible">
       <view class="action-top">
         <view @click="switchAudioKeyboard">
           <image class="more" v-if="audio.visible" src="/static/images/jianpan.png"></image>
           <image class="more" v-else src="/static/images/audio.png"></image>
         </view>
-        <!--  #ifdef  H5 -->
-        <view v-if="audio.visible" class="record-input" @click="onRecordStart">
+        <view v-if="audio.visible" class="record-input" @click="onRecordStart" @touchend.stop="onRecordEnd" @touchstart.stop="onRecordStart">
           {{ audio.recording ? '松开发送' : '按住录音' }}
         </view>
-        <!--  #endif -->
-        <!--  #ifndef  H5 -->
-        <view v-if="audio.visible" class="record-input" @touchend="onRecordEnd" @touchstart="onRecordStart">
-          {{ audio.recording ? '松开发送' : '按住录音' }}
-        </view>
-        <!--  #endif -->
         <!-- GoEasyIM最大支持3k的文本消息，如需发送长文本，需调整输入框maxlength值 -->
         <input v-else v-model="text" class="consult-input" maxlength="700" placeholder="发送消息" type="text" />
         <view @click="switchEmojiKeyboard">
@@ -235,7 +221,7 @@
         history: {
           messages: [],
           allLoaded: false,
-          loading: true
+          loading: false
         },
         audio: {
           startTime: null,
@@ -253,7 +239,6 @@
           url: '',
           context: null
         },
-        bottomView: '',
         // 展示消息删除弹出框
         actionPopup: {
           visible: false,
@@ -269,10 +254,9 @@
     },
     onLoad(options) {
       //聊天对象
-      let friendId = options.to;
+      this.friend = JSON.parse(options.to);
       this.currentUser = getApp().globalData.currentUser;
       //从服务器获取最新的好友信息
-      this.friend = restApi.findUserById(friendId);
       this.to = {
         id: this.friend.id,
         type: this.GoEasy.IM_SCENE.PRIVATE,
@@ -636,6 +620,7 @@
         this.messageSelector.messages = selectedMessages;
       },
       loadHistoryMessage(scrollToBottom) {//历史消息
+        this.history.loading = true;
         let lastMessageTimeStamp = null;
         let lastMessage = this.history.messages[0];
         if (lastMessage) {
@@ -647,6 +632,7 @@
           limit: 10,
           onSuccess: (result) => {
             uni.stopPullDownRefresh();
+            this.history.loading = false;
             let messages = result.content;
             if (messages.length === 0) {
               this.history.loaded = true;
@@ -666,6 +652,7 @@
             //获取失败
             console.log('获取历史消息失败:', error);
             uni.stopPullDownRefresh();
+            this.history.loading = false;
           }
         });
       },
@@ -762,9 +749,11 @@
       },
       scrollToBottom() {
         this.$nextTick(() => {
-          let index = this.history.messages.length - 1;
-          this.bottomView = `item${index}`;
-        })
+          uni.pageScrollTo({
+            scrollTop: 2000000,
+            duration: 0
+          });
+        });
       },
       markPrivateMessageAsRead() {
         this.goEasy.im.markMessageAsRead({

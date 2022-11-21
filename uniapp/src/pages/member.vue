@@ -3,7 +3,7 @@
 		<view class="member">
 			<image :src="member.avatar"
 				   class="group-member__item"
-				   v-for="(member, key) in users"
+				   v-for="(member, key) in members"
 				   :key="key">
 			</image>
 		</view>
@@ -15,14 +15,14 @@
 		name : 'member',
 		data () {
 			return {
-				users : {}
+				members : {}
 			}
 		},
 		onLoad (options) {
 			//群成员数据
-			this.users = JSON.parse(options.users);
+			this.members = JSON.parse(options.members);
 			uni.setNavigationBarTitle({
-				title : '成员（' + (Object.keys(this.users).length || 0) +'）'
+				title : '成员（' + (Object.keys(this.members).length || 0) +'）'
 			});
 		}
 	}

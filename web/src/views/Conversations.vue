@@ -4,20 +4,15 @@
       <div class="conversation-list-container">
         <div class="conversation-list-content">
           <div v-if="conversations.length">
-            <div
+            <router-link
+              tag="div" class="conversation" replace
               v-for="(conversation, key) in conversations" :key="key"
-              class="conversation"
-              @click="chat(conversation)"
+              :to="chatLocation(conversation)"
               @contextmenu.prevent.stop="e => showRightClickMenu(e,conversation)"
-              :class="{
-                checked:
-                  $route.path === '/conversations/privatechat' && conversation.userId === $route.query.id ||
-                  $route.path === '/conversations/groupchat' && conversation.groupId === $route.query.id
-              }"
             >
               <div class="avatar">
                 <img :src="conversation.data.avatar"/>
-                <div v-if="conversation.unread && currentUser.id !== conversation.lastMessage.senderId"
+                <div v-if="conversation.unread>0"
                      class="unread-count">
                   <span class="unread">{{ conversation.unread }}</span>
                 </div>
@@ -58,7 +53,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </router-link>
           </div>
           <div v-else class="no-conversation">- 当前没有会话 -</div>
         </div>
@@ -70,24 +65,17 @@
       </div>
     </div>
     <div class="chat">
-      <private-chat :key="$route.query.id" v-if="$route.path === '/conversations/privatechat'"/>
-      <group-chat :key="$route.query.id" v-if="$route.path === '/conversations/groupchat'"/>
+      <router-view :key="$route.params.id"/>
     </div>
   </div>
 </template>
 
 <script>
-  import PrivateChat from './PrivateChat';
-  import GroupChat from './GroupChat';
   import restApi from "../api/restapi";
   import {formatDate} from '../utils/utils.js'
 
   export default {
     name: 'Conversations',
-    components: {
-      PrivateChat,
-      GroupChat,
-    },
     data() {
       return {
         currentUser: {},
@@ -107,6 +95,7 @@
         this.hideRightClickMenu();
       });
       this.currentUser = this.globalData.currentUser;
+
       this.listenConversationUpdate(); //监听会话列表变化
       this.loadConversations(); //加载会话列表
       this.subscribeGroup();  //订阅群消息
@@ -148,12 +137,10 @@
         });
       },
       showRightClickMenu(e, conversation) {
-        this.rightClickMenu = {
-          conversation: conversation,
-          visible: true,
-          x: e.pageX,
-          y: e.pageY,
-        }
+        this.rightClickMenu.conversation = conversation;
+        this.rightClickMenu.visible = true;
+        this.rightClickMenu.x = e.pageX;
+        this.rightClickMenu.y = e.pageY;
       },
       hideRightClickMenu() {
         this.rightClickMenu.visible = false;
@@ -173,32 +160,30 @@
         });
       },
       deleteConversation() {
-        let confirmResult = confirm('确认要删除这条会话吗？');
-        if (confirmResult===false) {
-          return
+        if (confirm('确认要删除这条会话吗？')) {
+          let conversation = this.rightClickMenu.conversation;
+          this.goEasy.im.removeConversation({
+            conversation: conversation,
+            onSuccess: function () {
+              console.log('删除会话成功');
+            },
+            onFailed: function (error) {
+              console.log(error);
+            },
+          });
         }
-        let conversation = this.rightClickMenu.conversation;
-        this.goEasy.im.removeConversation({
-          conversation: conversation,
-          onSuccess: function () {
-            console.log('删除会话成功');
-          },
-          onFailed: function (error) {
-            console.log(error);
-          },
-        });
       },
-      chat(conversation) {
-        let path = conversation.type === 'private' ? 'privatechat' : 'groupchat';
-        let id = conversation.type === 'private' ? conversation.userId : conversation.groupId;
-        this.$router.replace({
-          path: `/conversations/${path}`,
+      chatLocation (conversation) {
+        let path = conversation.type === 'private' ?
+          '/conversations/privatechat/'+conversation.userId :
+          '/conversations/groupchat/'+conversation.groupId
+        return {
+          path: path,
           query: {
-            id: id,
             name: conversation.data.name,
             avatar: conversation.data.avatar
           }
-        });
+        }
       }
     },
   };
@@ -329,7 +314,7 @@
     border-radius: 10%;
   }
 
-  .conversation-list-content .checked {
+  .router-link-active {
     background: #eeeeee;
   }
 

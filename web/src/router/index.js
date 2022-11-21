@@ -21,11 +21,11 @@ const routes = [
 	            component: Conversations,
                 children: [
                     {
-                        path: 'privatechat',
+                        path: 'privatechat/:id',
                         component: PrivateChat,
                     },
                     {
-                        path: 'groupchat',
+                        path: 'groupchat/:id',
 	                    component: GroupChat,
                     },
                 ],

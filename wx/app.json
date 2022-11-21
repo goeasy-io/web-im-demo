@@ -20,7 +20,6 @@
 		"selectedColor":"#d02129",
 		"borderStyle":"black",
 		"backgroundColor":"#F8F7F7",
-		"height" : "60px",
 		"list" : [
 			{
 				"pagePath" : "pages/conversations/conversations",

@@ -23,20 +23,13 @@
         </div>
         <div class="menu-box">
           <div class="menu-list">
-            <div class="menu-item">
-              <router-link to="/conversations" replace>
-                <i :class="{ selected: selectedTab === 'conversations'}" class="iconfont icon-zaixiankefu"></i>
-              </router-link>
+            <router-link tag="div" class="menu-item" to="/conversations" replace>
+              <i class="iconfont icon-zaixiankefu"></i>
               <span v-if="unreadAmount" class="menu-unread">{{ unreadAmount}}</span>
-            </div>
-            <div class="menu-item">
-              <router-link to="/contacts" replace>
-                <i
-                  class="iconfont icon-haoyou"
-                  :class="{ selected: selectedTab === 'contacts' }"
-                ></i>
-              </router-link>
-            </div>
+            </router-link>
+            <router-link tag="div" class="menu-item" to="/contacts" replace>
+              <i class="iconfont icon-haoyou"></i>
+            </router-link>
           </div>
           <div class="exit">
             <i class="iconfont icon-h" @click="logout"></i>
@@ -55,7 +48,6 @@
     data() {
       return {
         currentUser: null,
-        selectedTab: "conversations",
         unreadAmount: null
       };
     },
@@ -65,15 +57,6 @@
         this.connectGoEasy();  //连接goeasy
       }
       this.goEasy.im.on(this.GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, this.setUnreadNumber);
-    },
-    watch: {
-      $route: {
-        handler() {
-          let path = this.$route.path;
-          let urls = path.split("/");
-          this.selectedTab = urls[1];
-        },
-      }
     },
     methods: {
       connectGoEasy() {
@@ -95,19 +78,17 @@
         this.unreadAmount = content.unreadTotal;
       },
       logout() {
-        let confirmResult = confirm('确认要退出登录吗？');
-        if (confirmResult===false) {
-          return
+        if (confirm('确认要退出登录吗？')) {
+          this.goEasy.disconnect({
+            onSuccess: () => {
+              this.globalData.currentUser = null;
+              this.$router.replace({path: './login'});
+            },
+            onFailed: (error) => {
+              console.log("Failed to disconnect GoEasy, code:" + error.code + ",error:" + error.content);
+            }
+          });
         }
-        this.goEasy.disconnect({
-          onSuccess: () => {
-            this.globalData.currentUser = null;
-            this.$router.replace({path: './login'});
-          },
-          onFailed: (error) => {
-            console.log("Failed to disconnect GoEasy, code:" + error.code + ",error:" + error.content);
-          }
-        });
       },
     },
   };
@@ -238,7 +219,7 @@
     color: #ffffff;
   }
 
-  .menu-list .selected {
+  .router-link-active i {
     color: #d02129 !important;
   }
 

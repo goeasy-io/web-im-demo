@@ -17,12 +17,9 @@
                 <text class="unread-text">
                   {{ conversation.lastMessage.read === false && conversation.lastMessage.senderId === currentUser.id ? '[未读]' : '' }}
                 </text>
-                <text v-if="conversation.type === 'private'">
-                  {{ conversation.lastMessage.senderId === currentUser.id ? '我' : conversation.data.name }}:
-                </text>
-                <text v-else>
-                  {{ conversation.lastMessage.senderId === currentUser.id ? '我' : conversation.lastMessage.senderData.name }}:
-                </text>
+
+                <text v-if="conversation.lastMessage.senderId === currentUser.id">我: </text>
+                <text v-else>{{ conversation.type === 'group' ? conversation.lastMessage.senderData.name : conversation.data.name }}: </text>
                 <text v-if="conversation.lastMessage.type === 'text'">{{ conversation.lastMessage.payload.text }}</text>
                 <text v-else-if="conversation.lastMessage.type === 'video'">[视频消息]</text>
                 <text v-else-if="conversation.lastMessage.type === 'audio'">[语音消息]</text>
@@ -32,11 +29,13 @@
                 <text v-else>[[未识别内容]]</text>
               </view>
               <view class="item-info-top_content" v-else>
-                <text v-if="conversation.type === 'private'">
-                  {{ conversation.lastMessage.senderId === currentUser.id ? '你' : `"${conversation.data.name}"` }}撤回了一条消息
+
+                <text v-if="conversation.lastMessage.senderId === currentUser.id">
+                  你撤回了一条消息
                 </text>
-                <text v-if="conversation.type === 'group'">
-                  {{ conversation.lastMessage.senderId === currentUser.id ? '你' : `"${conversation.lastMessage.senderData.name}"` }}撤回了一条消息
+                <text v-else>
+                  {{ conversation.type === 'group' ? conversation.lastMessage.senderData.name : conversation.data.name }}
+                  撤回了一条消息
                 </text>
               </view>
               <view class="item-info-bottom_action" @click.stop="showAction(conversation)"></view>
@@ -200,10 +199,25 @@
         })
       },
       chat(conversation) {
-        let path = conversation.type === this.GoEasy.IM_SCENE.PRIVATE
-          ? './privateChat?to=' + conversation.userId
-          : './groupChat?to=' + conversation.groupId;
-        uni.navigateTo({ url: path });
+        let path,to
+        if (conversation.type === this.GoEasy.IM_SCENE.PRIVATE) {
+          path = './privateChat?to=';
+          to = {
+            id: conversation.userId,
+            name: conversation.data.name,
+            avatar: conversation.data.avatar
+          };
+        } else {
+          path = './groupChat?to=';
+          to = {
+            id: conversation.groupId,
+            name: conversation.data.name,
+            avatar: conversation.data.avatar
+          }
+        }
+        uni.navigateTo({
+          url: path+JSON.stringify(to)
+        });
       },
       showAction(conversation) {
         this.actionPopup.conversation = conversation;

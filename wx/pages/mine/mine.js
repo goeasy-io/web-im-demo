@@ -19,7 +19,7 @@ Page({
 				onSuccess: function(){
 					wx.hideLoading();
 					console.log('注销成功');
-					wx.removeStorageSync('currentUser');
+                    getApp().globalData.currentUser = null;
 					wx.redirectTo({
 						url: '../login/login'
 					});

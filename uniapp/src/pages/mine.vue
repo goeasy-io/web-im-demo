@@ -23,6 +23,9 @@
     },
     methods: {
       logout() {
+        if(this.goEasy.getConnectionStatus() === 'disconnected') {
+          return
+        }
         uni.showLoading({
           title: '注销中',
           mask: true,

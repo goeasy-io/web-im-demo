@@ -1,15 +1,25 @@
 <template>
   <div class="contact">
     <div class="contact-left">
-      <div class="tab-list">
-        <div :class="currentTab === 'friend'? 'tab-item selected' : 'tab-item'" @click="switchTab('friend')">好友</div>
-        <div :class="currentTab === 'group'? 'tab-item selected' : 'tab-item'" @click="switchTab('group')">群组</div>
-      </div>
-      <div class="contact-list" v-if="currentTab === 'friend'">
+      <div class="contact-list-title">群组</div>
+      <div class="group-list">
         <div
-          v-for="(friend, key) in friends || []" :key="key"
-          :class="selectedContact.data.id === friend.id? 'friend-item selected':'friend-item'"
-          @click="showProfileCard(friend,'friend')"
+          v-for="(group, key) in groups || []" :key="key" class="group-item"
+          :class="{actived: profile.group && profile.group.id === group.id}"
+          @click="showGroupProfile(group)"
+        >
+          <div class="group-avatar">
+            <img :src="group.avatar"/>
+          </div>
+          <div class="group-name">{{ group.name }}({{ group.userList.length }})</div>
+        </div>
+      </div>
+      <div class="contact-list-title">好友</div>
+      <div class="friend-list">
+        <div
+          v-for="(friend, key) in friends || []" :key="key" class="friend-item"
+          :class="{actived: profile.friend && profile.friend.id === friend.id}"
+          @click="showFriendProfile(friend)"
         >
           <div class="friend-avatar">
             <img :src="friend.avatar"/>
@@ -20,53 +30,40 @@
           </div>
         </div>
       </div>
-      <div class="contact-list" v-if="currentTab === 'group'">
-        <div
-          v-for="(group, key) in groups || []"
-          :class="selectedContact.data.id === group.id? 'group-item selected':'group-item'"
-          :key="key"
-          @click="showProfileCard(group,'group')"
-        >
-          <div class="group-avatar">
-            <img :src="group.avatar"/>
-          </div>
-          <div class="group-name">{{ group.name }}({{ group.userList.length }})</div>
-        </div>
-      </div>
     </div>
     <div class="contact-main">
-      <div class="profile-card" v-if="selectedContact.type === 'friend'">
-        <div class="card-title">
+      <div class="profile-card" v-if="profile.friend">
+        <div class="profile-card-title">
           <div class="profile-name">
             <i class="iconfont icon-zhanghu"></i>
-            <div>{{ selectedContact.data.name }}</div>
+            <div>{{ profile.friend.name }}</div>
           </div>
           <div class="profile-avatar">
-            <img :src="selectedContact.data.avatar"/>
+            <img :src="profile.friend.avatar"/>
           </div>
         </div>
-        <div class="info-item">
+        <div class="friend-info">
           <div class="info-name">邮 箱</div>
-          <div class="info-text">{{ selectedContact.data.email }}</div>
+          <div class="info-text">{{ profile.friend.email }}</div>
         </div>
-        <div class="info-item">
+        <div class="friend-info">
           <div class="info-name">手 机</div>
-          <div class="info-text">{{ selectedContact.data.phone }}</div>
+          <div class="info-text">{{ profile.friend.phone }}</div>
         </div>
         <div class="button-box">
-          <button class="card-button" @click="chat('privatechat')">发消息</button>
+          <button class="card-button" @click="privateChat">发消息</button>
         </div>
       </div>
-      <div class="profile-card" v-else-if="selectedContact.type === 'group'">
-        <div class="group-name">{{ selectedContact.data.name }}</div>
+      <div class="profile-card" v-if="profile.group">
+        <div class="group-profile-name">{{ profile.group.name }}</div>
         <div class="group-members">
-          <div class="member" v-for="(member, index) in selectedContact.data.userInfoList" :key="index">
+          <div class="member" v-for="(member, index) in profile.group.members" :key="index">
             <img class="member-avatar" :src="member.avatar"/>
             <span class="member-name">{{ member.name }}</span>
           </div>
         </div>
         <div class="button-box">
-          <button class="card-button" @click="chat('groupchat')">发消息</button>
+          <button class="card-button" @click="groupChat">发消息</button>
         </div>
       </div>
     </div>
@@ -81,12 +78,10 @@
       return {
         friends: [],
         groups: [],
-        currentTab: 'friend',
-        selectedContact: {
-          type: null,
-          data: {}
+        profile: {
+          friend: null,
+          group: null
         },
-        groupMembers: [],
       };
     },
     mounted() {
@@ -95,27 +90,35 @@
       this.groups = restApi.findGroups(currentUser);
     },
     methods: {
-      switchTab(tab) {
-        this.currentTab = tab;
+      showFriendProfile(friend) {
+        this.profile.group = null;
+        this.profile.friend = friend;
       },
-      showProfileCard(contact, type) {
-        this.selectedContact.data = contact;
-        this.selectedContact.type = type;
-        if (this.selectedContact.type === 'group') {
-          this.selectedContact.data.userInfoList = [];
-          this.selectedContact.data.userList.map((item) => {
-            const info = restApi.findUserById(item);
-            this.selectedContact.data.userInfoList.push(info);
-          });
-        }
+      showGroupProfile(group) {
+        this.profile.friend = null;
+        this.profile.group = group;
+        this.profile.group.members = [];
+
+        group.userList.map((item) => {
+          const info = restApi.findUserById(item);
+          this.profile.group.members.push(info);
+        });
       },
-      chat(path) {
+      privateChat () {
         this.$router.replace({
-          path: `/conversations/${path}`,
+          path: '/conversations/privatechat/'+this.profile.friend.id,
           query: {
-            id: this.selectedContact.data.id,
-            name: this.selectedContact.data.name,
-            avatar: this.selectedContact.data.avatar
+            name: this.profile.friend.name,
+            avatar: this.profile.friend.avatar
+          }
+        });
+      },
+      groupChat () {
+        this.$router.replace({
+          path: '/conversations/groupchat/'+this.profile.group.id,
+          query: {
+            name: this.profile.group.name,
+            avatar: this.profile.group.avatar
           }
         });
       }
@@ -123,220 +126,205 @@
   };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
   .contact {
     width: 100%;
     height: 100%;
     display: flex;
     background: #F7F7F7;
     color: #333333;
+  }
 
-    .contact-left {
-      width: 260px;
-      height: 100%;
-      border-right: #dbd6d6 1px solid;
+  .contact-left {
+    width: 260px;
+    height: 100%;
+    border-right: #dbd6d6 1px solid;
+  }
 
-      .tab-list {
-        padding: 20px;
-        display: flex;
+  .contact-list-title {
+    margin: 10px 20px;
+    font-size: 14px;
+  }
 
-        .tab-item {
-          flex: 1;
-          text-align: center;
-          color: #403a3a;
-          height: 40px;
-          box-sizing: border-box;
-          line-height: 40px;
-          font-size: 14px;
-          font-weight: 500;
-          position: relative;
-          cursor: pointer;
-          margin-bottom: 10px;
-        }
+  .friend-list {
+    display: flex;
+    flex-direction: column;
+  }
 
-        .selected {
-          border-bottom: 2px solid #606266;
-        }
-      }
+  .group-list {
+    display: flex;
+    flex-direction: column;
+  }
 
-      .contact-list {
-        display: flex;
-        flex-direction: column;
+  .actived {
+    background: #FFFFFF;
+    border-radius: 10px;
+    box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.1);
+  }
 
-        .selected {
-          background: #FFFFFF;
-          border-radius: 10px;
-          box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.1);
-        }
-      }
+  .friend-item {
+    display: flex;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
 
-      .friend-item {
-        display: flex;
-        padding: 5px 10px;
-        cursor: pointer;
+  .friend-avatar img {
+    width: 50px;
+    height: 50px;
+    border-radius: 10%;
+    margin-left: 10px;
+  }
 
-        .friend-avatar {
-          width: 58px;
+  .friend {
+    width: 65%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    padding-left: 10px;
+  }
 
-          img {
-            width: 50px;
-            height: 50px;
-            border-radius: 10%;
-            margin-left: 10px;
-          }
-        }
+  .friend-name {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 400;
+  }
 
-        .friend {
-          width: 65%;
-          margin: 0;
-          display: flex;
-          flex-direction: column;
-          text-align: left;
-          padding-left: 10px;
+  .friend-mail {
+    line-height: 21px;
+    color: #888888;
+  }
 
-          .friend-name {
-            margin: 0;
-            font-size: 16px;
-            font-weight: 400;
-          }
+  .group-item {
+    display: flex;
+    padding: 8px 10px;
+    cursor: pointer;
+    align-items: center;
+  }
 
-          .friend-mail {
-            line-height: 30px;
-            color: #888888;
-          }
-        }
-      }
+  .group-avatar {
+    width: 40px;
+    height: 40px;
+    margin-left: 10px;
+    overflow: hidden;
+    display: flex;
+  }
 
-      .group-item {
-        display: flex;
-        padding: 5px 10px;
-        cursor: pointer;
-        align-items: center;
+  .group-name {
+    margin-left: 10px;
+    width: 160px;
+    text-align: left;
+    font-size: 15px;
+    line-height: 40px;
+  }
 
-        .group-avatar {
-          width: 50px;
-          height: 50px;
-          margin-left: 10px;
-          overflow: hidden;
-          display: flex;
-        }
+  .contact-main {
+    flex: 1;
+    background: #FFFFFF;
+  }
 
-        .group-name {
-          margin-left: 10px;
-          width: 160px;
-          text-align: left;
-          font-size: 15px;
-          line-height: 40px;
-        }
-      }
-    }
+  .profile-card {
+    padding: 20px 0;
+  }
 
-    .contact-main {
-      flex: 1;
-      background: #FFFFFF;
+  .profile-card-title {
+    padding: 60px;
+    border-bottom: 1px solid #eeeeee;
+    display: flex;
+    justify-content: space-around;
+  }
 
-      .profile-card {
-        padding: 20px 0;
+  .profile-name {
+    width: 300px;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+  }
 
-        .card-title {
-          padding: 60px;
-          border-bottom: 1px solid #eeeeee;
-          display: flex;
-          justify-content: space-around;
+  .icon-zhanghu {
+    font-size: 26px;
+    color: #eeeeee;
+    margin-right: 10px;
+  }
 
-          .profile-name {
-            width: 300px;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
+  .profile-avatar {
+    width: 80px;
+  }
 
-            .icon-zhanghu {
-              font-size: 26px;
-              color: #eeeeee;
-              margin-right: 10px;
-            }
+  .profile-avatar img {
+    width: 80px;
+    height: 80px;
+    border-radius: 10%;
+  }
 
-          }
+  .friend-info {
+    padding: 10px 30px;
+    display: flex;
+    justify-content: space-around;
+    text-align: left;
+    font-size: 14px;
+    line-height: 45px;
+  }
 
-          .profile-avatar img{
-            width: 80px;
-            height: 80px;
-            border-radius: 10%;
-          }
-        }
+  .info-name {
+    width: 100px;
+  }
 
-        .info-item {
-          padding: 10px 30px;
-          display: flex;
-          justify-content: space-around;
-          text-align: left;
-          font-size: 14px;
-          line-height: 45px;
+  .info-text {
+    width: 200px;
+  }
 
-          .info-name {
-            width: 100px;
-          }
+  .group-profile-name {
+    font-size: 18px;
+    padding: 20px 70px;
+    border-bottom: 1px solid #eeeeee;
+  }
 
-          .info-text {
-            width: 200px;
-          }
+  .group-members {
+    width: 400px;
+    min-height: 200px;
+    margin: 20px auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+  }
 
-        }
+  .group-members .member {
+    width: 25%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
-        .group-name {
-          font-size: 18px;
-          padding: 20px 70px;
-          border-bottom: 1px solid #eeeeee;
-        }
+  }
 
-        .group-members {
-          width: 400px;
-          min-height: 200px;
-          margin: 20px auto;
-          display: flex;
-          flex-wrap: wrap;
-          align-content: flex-start;
+  .group-members .member-avatar {
+    width: 58px;
+    margin-top: 20px;
+    border-radius: 5%;
+  }
 
-          .member {
-            width: 25%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+  .group-members .member-name {
+    color: gray;
+    margin-top: 10px;
+    font-size: 12px;
+  }
 
-            .member-avatar {
-              width: 58px;
-              margin-top: 20px;
-              border-radius: 5%;
-            }
+  .button-box {
+    padding: 40px 0;
+  }
 
-            .member-name {
-              color: gray;
-              margin-top: 10px;
-              font-size: 12px;
-            }
-          }
-        }
-
-        .button-box {
-          padding: 40px 0;
-
-          .card-button {
-            background: #eeeeee;
-            color: #000000;
-            font-size: 14px;
-            border: none;
-            display: flex;
-            width: 120px;
-            height: 35px;
-            cursor: pointer;
-            border-radius: 5px;
-            margin: 0 auto;
-            align-items: center;
-            justify-content: center;
-          }
-
-        }
-      }
-    }
+  .card-button {
+    background: #eeeeee;
+    color: #000000;
+    font-size: 14px;
+    border: none;
+    display: flex;
+    width: 120px;
+    height: 35px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 0 auto;
+    align-items: center;
+    justify-content: center;
   }
 </style>

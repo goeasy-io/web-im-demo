@@ -186,11 +186,15 @@
   import {formatDate} from '../utils/utils.js'
   import restApi from '../api/restapi';
   import EmojiDecoder from '../utils/EmojiDecoder';
+  import GoeasyVideoPlayer from "../components/GoEasyVideoPlayer";
 
   const IMAGE_MAX_WIDTH = 200;
   const IMAGE_MAX_HEIGHT = 150;
   export default {
     name: 'PrivateChat',
+    components: {
+      GoeasyVideoPlayer,
+    },
     data() {
       const emojiUrl = 'https://imgcache.qq.com/open/qcloud/tim/assets/emoji/';
       const emojiMap = {
@@ -250,7 +254,7 @@
     },
     created() {
       this.friend = {
-        id: this.$route.query.id,
+        id: this.$route.params.id,
         name: this.$route.query.name,
         avatar: this.$route.query.avatar,
       };

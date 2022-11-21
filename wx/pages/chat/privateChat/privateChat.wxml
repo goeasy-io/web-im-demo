@@ -5,8 +5,10 @@
 <view class="chat">
     <view class="chat-box">
         <view class="scroll-view">
-            <view class="header">
-                <text>{{history.loaded ? '已经没有更多的历史消息' : '下拉获取历史消息'}}</text>
+            <image wx:if="{{history.loading}}" class="history-loaded" src="/static/images/loading.svg"/>
+            <view wx:else>
+                <view class="history-loaded" wx:if="{{history.loaded}}">已经没有更多的历史消息</view>
+                <view class="load" wx:else>下拉获取历史消息</view>
             </view>
             <!--已经收到的消息-->
             <checkbox-group bindchange="selectMessages">
@@ -50,9 +52,12 @@
                                     <view wx:if="{{message.type ==='audio'}}" class="audio-content"
                                           bindtap="playAudio" data-message="{{message}}">
                                         <view class="audio-facade" style="width:{{message.width}}">
-                                            <image wx:if="{{audioPlayer.playingMessage.messageId === message.messageId}}"
-                                                   class="audio-facade-bg audio-play-icon" src="/static/images/play.gif"></image>
-                                            <image wx:else class="audio-facade-bg" src="/static/images/voice.png"></image>
+                                            <image
+                                                wx:if="{{audioPlayer.playingMessage.messageId === message.messageId}}"
+                                                class="audio-facade-bg audio-play-icon"
+                                                src="/static/images/play.gif"></image>
+                                            <image wx:else class="audio-facade-bg"
+                                                   src="/static/images/voice.png"></image>
                                             <view class="record-second">{{message.finalDuration}}"</view>
                                         </view>
                                     </view>

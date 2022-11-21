@@ -3,42 +3,28 @@
     <view class="title">GoEasy IM</view>
     <view class="user-selector">
       <view class="selected-area" @click="switchSelectorVisible">
-        <view class="selected-content">
-          <image v-if="userSelector.selectedUser" :src="userSelector.selectedUser.avatar"></image>
-          <text>{{ userSelector.selectedUser ? userSelector.selectedUser.name : '请选择用户' }}</text>
+        <view class="selected-content" v-if="userSelector.selectedUser">
+          <image :src="userSelector.selectedUser.avatar"></image>
+          <text>{{ userSelector.selectedUser.name }}</text>
         </view>
-        <image
-          :class="userSelector.visible ? 'selected-icon' : 'selected-icon rotate'"
-          src="/static/images/up.png"
-        ></image>
+        <view class="selected-content" v-else>
+          <text>请选择用户</text>
+        </view>
+        <image class="selected-icon rotate" src="/static/images/up.png"></image>
       </view>
       <view v-if="userSelector.visible" class="dialog-area">
         <view class="dialog-list">
-          <view
-            class="dialog-list-item"
-            v-for="(user, index) in userSelector.users"
-            :key="index"
-            @click="selectUser(user)">
+          <view class="dialog-list-item" v-for="(user, index) in userSelector.users" :key="index" @click="selectUser(user)">
             <image class="dialog-list-item-avatar" :src="user.avatar"></image>
-            <text :class="userSelector.selectedUser === user ? 'selected' : ''">{{ user.name }}</text>
+            <text>{{ user.name }}</text>
           </view>
         </view>
       </view>
     </view>
 
     <view class="password-box">
-      <input
-        v-model="password.value"
-        class="password-input"
-        placeholder="请输入密码"
-        :password="!password.visible"
-        type="text"
-      >
-      <image
-        class="password-image"
-        @click="switchPasswordVisible"
-        :src="password.visible?'/static/images/invisible.png':'/static/images/visible.png'"
-      ></image>
+      <input v-model="password.value" class="password-input" placeholder="请输入密码" :password="!password.visible" type="text">
+      <image class="password-image" @click="switchPasswordVisible" src="/static/images/visible.png"></image>
     </view>
 
     <view v-show="errorVisible" class="alert-box">
@@ -62,11 +48,10 @@
         userSelector: {
           users: [],
           visible: false,
-          index: 0,
           selectedUser: null
         },
 
-        username:'',
+        username: '',
         password: {
           visible: false,
           value: '123'
@@ -85,17 +70,17 @@
       selectUser(user) {
         this.userSelector.visible = false;
         this.userSelector.selectedUser = user;
-        this.username= user.name;
+        this.username = user.name;
       },
       switchPasswordVisible() {
         this.password.visible = !this.password.visible;
       },
       login() {
-        if (this.username.trim() !== ''&& this.password.value.trim() !== '') {
+        if (this.username.trim() !== '' && this.password.value.trim() !== '') {
           let user = restApi.findUser(this.username, this.password.value);
           if (user) {
             getApp().globalData.currentUser = user;
-            uni.switchTab({ url: './conversations' });
+            uni.switchTab({url: './conversations'});
             return
           }
         }

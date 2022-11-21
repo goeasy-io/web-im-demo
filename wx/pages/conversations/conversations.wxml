@@ -17,15 +17,10 @@
                                 <view class="unread-text">
                                     {{conversation.lastMessage.read === false&&conversation.lastMessage.senderId === currentUser.id ? '[未读]' : ''}}
                                 </view>
-                                <view wx:if="{{conversation.type === 'private'}}">
-                                    {{conversation.lastMessage.senderId === currentUser.id ? '我' : conversation.data.name}}:
-                                </view>
-                                <view wx:else>
-                                    {{conversation.lastMessage.senderId === currentUser.id ? '我' : conversation.lastMessage.senderData.name}}:
-                                </view>
-                                <view wx:if="{{conversation.lastMessage.type == 'text'}}">
-                                    {{conversation.lastMessage.payload.text}}
-                                </view>
+
+                                <view wx:if="{{conversation.lastMessage.senderId === currentUser.id}}">我: </view>
+                                <view wx:else>{{ conversation.type === 'group' ? conversation.lastMessage.senderData.name : conversation.data.name }}: </view>
+                                <view wx:if="{{conversation.lastMessage.type == 'text'}}">{{conversation.lastMessage.payload.text}}</view>
                                 <view wx:elif="{{conversation.lastMessage.type == 'video'}}">[视频消息]</view>
                                 <view wx:elif="{{conversation.lastMessage.type == 'audio'}}">[语音消息]</view>
                                 <view wx:elif="{{conversation.lastMessage.type == 'image'}}">[图片消息]</view>
@@ -34,15 +29,15 @@
                                 <view wx:else>[[未识别内容]]</view>
                             </view>
                             <view class="item-info-top_content" wx:else>
-                                <view wx:if="{{conversation.type === 'private'}}">
-                                    {{conversation.lastMessage.senderId === currentUser.id ? '你' : '"' + conversation.data.name + '"'}}撤回了一条消息
+                                <view wx:if="{{conversation.lastMessage.senderId === currentUser.id}}">
+                                    你撤回了一条消息
                                 </view>
-                                <view wx:if="{{conversation.type === 'group'}}">
-                                    {{conversation.lastMessage.senderId === currentUser.id ? '你' : '"' + conversation.lastMessage.senderData.name + '"'}}撤回了一条消息
+                                <view wx:else>
+                                    {{ conversation.type === 'group' ? conversation.lastMessage.senderData.name : conversation.data.name }}
+                                    撤回了一条消息
                                 </view>
                             </view>
-                            <view class="item-info-bottom_action" catchtap="showAction"
-                                  data-conversation="{{conversation}}">
+                            <view class="item-info-bottom_action" catchtap="showAction" data-conversation="{{conversation}}">
                                 <image class="item-info-bottom_action-image" src="/static/images/action.png"></image>
                             </view>
                         </view>
