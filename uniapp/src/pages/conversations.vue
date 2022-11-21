@@ -18,8 +18,8 @@
                   {{ conversation.lastMessage.read === false && conversation.lastMessage.senderId === currentUser.id ? '[未读]' : '' }}
                 </text>
 
-                <text v-if="conversation.lastMessage.senderId === currentUser.id">我</text>
-                <text v-else>{{ conversation.type === 'group' ? conversation.lastMessage.senderData.name : conversation.data.name }}</text>
+                <text v-if="conversation.lastMessage.senderId === currentUser.id">我: </text>
+                <text v-else>{{ conversation.type === 'group' ? conversation.lastMessage.senderData.name : conversation.data.name }}: </text>
                 <text v-if="conversation.lastMessage.type === 'text'">{{ conversation.lastMessage.payload.text }}</text>
                 <text v-else-if="conversation.lastMessage.type === 'video'">[视频消息]</text>
                 <text v-else-if="conversation.lastMessage.type === 'audio'">[语音消息]</text>

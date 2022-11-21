@@ -31,7 +31,7 @@ Page({
 	},
 	onHide(){
 		// 销毁conversation监听器
-		wx.goEasy.im.on(wx.GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, (conversations) => {});
+		wx.goEasy.im.off(wx.GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, (conversations) => {});
 	},
 	connectGoEasy() {
 		wx.goEasy.connect({

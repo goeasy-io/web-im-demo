@@ -28,8 +28,9 @@ page {
 
 .chatInterface .scroll-view .load {
     font-size: 24rpx;
-    height: 90rpx;
-    line-height: 90rpx;
+    height: 60rpx;
+    line-height: 60rpx;
+    margin: 15rpx 0;
     width: 100%;
     text-align: center;
     color: #d02129;

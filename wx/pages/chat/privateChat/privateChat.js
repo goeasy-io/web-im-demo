@@ -35,7 +35,8 @@ Page({
         },
         history: {
             messages: [],
-            allLoaded: false
+            allLoaded: false,
+            loading: false
         },
         audio: {
             //录音按钮展示
@@ -441,6 +442,9 @@ Page({
     },
     loadHistoryMessage(scrollToBottom) {
         //历史消息
+        this.setData({
+            ['history.loading']: true
+        });
         let self = this;
         let friendId = this.data.friend.id;
         let lastMessageTimeStamp;
@@ -453,6 +457,9 @@ Page({
             lastTimestamp: lastMessageTimeStamp,
             onSuccess: function (result) {
                 wx.stopPullDownRefresh();
+                self.setData({
+                    ['history.loading']: false
+                });
                 let messages = result.content;
                 if (messages.length === 0) {
                     self.setData({
@@ -472,6 +479,9 @@ Page({
                 //获取失败
                 console.log('获取历史消息失败, code:' + error.code + ',错误信息:' + error.content);
                 wx.stopPullDownRefresh();
+                self.setData({
+                    ['history.loading']: false
+                });
             }
         });
     },
