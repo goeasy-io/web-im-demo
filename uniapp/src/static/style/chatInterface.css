@@ -10,12 +10,10 @@ page {
 .chatInterface .scroll-view {
     padding-left: 20rpx;
     padding-right: 20rpx;
-    height: 100%;
     box-sizing: border-box;
     -webkit-overflow-scrolling: touch;
     padding-bottom: 140rpx;
     background-color: #F1F1F1;
-    overflow-y: auto;
 }
 
 .chatInterface .scroll-view .history-loaded {

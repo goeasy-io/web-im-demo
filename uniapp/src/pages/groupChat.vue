@@ -1,15 +1,11 @@
 <template>
   <view class="chatInterface" @contextmenu.prevent="">
     <image class="group-icon" src="/static/images/group-icon.png" @click="showMembers"/>
-    <scroll-view :scroll-y="true" :scroll-into-view="bottomView" class="scroll-view">
-      <!--  #ifdef  H5 -->
+    <view class="scroll-view">
       <view :class="history.loaded ? 'history-loaded':'load'" @click="loadHistoryMessage(false)">
-      <!--  #endif -->
-      <!--  #ifndef  H5 -->
-      <view :class="history.loaded ? 'history-loaded':'load'">
-      <!--  #endif -->
         {{ history.loaded ? '已经没有更多的历史消息' : '点击获取历史消息' }}
       </view>
+
       <checkbox-group @change="selectMessages">
         <view :id="'item'+index" v-for="(message,index) in history.messages" :key="message.messageId">
           <!--时间显示，类似于微信，隔5分钟不发言，才显示时间-->
@@ -33,12 +29,8 @@
               <view class="avatar">
                 <image :src="message.senderData.avatar"></image>
               </view>
-              <!--  #ifdef  H5 -->
-              <view class="content" @click.right="showActionPopup(message)">
-              <!--  #endif -->
-              <!--  #ifndef  H5 -->
-              <view class="content" @longpress="showActionPopup(message)">
-              <!--  #endif -->
+
+              <view class="content" @click.right="showActionPopup(message)" @longpress="showActionPopup(message)">
                 <view class="message-payload">
                   <b class="pending" v-if="message.status === 'sending'"></b>
                   <b class="send-fail" v-if="message.status === 'fail'"></b>
@@ -95,23 +87,16 @@
           </view>
         </view>
       </checkbox-group>
-    </scroll-view>
+    </view>
     <view class="action-box" v-if="!videoPlayer.visible && !messageSelector.visible">
       <view class="action-top">
         <view @click="switchAudioKeyboard">
           <image class="more" v-if="audio.visible" src="/static/images/jianpan.png"></image>
           <image class="more" v-else src="/static/images/audio.png"></image>
         </view>
-        <!--  #ifdef  H5 -->
-        <view v-if="audio.visible" class="record-input" @click="onRecordStart">
+        <view v-if="audio.visible" class="record-input" @click="onRecordStart" @touchend="onRecordEnd" @touchstart="onRecordStart">
           {{ audio.recording ? '松开发送' : '按住录音' }}
         </view>
-        <!--  #endif -->
-        <!--  #ifndef  H5 -->
-        <view v-if="audio.visible" class="record-input" @touchend="onRecordEnd" @touchstart="onRecordStart">
-          {{ audio.recording ? '松开发送' : '按住录音' }}
-        </view>
-        <!--  #endif -->
         <!-- GoEasyIM最大支持3k的文本消息，如需发送长文本，需调整输入框maxlength值 -->
         <input v-else v-model="text" class="consult-input" maxlength="700" placeholder="发送消息" type="text" />
         <view @click="switchEmojiKeyboard">
@@ -231,8 +216,7 @@
         },
         history: {
           messages: [],
-          allLoaded: false,
-          loading: true
+          allLoaded: false
         },
         audio: {
           startTime: null,
@@ -250,7 +234,6 @@
           url: '',
           context: null
         },
-        bottomView: '',
         // 展示消息删除弹出框
         actionPopup: {
           visible: false,
@@ -667,7 +650,7 @@
       },
       showMembers() {//显示群成员
         uni.navigateTo({
-          url: './member?users=' + JSON.stringify(this.groupMembers)
+          url: './member?members=' + JSON.stringify(this.groupMembers)
         });
       },
       onRecordStart() {
@@ -785,9 +768,11 @@
       },
       scrollToBottom() {
         this.$nextTick(() => {
-          let index = this.history.messages.length - 1;
-          this.bottomView = `item${index}`;
-        })
+          uni.pageScrollTo({
+            scrollTop: 2000000,
+            duration: 0
+          });
+        });
       },
       markGroupMessageAsRead() {
         this.goEasy.im.markMessageAsRead({
