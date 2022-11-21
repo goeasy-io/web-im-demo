@@ -2,8 +2,9 @@
   <view class="chatInterface" @contextmenu.prevent="">
     <image class="group-icon" src="/static/images/group-icon.png" @click="showMembers"/>
     <view class="scroll-view">
-      <view :class="history.loaded ? 'history-loaded':'load'" @click="loadHistoryMessage(false)">
-        {{ history.loaded ? '已经没有更多的历史消息' : '点击获取历史消息' }}
+      <image v-if="history.loading" class="history-loaded" src="/static/images/loading.svg"/>
+      <view v-else :class="history.loaded ? 'history-loaded':'load'" @click="loadHistoryMessage(false)">
+        <view>{{ history.loaded ? '已经没有更多的历史消息' : '点击获取历史消息' }}</view>
       </view>
 
       <checkbox-group @change="selectMessages">
@@ -216,7 +217,8 @@
         },
         history: {
           messages: [],
-          allLoaded: false
+          allLoaded: false,
+          loading: false
         },
         audio: {
           startTime: null,
@@ -615,6 +617,7 @@
         this.messageSelector.messages = selectedMessages;
       },
       loadHistoryMessage(scrollToBottom) {//历史消息
+        this.history.loading = true;
         let lastMessageTimeStamp = null;
         let lastMessage = this.history.messages[0];
         if (lastMessage) {
@@ -626,6 +629,7 @@
           limit: 10,
           onSuccess: (result) => {
             uni.stopPullDownRefresh();
+            this.history.loading = false;
             let messages = result.content;
             if (messages.length === 0) {
               this.history.loaded = true;
@@ -645,6 +649,7 @@
             //获取失败
             console.log('获取历史消息失败:', error);
             uni.stopPullDownRefresh();
+            this.history.loading = false;
           }
         });
       },
