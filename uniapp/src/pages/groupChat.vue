@@ -250,12 +250,10 @@
       }
     },
     onLoad(options) {
+      this.group = JSON.parse(options.to);
       //聊天对象
-      let groupId = options.to;
       this.currentUser = getApp().globalData.currentUser;
-      //从服务器获取最新的群信息
-      this.group = restApi.findGroupById(groupId);
-      this.groupMembers = restApi.findGroupMembers(groupId);
+      this.groupMembers = restApi.findGroupMembers(this.group.id);
       this.to = {
         id: this.group.id,
         type: this.GoEasy.IM_SCENE.GROUP,

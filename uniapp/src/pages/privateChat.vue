@@ -254,10 +254,9 @@
     },
     onLoad(options) {
       //聊天对象
-      let friendId = options.to;
+      this.friend = JSON.parse(options.to);
       this.currentUser = getApp().globalData.currentUser;
       //从服务器获取最新的好友信息
-      this.friend = restApi.findUserById(friendId);
       this.to = {
         id: this.friend.id,
         type: this.GoEasy.IM_SCENE.PRIVATE,

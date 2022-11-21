@@ -199,10 +199,25 @@
         })
       },
       chat(conversation) {
-        let path = conversation.type === this.GoEasy.IM_SCENE.PRIVATE
-          ? './privateChat?to=' + conversation.userId
-          : './groupChat?to=' + conversation.groupId;
-        uni.navigateTo({ url: path });
+        let path,to
+        if (conversation.type === this.GoEasy.IM_SCENE.PRIVATE) {
+          path = './privateChat?to=';
+          to = {
+            id: conversation.userId,
+            name: conversation.data.name,
+            avatar: conversation.data.avatar
+          };
+        } else {
+          path = './groupChat?to=';
+          to = {
+            id: conversation.groupId,
+            name: conversation.data.name,
+            avatar: conversation.data.avatar
+          }
+        }
+        uni.navigateTo({
+          url: path+JSON.stringify(to)
+        });
       },
       showAction(conversation) {
         this.actionPopup.conversation = conversation;

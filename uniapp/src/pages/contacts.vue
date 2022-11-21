@@ -2,7 +2,7 @@
   <div class="contacts">
     <div class="contacts-container">
       <div class="user-list">
-        <div class="user-list-item" v-for="(group, id) in groups" :key="id" @click="enterChat(group.id, 'group')">
+        <div class="user-list-item" v-for="(group, id) in groups" :key="id" @click="groupChat(group)">
           <div class="user-item-avatar">
             <image :src="group.avatar"/>
           </div>
@@ -14,7 +14,7 @@
       <view class="contacts-title" v-if="friends && friends.length !==0">联系人</view>
       <div class="user-list">
         <div class="user-list-item" v-for="(friend, id) in friends" :key="id"
-             @click="enterChat(friend.id, 'private')">
+             @click="privateChat(friend)">
           <div class="user-item-avatar">
             <image :src="friend.avatar"></image>
           </div>
@@ -44,11 +44,27 @@
       this.groups = restApi.findGroups(currentUser);
     },
     methods: {
-      enterChat(id, type) {//进入聊天页面
-        let path = type === this.GoEasy.IM_SCENE.PRIVATE
-          ? './privateChat?to=' + id
-          : './groupChat?to=' + id;
-        uni.navigateTo({ url: path });
+      privateChat (friend) {
+        let path = './privateChat?to=';
+        let to = {
+          id: friend.id,
+          name: friend.name,
+          avatar: friend.avatar
+        }
+        uni.navigateTo({
+          url: path+JSON.stringify(to)
+        });
+      },
+      groupChat (group) {
+        let path = './groupChat?to=';
+        let to = {
+          id: group.id,
+          name: group.name,
+          avatar: group.avatar
+        }
+        uni.navigateTo({
+          url: path+JSON.stringify(to)
+        });
       }
     }
   }
