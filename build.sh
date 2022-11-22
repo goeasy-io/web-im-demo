@@ -90,7 +90,7 @@ copy_html() {
     uniappPath=src\=$basePath\\/uniapp\\/
     webPath=src\=$basePath\\/web\\/
     sed -i "s/src\=\"uniapp\/\"/$uniappPath/g" build/$vesionDir/index.html
-    sed -i "s/src\=\"web\/\"/$uniappPath/g" build/$vesionDir/index.html
+    sed -i "s/src\=\"web\/\"/$webPath/g" build/$vesionDir/index.html
 }
 
 # 升级web服务的版本
