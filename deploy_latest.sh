@@ -31,18 +31,18 @@ else
   exit 1
 fi
 # 清除老数据
-if [ -d "latest" ]; then
-    rm -rf latest
+if [ -d "index.html" ]; then
+    rm -rf index.html
 fi
-# 拷贝版本目录下的所有文件到latest文件下
-cp -r $versionDir latest
+# 拷贝versionDir下的index.html到根目录index.html
+cp $versionDir/index.html index.html
 # 设置信息
 git config user.name "${git_usernamne}"
 git config user.password "${git_password}"
 git config user.email "${git_email}"
 # 标记推送
-git add latest/
-git commit -m "[latest_deploy.sh]将latest部署到pages"
+git add .
+git commit -m "[deploy.sh]将[$versionDir]版本部署到pages"
 git push
 # 退出当前目录
 cd ../
