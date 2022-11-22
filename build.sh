@@ -82,9 +82,15 @@ build_uniapp() {
     cd ../
 }
 
-# 拷贝inde.html
+# 拷贝index.html
 copy_html() {
     cp index.html build/$vesionDir/index.html
+    # 替换index.html中的路径
+    basePath="\/show-im\/$vesionDir"
+    uniappPath=src\=$basePath\\/uniapp\\/
+    webPath=src\=$basePath\\/web\\/
+    sed -i "s/src\=\"uniapp\/\"/$uniappPath/g" build/$vesionDir/index.html
+    sed -i "s/src\=\"web\/\"/$uniappPath/g" build/$vesionDir/index.html
 }
 
 # 升级web服务的版本
