@@ -1,6 +1,6 @@
 {
   "name": "uniapp",
-  "version": "1.0.19",
+  "version": "1.0.20-0",
   "private": true,
   "scripts": {
     "serve": "npm run dev:h5",
