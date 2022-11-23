@@ -1,6 +1,6 @@
 <template>
   <view class="login">
-    <view class="title">GoEasy IM</view>
+    <view class="title">GoEasy IM Uniapp示例</view>
     <view class="user-selector">
       <view class="selected-area" @click="switchSelectorVisible">
         <view class="selected-content" v-if="userSelector.selectedUser">

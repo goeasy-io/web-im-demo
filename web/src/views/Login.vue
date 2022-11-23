@@ -3,7 +3,7 @@
     <div class="login-container">
       <div class="login-main">
         <div class="login-header">
-          <div>GoEasyIM-Demo</div>
+          <div>GoEasy IM PC端示例</div>
         </div>
         <div class="login-form">
           <div class="form-item">
