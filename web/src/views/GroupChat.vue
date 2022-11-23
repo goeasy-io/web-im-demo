@@ -80,7 +80,6 @@
           </div>
         </div>
       </div>
-      <span ref="bottomView"></span>
     </div>
     <div class="chat-footer">
       <div class="action-delete" v-if="messageSelector.visible">
@@ -577,10 +576,8 @@
       },
       scrollToBottom() {
         this.$nextTick(() => {
-          if (this.$refs.bottomView) {
-            this.$refs.bottomView.scrollIntoView();
-          }
-        })
+          this.$refs.scrollView.scrollTop = this.$refs.messageList.scrollHeight;
+        });
       },
       renderMessageDate(message, index) {
         if (index === 0) {
