@@ -79,7 +79,7 @@
         if (this.username.trim() !== '' && this.password.value.trim() !== '') {
           let user = restApi.findUser(this.username, this.password.value);
           if (user) {
-            getApp().globalData.currentUser = user;
+            uni.setStorageSync('currentUser', user);
             uni.switchTab({url: './conversations'});
             return
           }

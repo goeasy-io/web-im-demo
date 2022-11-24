@@ -35,6 +35,7 @@
             uni.hideLoading();
             console.log('注销成功')
             getApp().globalData.currentUser = null;
+            uni.removeStorageSync('currentUser');
             uni.navigateTo({
               url: './login'
             })

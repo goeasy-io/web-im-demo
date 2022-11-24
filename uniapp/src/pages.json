@@ -9,7 +9,7 @@
 				"app-plus" : {
 					"titleNView" : true
 				}
-			}			
+			}
 		},
 		{
 			"path": "pages/login",
@@ -19,7 +19,7 @@
 				"navigationBarTextStyle":"white",
 				"app-plus" : {
 					"titleNView" : true
-				}	
+				}
 			}
 		},
 		{
@@ -28,7 +28,7 @@
 				"navigationBarTitleText": "通讯录",
 				"navigationBarBackgroundColor" : "#ffffff",
 				"navigationBarTextStyle" : "black"
-			}			
+			}
 		},
 		{
 			"path": "pages/mine",
@@ -36,23 +36,41 @@
 				"navigationBarTitleText": "我的",
 				"navigationBarBackgroundColor" : "#ffffff",
 				"navigationBarTextStyle" : "black"
-			}			
+			}
 		},
 		{
 			"path": "pages/privateChat",
 			"style": {
 				"navigationBarTitleText": "uni-app",
 				"navigationBarBackgroundColor" : "#F1F1F1",
-				"enablePullDownRefresh": true
-			}			
+				"enablePullDownRefresh": true,
+                "app-plus":{
+                    "titleNView":{
+                        "buttons":[{
+                            "float":"left",
+                            "fontSize":"30px",
+                            "text":" ‹ "
+                        }]
+                    }
+                }
+			}
 		},
 		{
 			"path": "pages/groupChat",
 			"style": {
 				"navigationBarTitleText": "群",
 				"navigationBarBackgroundColor" : "#F1F1F1",
-				"enablePullDownRefresh": true
-			}			
+				"enablePullDownRefresh": true,
+                "app-plus":{
+                    "titleNView":{
+                        "buttons":[{
+                            "float":"left",
+                            "fontSize":"30px",
+                            "text":" ‹ "
+                        }]
+                    }
+                }
+			}
 		},
 		{
 			"path": "pages/member",
@@ -60,7 +78,7 @@
 				"navigationBarTitleText": "群成员",
 				"navigationBarBackgroundColor" : "#ffffff",
                 "navigationBarTextStyle" : "black"
-			}			
+			}
 		}
 	],
 	"globalStyle": {

@@ -45,25 +45,13 @@
     },
     methods: {
       privateChat (friend) {
-        let path = './privateChat?to=';
-        let to = {
-          id: friend.id,
-          name: friend.name,
-          avatar: friend.avatar
-        }
-        uni.navigateTo({
-          url: path+JSON.stringify(to)
+        uni.redirectTo({
+          url: './privateChat?to=' + friend.id +'&from=contacts'
         });
       },
       groupChat (group) {
-        let path = './groupChat?to=';
-        let to = {
-          id: group.id,
-          name: group.name,
-          avatar: group.avatar
-        }
-        uni.navigateTo({
-          url: path+JSON.stringify(to)
+        uni.redirectTo({
+          url: './groupChat?to=' + group.id +'&from=contacts'
         });
       }
     }

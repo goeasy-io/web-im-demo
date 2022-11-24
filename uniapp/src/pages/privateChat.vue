@@ -8,7 +8,7 @@
 
       <checkbox-group @change="selectMessages">
         <!--消息记录-->
-        <view :id="'item'+index" v-for="(message,index) in history.messages" :key="message.messageId">
+        <view v-for="(message,index) in history.messages" :key="message.messageId">
           <!--时间显示，类似于微信，隔5分钟不发言，才显示时间-->
           <view class="time-lag">
             {{ renderMessageDate(message, index) }}
@@ -203,6 +203,7 @@
         text: '',
         friend: null,
         to: {},// 作为createMessage的参数
+        from: '',// 记录上一个页面的路径
         currentUser: null,
 
         //定义表情列表
@@ -254,9 +255,10 @@
     },
     onLoad(options) {
       //聊天对象
-      this.friend = JSON.parse(options.to);
+      let id = options.to;
+      this.friend = restApi.findUserById(id);
+      this.from = options.from;
       this.currentUser = getApp().globalData.currentUser;
-      //从服务器获取最新的好友信息
       this.to = {
         id: this.friend.id,
         type: this.GoEasy.IM_SCENE.PRIVATE,
@@ -291,7 +293,9 @@
       this.goEasy.im.off(this.GoEasy.IM_EVENT.MESSAGE_DELETED, this.onMessageDeleted);
     },
     methods: {
-      formatDate,
+      onNavigationBarButtonTap(e) {
+        uni.switchTab({ url: `./${this.from}` });
+      },
       //渲染文本消息，如果包含表情，替换为图片
       //todo:本不需要该方法，可以在标签里完成，但小程序有兼容性问题，被迫这样实现
       renderTextMessage(message) {
@@ -301,10 +305,10 @@
       //todo:本不需要该方法，可以在标签里完成，但小程序有兼容性问题，被迫这样实现
       renderMessageDate(message, index) {
         if (index === 0) {
-          return this.formatDate(message.timestamp)
+          return formatDate(message.timestamp)
         } else {
           if (message.timestamp - this.history.messages[index - 1].timestamp > 5 * 60 * 1000) {
-            return this.formatDate(message.timestamp)
+            return formatDate(message.timestamp)
           }
         }
         return '';
