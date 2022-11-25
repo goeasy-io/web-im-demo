@@ -456,10 +456,20 @@ Page({
                 let messages = result.content;
                 if (messages.length === 0) {
                     self.setData({
-                        ['history.loaded']: true
+                        ['history.allLoaded']: true
                     });
                 } else {
-                    let messageList = messages.concat(self.data.history.messages);
+                    let messageList
+                    if (lastMessageTimeStamp) {
+                        messageList = messages.concat(self.data.history.messages);
+                    } else {
+                        messageList = messages;
+                    }
+                    if (messages.length < 10) {
+                        self.setData({
+                            ['history.allLoaded']: true
+                        });
+                    }
                     self.renderMessages(messageList);
                     if (scrollToBottom) {
                         self.scrollToBottom();

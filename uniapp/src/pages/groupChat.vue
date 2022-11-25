@@ -637,7 +637,7 @@
               } else {
                 this.history.messages = messages;
               }
-              if (messages.length < 9) {
+              if (messages.length < 10) {
                 this.history.allLoaded = true;
               }
               if (scrollToBottom) {
