@@ -43,16 +43,7 @@
 			"style": {
 				"navigationBarTitleText": "uni-app",
 				"navigationBarBackgroundColor" : "#F1F1F1",
-				"enablePullDownRefresh": true,
-                "app-plus":{
-                    "titleNView":{
-                        "buttons":[{
-                            "float":"left",
-                            "fontSize":"30px",
-                            "text":" ‹ "
-                        }]
-                    }
-                }
+				"enablePullDownRefresh": true
 			}
 		},
 		{
@@ -60,16 +51,7 @@
 			"style": {
 				"navigationBarTitleText": "群",
 				"navigationBarBackgroundColor" : "#F1F1F1",
-				"enablePullDownRefresh": true,
-                "app-plus":{
-                    "titleNView":{
-                        "buttons":[{
-                            "float":"left",
-                            "fontSize":"30px",
-                            "text":" ‹ "
-                        }]
-                    }
-                }
+				"enablePullDownRefresh": true
 			}
 		},
 		{
