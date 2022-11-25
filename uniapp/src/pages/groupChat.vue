@@ -3,8 +3,8 @@
     <image class="group-icon" src="/static/images/group-icon.png" @click="showMembers"/>
     <view class="scroll-view">
       <image v-if="history.loading" class="history-loaded" src="/static/images/loading.svg"/>
-      <view v-else :class="history.loaded ? 'history-loaded':'load'" @click="loadHistoryMessage(false)">
-        <view>{{ history.loaded ? '已经没有更多的历史消息' : '点击获取历史消息' }}</view>
+      <view v-else :class="history.allLoaded ? 'history-loaded':'load'" @click="loadHistoryMessage(false)">
+        <view>{{ history.allLoaded ? '已经没有更多的历史消息' : '点击获取历史消息' }}</view>
       </view>
 
       <checkbox-group @change="selectMessages">
@@ -635,11 +635,15 @@
             this.history.loading = false;
             let messages = result.content;
             if (messages.length === 0) {
-              this.history.loaded = true;
+              this.history.allLoaded = true;
             } else {
-              this.history.messages = messages.concat(this.history.messages);
-              if (messages.length < 9) {
-                this.history.loaded = true;
+              if (lastMessageTimeStamp) {
+                this.history.messages = messages.concat(this.history.messages);
+              } else {
+                this.history.messages = messages;
+              }
+              if (messages.length < 10) {
+                this.history.allLoaded = true;
               }
               if (scrollToBottom) {
                 this.scrollToBottom();

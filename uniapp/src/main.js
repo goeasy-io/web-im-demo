@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import App from './App';
-import GoEasy from './lib/goeasy-2.5.10.min';
+import GoEasy from './lib/goeasy-2.5.11.min';
 
 Vue.config.productionTip = false;
 App.mpType = 'app';
@@ -50,7 +50,7 @@ goEasy.onClickNotification((message) => {
     }
 
     if (currentUrl !== newUrl) {
-        uni.redirectTo({
+        uni.navigateTo({
             url: newUrl,
         });
     }

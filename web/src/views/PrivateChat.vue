@@ -9,8 +9,8 @@
         <div v-if="history.loading" class="history-loading">
           <img src="../assets/images/pending.gif"/>
         </div>
-        <div v-else :class="history.loaded ? 'history-loaded':'load'" @click="loadHistoryMessage(false)">
-          {{ history.loaded ? '已经没有更多的历史消息' : '获取历史消息' }}
+        <div v-else :class="history.allLoaded ? 'history-loaded':'load'" @click="loadHistoryMessage(false)">
+          {{ history.allLoaded ? '已经没有更多的历史消息' : '获取历史消息' }}
         </div>
         <div v-for="(message, index) in history.messages" :key="index">
           <div class="time-tips">{{ renderMessageDate(message, index) }}</div>
@@ -212,7 +212,7 @@
 
         history: {
           messages: [],
-          loaded: false,
+          allLoaded: false,
           loading: true
         },
 
@@ -544,11 +544,15 @@
             this.history.loading = false;
             let messages = result.content;
             if (messages.length === 0) {
-              this.history.loaded = true;
+              this.history.allLoaded = true;
             } else {
-              this.history.messages = messages.concat(this.history.messages);
-              if (messages.length < 9) {
-                this.history.loaded = true;
+              if (lastMessageTimeStamp) {
+                this.history.messages = messages.concat(this.history.messages);
+              } else {
+                this.history.messages = messages;
+              }
+              if (messages.length < 10) {
+                this.history.allLoaded = true;
               }
               if (scrollToBottom) {
                 this.scrollToBottom();
