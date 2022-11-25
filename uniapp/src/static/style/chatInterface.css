@@ -603,7 +603,3 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
     margin-left: 10rpx;
     color: #d02129;
 }
-
-uni-page-head .uni-page-head-hd > .uni-page-head-btn {
-    display: none;
-}
