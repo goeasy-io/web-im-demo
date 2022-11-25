@@ -5,51 +5,52 @@
         <div class="conversation-list-content">
           <div v-if="conversations.length">
             <router-link
-              tag="div" class="conversation" replace
+              tag="div" replace
               v-for="(conversation, key) in conversations" :key="key"
               :to="chatLocation(conversation)"
-              @contextmenu.prevent.stop="e => showRightClickMenu(e,conversation)"
             >
-              <div class="avatar">
-                <img :src="conversation.data.avatar"/>
-                <div v-if="conversation.unread>0"
-                     class="unread-count">
-                  <span class="unread">{{ conversation.unread }}</span>
-                </div>
-              </div>
-              <div class="conversation-message">
-                <div class="conversation-top">
-                  <span class="conversation-name">{{ conversation.data.name }}</span>
-                  <div class="conversation-time">
-                    <div>{{ formatDate(conversation.lastMessage.timestamp) }}</div>
+              <div class="conversation" @contextmenu.prevent.stop="e => showRightClickMenu(e,conversation)">
+                <div class="avatar">
+                  <img :src="conversation.data.avatar"/>
+                  <div v-if="conversation.unread>0"
+                       class="unread-count">
+                    <span class="unread">{{ conversation.unread }}</span>
                   </div>
                 </div>
-                <div class="conversation-bottom">
-                  <div class="conversation-content" v-if="conversation.lastMessage.recalled">
-                    <div v-if="conversation.type === 'private'">
-                      {{ conversation.lastMessage.senderId === currentUser.id ? '你' : `"${conversation.data.name}"` }}撤回了一条消息
-                    </div>
-                    <div v-if="conversation.type === 'group'">
-                      {{ conversation.lastMessage.senderId === currentUser.id ? '你' : `"${conversation.lastMessage.senderData.name}"` }}撤回了一条消息
+                <div class="conversation-message">
+                  <div class="conversation-top">
+                    <span class="conversation-name">{{ conversation.data.name }}</span>
+                    <div class="conversation-time">
+                      <div>{{ formatDate(conversation.lastMessage.timestamp) }}</div>
                     </div>
                   </div>
-                  <div class="conversation-content" v-else>
-                    <div class="unread-text"
-                         v-if="conversation.lastMessage.read === false && conversation.lastMessage.senderId === currentUser.id">
-                      [未读]
+                  <div class="conversation-bottom">
+                    <div class="conversation-content" v-if="conversation.lastMessage.recalled">
+                      <div v-if="conversation.type === 'private'">
+                        {{ conversation.lastMessage.senderId === currentUser.id ? '你' : `"${conversation.data.name}"` }}撤回了一条消息
+                      </div>
+                      <div v-if="conversation.type === 'group'">
+                        {{ conversation.lastMessage.senderId === currentUser.id ? '你' : `"${conversation.lastMessage.senderData.name}"` }}撤回了一条消息
+                      </div>
                     </div>
-                    <div v-if="conversation.type === 'private'">
-                      {{ conversation.lastMessage.senderId === currentUser.id ? '我' : conversation.data.name }}:
+                    <div class="conversation-content" v-else>
+                      <div class="unread-text"
+                           v-if="conversation.lastMessage.read === false && conversation.lastMessage.senderId === currentUser.id">
+                        [未读]
+                      </div>
+                      <div v-if="conversation.type === 'private'">
+                        {{ conversation.lastMessage.senderId === currentUser.id ? '我' : conversation.data.name }}:
+                      </div>
+                      <div v-else>
+                        {{ conversation.lastMessage.senderId === currentUser.id ? '我' : conversation.lastMessage.senderData.name }}:
+                      </div>
+                      <span class="text" v-if="conversation.lastMessage.type === 'text'">{{conversation.lastMessage.payload.text}}</span>
+                      <span v-else-if="conversation.lastMessage.type === 'video'">[视频消息]</span>
+                      <span v-else-if="conversation.lastMessage.type === 'audio'">[语音消息]</span>
+                      <span v-else-if="conversation.lastMessage.type === 'image'">[图片消息]</span>
+                      <span v-else-if="conversation.lastMessage.type === 'file'">[文件消息]</span>
+                      <span v-else-if="conversation.lastMessage.type === 'order'">[订单消息]</span>
                     </div>
-                    <div v-else>
-                      {{ conversation.lastMessage.senderId === currentUser.id ? '我' : conversation.lastMessage.senderData.name }}:
-                    </div>
-                    <span class="text" v-if="conversation.lastMessage.type === 'text'">{{conversation.lastMessage.payload.text}}</span>
-                    <span v-else-if="conversation.lastMessage.type === 'video'">[视频消息]</span>
-                    <span v-else-if="conversation.lastMessage.type === 'audio'">[语音消息]</span>
-                    <span v-else-if="conversation.lastMessage.type === 'image'">[图片消息]</span>
-                    <span v-else-if="conversation.lastMessage.type === 'file'">[文件消息]</span>
-                    <span v-else-if="conversation.lastMessage.type === 'order'">[订单消息]</span>
                   </div>
                 </div>
               </div>
