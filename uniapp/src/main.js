@@ -50,7 +50,7 @@ goEasy.onClickNotification((message) => {
     }
 
     if (currentUrl !== newUrl) {
-        uni.redirectTo({
+        uni.navigateTo({
             url: newUrl,
         });
     }
