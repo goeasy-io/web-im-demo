@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import App from './App';
-import GoEasy from './lib/goeasy-2.5.7.min';
+import GoEasy from './lib/goeasy-2.5.10.min';
 
 Vue.config.productionTip = false;
 App.mpType = 'app';
@@ -16,6 +16,19 @@ const goEasy = GoEasy.getInstance({
     allowNotification: true //仅有效于app,小程序和H5将会被自动忽略
 });
 
+goEasy.im.on(GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, setUnreadNumber);
+function setUnreadNumber (content) {
+    let unreadTotal = content.unreadTotal;
+    if(unreadTotal > 0) {
+        uni.setTabBarBadge({
+            index: 0,
+            text: unreadTotal.toString()
+        });
+    }else{
+        uni.removeTabBarBadge({index: 0});
+    }
+}
+
 goEasy.onClickNotification((message) => {
     let currentUrl;
     const routes = getCurrentPages();
@@ -29,15 +42,15 @@ goEasy.onClickNotification((message) => {
     let newUrl;
     switch (message.toType) {
         case GoEasy.IM_SCENE.PRIVATE:
-            newUrl = '/pages/chat/privateChat/privateChat?to=' + message.senderId;
+            newUrl = '/pages/privateChat?to=' + message.senderId +'&from=conversations';
             break;
         case GoEasy.IM_SCENE.GROUP:
-            newUrl = '/pages/chat/groupChat/groupChat?to=' + message.groupId;
+            newUrl = '/pages/groupChat?to=' + message.groupId +'&from=conversations';
             break;
     }
 
     if (currentUrl !== newUrl) {
-        uni.navigateTo({
+        uni.redirectTo({
             url: newUrl,
         });
     }

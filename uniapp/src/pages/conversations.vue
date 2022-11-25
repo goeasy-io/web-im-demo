@@ -76,7 +76,8 @@
       }
     },
     onShow() {
-      this.currentUser = getApp().globalData.currentUser;
+      this.currentUser = uni.getStorageSync('currentUser');
+      getApp().globalData.currentUser = this.currentUser;
       if (!this.currentUser) {
         uni.navigateTo({ url: './login' });
         return;
@@ -120,6 +121,15 @@
             uni.hideLoading();
             let content = result.content;
             this.renderConversations(content);
+            let unreadTotal = content.unreadTotal;
+            if(unreadTotal > 0) {
+              uni.setTabBarBadge({
+                index: 0,
+                text: unreadTotal.toString()
+              });
+            }else{
+              uni.removeTabBarBadge({index: 0});
+            }
           },
           onFailed: (error) => {
             uni.hideLoading();
@@ -129,21 +139,6 @@
       },
       renderConversations(content) {
         this.conversations = content.conversations;
-        let unreadTotal = content.unreadTotal;
-        this.setUnreadAmount(unreadTotal);
-      },
-      setUnreadAmount (unreadTotal) {
-        this.unreadTotal = unreadTotal;
-        if(this.unreadTotal > 0) {
-          uni.setTabBarBadge({
-            index: 0,
-            text: this.unreadTotal.toString()
-          });
-        }else{
-          uni.removeTabBarBadge({
-            index: 0
-          });
-        }
       },
       subscribeGroup() {
         let groups = restApi.findGroups(this.currentUser);
@@ -199,25 +194,10 @@
         })
       },
       chat(conversation) {
-        let path,to
-        if (conversation.type === this.GoEasy.IM_SCENE.PRIVATE) {
-          path = './privateChat?to=';
-          to = {
-            id: conversation.userId,
-            name: conversation.data.name,
-            avatar: conversation.data.avatar
-          };
-        } else {
-          path = './groupChat?to=';
-          to = {
-            id: conversation.groupId,
-            name: conversation.data.name,
-            avatar: conversation.data.avatar
-          }
-        }
-        uni.navigateTo({
-          url: path+JSON.stringify(to)
-        });
+        let path = conversation.type === this.GoEasy.IM_SCENE.PRIVATE
+          ? './privateChat?to=' + conversation.userId
+          : './groupChat?to=' + conversation.groupId;
+        uni.navigateTo({ url: path });
       },
       showAction(conversation) {
         this.actionPopup.conversation = conversation;

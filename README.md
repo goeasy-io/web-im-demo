@@ -1,17 +1,13 @@
-# GoEasy IM Demo
+# GoEasy IM
 
-[GoEasy IM](https://www.goeasy.io/cn/im.html)是[GoEasy](https://www.goeasy.io/)专门为Web前端开发者打造, 天生支持H5、Uniapp和各种小程序的IM即时通讯, 快速实现私聊、群聊、在线客服!
-
-#### 官方链接 
-* [GoEasy IM官网](https://www.goeasy.io/cn/im.html) 
-* [GoEasy IM开发文档](https://docs.goeasy.io/2.x/im)
+[GoEasy IM](https://www.goeasy.io/cn/im.html)是[GoEasy](https://www.goeasy.io/)专为Web前端开发者打造, 天生支持H5、Uniapp和各种小程序的IM即时通讯, 快速实现私聊、群聊、在线客服!
 
 ## 体验在线示例(免注册)
-* [IM示例体验](https://goeasy-io.gitee.io/show-im/)
-* [在线客服示例体验](https://goeasy-io.gitee.io/show-cs/)
+* [IM示例体验](https://www.goeasy.io/cn/im-demo.html)
+* [在线客服示例体验](https://www.goeasy.io/cn/cs-demo.html)
 
 
-## 源码说明
+## Demo源码说明
 
 ````
 web-im-demo------------------包含三个版本的IM聊天demo
@@ -53,14 +49,17 @@ GoEasy IM可以帮助Web前端开发者快速实现私聊、群聊、在线客�
 ## GoEasy IM优势
 
 | 优势 | 描述                                             |
-|--|------------------------------------------------|
+|---------|--------|
 | 集成简单 | 傻瓜式API， 最快半天集成！                                |
-| 更低成本 | 免费试用1年, 付费套餐最低199元/月起                          |
+| 更低成本 | 免费试用1年, 最低199元/月起                          |
 | 一对一技术支持 | 技术人员在线提供1对1技术支持(周一至周五)<br/> 紧急事务7 X 24小时电话技术支持 |
 | 性能卓越 | 海量用户同时在线， 每秒千万级消息实时必达！                         |
 | 安全私密 | 独创GoEasy OTP技术结合HTTPS，确保您的数据私密传输               |
 | 健壮可靠 | 跨区多活灾备，自动水平扩展，99.95%高可用承诺，完美应对爆发式活动支持          |
 
 
+#### 官方链接
+* [GoEasy IM官网](https://www.goeasy.io/cn/im.html)
+* [GoEasy IM开发文档](https://docs.goeasy.io/2.x/im)
 
 

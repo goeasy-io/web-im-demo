@@ -20,7 +20,6 @@ page {
     font-size: 24rpx;
     height: 60rpx;
     line-height: 60rpx;
-    margin: 15rpx 0;
     width: 100%;
     text-align: center;
     color: #cccccc;
@@ -30,7 +29,6 @@ page {
     font-size: 24rpx;
     height: 60rpx;
     line-height: 60rpx;
-    margin: 15rpx 0;
     width: 100%;
     text-align: center;
     color: #d02129;
@@ -604,4 +602,8 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
 .message-recalled .message-recalled-self span {
     margin-left: 10rpx;
     color: #d02129;
+}
+
+uni-page-head .uni-page-head-hd > .uni-page-head-btn {
+    display: none;
 }
