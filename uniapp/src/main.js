@@ -42,10 +42,10 @@ goEasy.onClickNotification((message) => {
     let newUrl;
     switch (message.toType) {
         case GoEasy.IM_SCENE.PRIVATE:
-            newUrl = '/pages/privateChat?to=' + message.senderId +'&from=conversations';
+            newUrl = '/pages/privateChat?to=' + message.senderId;
             break;
         case GoEasy.IM_SCENE.GROUP:
-            newUrl = '/pages/groupChat?to=' + message.groupId +'&from=conversations';
+            newUrl = '/pages/groupChat?to=' + message.groupId;
             break;
     }
 
