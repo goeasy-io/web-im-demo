@@ -200,6 +200,7 @@
         text: '',
         friend: null,
         to: {},// 作为createMessage的参数
+        from: '',// 记录上一个页面的路径
         currentUser: null,
 
         //定义表情列表
@@ -253,6 +254,7 @@
       //聊天对象
       let id = options.to;
       this.group = restApi.findGroupById(id);
+      this.from = options.from;
       this.currentUser = getApp().globalData.currentUser;
       this.groupMembers = restApi.findGroupMembers(this.group.id);
       this.to = {
@@ -291,6 +293,9 @@
       this.goEasy.im.off(this.GoEasy.IM_EVENT.MESSAGE_DELETED, this.onMessageDeleted);
     },
     methods: {
+      onNavigationBarButtonTap(e) {
+        uni.switchTab({ url: `./${this.from}` });
+      },
       //渲染文本消息，如果包含表情，替换为图片
       //todo:本不需要该方法，可以在标签里完成，但小程序有兼容性问题，被迫这样实现
       renderTextMessage(message) {

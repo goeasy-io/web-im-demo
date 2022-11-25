@@ -195,9 +195,9 @@
       },
       chat(conversation) {
         let path = conversation.type === this.GoEasy.IM_SCENE.PRIVATE
-          ? './privateChat?to=' + conversation.userId
-          : './groupChat?to=' + conversation.groupId;
-        uni.navigateTo({ url: path });
+          ? './privateChat?to=' + conversation.userId +'&from=conversations'
+          : './groupChat?to=' + conversation.groupId +'&from=conversations';
+        uni.redirectTo({ url: path });
       },
       showAction(conversation) {
         this.actionPopup.conversation = conversation;

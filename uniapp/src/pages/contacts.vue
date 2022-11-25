@@ -45,13 +45,13 @@
     },
     methods: {
       privateChat (friend) {
-        uni.navigateTo({
-          url: './privateChat?to=' + friend.id
+        uni.redirectTo({
+          url: './privateChat?to=' + friend.id +'&from=contacts'
         });
       },
       groupChat (group) {
-        uni.navigateTo({
-          url: './groupChat?to=' + group.id
+        uni.redirectTo({
+          url: './groupChat?to=' + group.id +'&from=contacts'
         });
       }
     }
