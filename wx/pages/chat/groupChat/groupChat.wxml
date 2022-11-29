@@ -22,7 +22,7 @@
                         </view>
                         <view wx:else class="message-recalled-self">
                             <view>你撤回了一条消息</view>
-                            <view wx:if="{{message.editable}}" data-text="{{message.payload.text}}"
+                            <view class="re-edit" wx:if="{{message.editable}}" data-text="{{message.payload.text}}"
                                   bindtap="editRecalledMessage">重新编辑
                             </view>
                         </view>

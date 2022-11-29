@@ -95,13 +95,13 @@ Page({
     },
     onUnload() {
         //退出聊天页面之前，清空监听器
-        wx.goEasy.im.off(wx.GoEasy.IM_EVENT.PRIVATE_MESSAGE_RECEIVED, this.onMessageReceived);
+        wx.goEasy.im.off(wx.GoEasy.IM_EVENT.GROUP_MESSAGE_RECEIVED, this.onMessageReceived);
         wx.goEasy.im.off(wx.GoEasy.IM_EVENT.MESSAGE_DELETED, this.onMessageDeleted);
         wx.goEasy.im.off(wx.GoEasy.IM_EVENT.MESSAGE_RECALLED, this.onMessageRecalled);
     },
     initialGoEasyListeners() {
         //监听群聊消息
-        wx.goEasy.im.on(wx.GoEasy.IM_EVENT.PRIVATE_MESSAGE_RECEIVED, this.onMessageReceived);
+        wx.goEasy.im.on(wx.GoEasy.IM_EVENT.GROUP_MESSAGE_RECEIVED, this.onMessageReceived);
         //监听消息删除
         wx.goEasy.im.on(wx.GoEasy.IM_EVENT.MESSAGE_DELETED, this.onMessageDeleted);
         // 监听消息撤回
@@ -110,8 +110,8 @@ Page({
     onMessageReceived(message) {
         let groupId = message.groupId;
         if (groupId === this.data.group.id) {
-            this.data.messages.push(message);
-            this.renderMessages(this.data.messages);
+            this.data.history.messages.push(message);
+            this.renderMessages(this.data.history.messages);
             //聊天时，收到消息标记为已读
             this.markGroupMessageAsRead();
             //收到新消息，是滚动到最底部
@@ -123,17 +123,17 @@ Page({
         deletedMessages.forEach(message => {
             let groupId = message.groupId;
             if (groupId && groupId === this.data.group.id) {
-                let index = this.data.messages.indexOf(message);
+                let index = this.data.history.messages.indexOf(message);
                 if (index > -1) {
                     needRender = true;
-                    this.data.messages.splice(index, 1);
+                    this.data.history.messages.splice(index, 1);
                 }
             }
         });
-        needRender && this.renderMessages(this.data.messages);
+        needRender && this.renderMessages(this.data.history.messages);
     },
     onMessageRecalled(recalledMessages) {
-        this.renderMessages(this.data.messages);
+        this.renderMessages(this.data.history.messages);
     },
     initialAudioPlayer () {
         this.setData({

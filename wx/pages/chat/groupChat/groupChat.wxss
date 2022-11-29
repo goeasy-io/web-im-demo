@@ -108,7 +108,7 @@ page {
     display: flex;
 }
 
-.message-recalled .message-recalled-self span {
+.message-recalled .message-recalled-self .re-edit {
     margin-left: 10rpx;
     color: #d02129;
 }
