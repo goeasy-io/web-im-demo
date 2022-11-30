@@ -1,13 +1,248 @@
 <template>
-    <div></div>
+  <div class="login">
+    <div class="login-container">
+      <div class="login-main">
+        <div class="login-header">
+          <div>GoEasyIM-Demo</div>
+        </div>
+        <div class="login-form">
+          <div class="form-item">
+            <div class="selected-area" @click="switchSelectorVisible">
+              <div class="selected-content" v-if="userSelector.selectedUser">
+                <img :src="userSelector.selectedUser.avatar"/>
+                <div>{{ userSelector.selectedUser.name }}</div>
+              </div>
+              <div class="selected-content" v-else>
+                <div>请选择用户</div>
+              </div>
+              <img class="selected-icon rotate" src="../assets/images/up.png"/>
+            </div>
+            <div v-if="userSelector.visible" class="dialog-area">
+              <div class="dialog-list">
+                <div class="dialog-list-item" v-for="(user, index) in userSelector.users" :key="index"
+                     @click="selectUser(user)">
+                  <img class="dialog-list-item-avatar" :src="user.avatar"/>
+                  <div>{{ user.name }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-item">
+            <input v-model="password.value" class="password-input" placeholder="请输入密码" :type="password.visible ? 'text':'password'"/>
+            <img class="password-image" @click="switchPasswordVisible" src="../assets/images/visible.png"/>
+          </div>
+          <div class="form-item">
+            <button class="form-item-btn" @click="login">登录</button>
+          </div>
+          <div v-show="errorVisible" class="form-error">账号或密码错误!</div>
+        </div>
+        <div class="version">{{ version }}</div>
+      </div>
+    </div>
+  </div>
 </template>
 
-<script>
-export default {
-    name: "Login"
-}
+<script lang="ts" setup>
+  import { ref, reactive, onMounted, inject } from 'vue';
+  import { useRouter } from 'vue-router';
+  import restApi from '../api/restapi';
+  import { version } from '../../package.json';
+
+  // 获取全局对象
+  let currentUser:any = inject('currentUser');
+
+  const router = useRouter();
+  // 响应式状态
+  let userSelector = reactive({
+    users: [],
+    visible: false,
+    selectedUser: null
+  })
+  let username = ref('')
+  let password = reactive({
+    visible: false,
+    value: '123'
+  })
+  let errorVisible = ref(false)
+
+  // 生命周期钩子
+  onMounted(() => {
+    userSelector.users = restApi.findUsers();
+  })
+
+  // 更改状态、触发更新的函数
+  function switchSelectorVisible() {
+    userSelector.visible = !userSelector.visible
+  }
+
+  function selectUser (user:any) {
+    userSelector.visible = false;
+    userSelector.selectedUser = user;
+    username.value = user.name;
+  }
+
+  function switchPasswordVisible() {
+    password.visible = !password.visible;
+  }
+
+  function login() {
+    if (username.value.trim() !== '' && password.value.trim() !== '') {
+      let user = restApi.findUser(username.value, password.value);
+      if (user) {
+        currentUser.value = user;
+        router.replace({path: './conversations'});
+        return;
+      }
+    }
+    errorVisible.value = true;
+  }
 </script>
 
 <style scoped>
+  .login {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .login-container {
+    width: 1000px;
+    height: 600px;
+    border-radius: 12px;
+  }
+
+  .login-main {
+    width: 600px;
+    margin: 130px auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .login-header {
+    margin: 20px auto;
+    width: 300px;
+    text-align: center;
+    font-size: 30px;
+    font-weight: 500;
+    color: #d02129;
+  }
+
+  .login-form {
+    width: 300px;
+  }
+
+  .form-item {
+    position: relative;
+    margin: 30px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .selected-area {
+    width: 280px;
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+    border: 1px solid #DCDFE6;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .selected-area .selected-content {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    height: 37px;
+  }
+
+  .selected-area .selected-content img {
+    width: 35px;
+    height: 35px;
+    margin-right: 15px;
+    border-radius: 50%;
+  }
+
+  .selected-area .selected-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+  }
+
+  .selected-area .rotate {
+    transform-origin: center;
+    transform: rotate(180deg);
+  }
+
+  .dialog-area {
+    position: absolute;
+    top: 55px;
+    left: 0;
+    width: 300px;
+    background: #FFFFFF;
+    border: 1px solid #DCDFE6;
+    z-index: 99;
+  }
+
+  .dialog-list-item {
+    width: 100%;
+    margin: 15px 0;
+    padding-left: 10px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .dialog-list-item-avatar {
+    width: 35px;
+    height: 35px;
+    margin-right: 15px;
+    border-radius: 50%;
+  }
+
+  .password-input {
+    width: 280px;
+    height: 37px;
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+    border: 1px solid #DCDFE6;
+    border-radius: 4px;
+  }
+
+  .password-image {
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    cursor: pointer;
+  }
+
+  .form-item-btn {
+    width: 100%;
+    color: #FFFFFF;
+    background-color: #d02129;
+    border: none;
+    height: 35px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 14px;
+    border-radius: 4px;
+  }
+
+  .form-error {
+    color: #d02129;
+    margin-bottom: 22px;
+  }
+
+  .login-main .version {
+    color: #FFFFFF;
+  }
 
 </style>

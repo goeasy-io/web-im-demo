@@ -1,4 +1,4 @@
-import { createApp } from 'vue'
+import { createApp, ref } from 'vue'
 import App from './App.vue'
 import router from './router'
 import GoEasy from 'goeasy'
@@ -9,8 +9,12 @@ const goEasy = GoEasy.getInstance({
     modules: ['im'],
 });
 
+let currentUser = ref({})
+
 const app = createApp(App)
-app.config.globalProperties.GoEasy = GoEasy;
-app.config.globalProperties.goEasy = goEasy;
+app.provide('GoEasy', GoEasy);
+app.provide('goEasy', goEasy);
+app.provide('currentUser', currentUser);
+
 
 app.use(router).mount('#app')

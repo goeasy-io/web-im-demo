@@ -28,7 +28,6 @@
   a {
     text-decoration: none;
     outline: none;
-    font-size: 20px;
     color: #333;
   }
 
