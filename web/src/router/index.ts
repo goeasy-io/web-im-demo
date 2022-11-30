@@ -1,14 +1,12 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
-const Home = () => import('@/views/Home');
-const Login = () => import('@/views/Login');
-const Conversations = () => import('@/views/Conversations');
-const Contacts = () => import('@/views/Contacts');
-const PrivateChat = () => import('@/views/PrivateChat');
-const GroupChat = () => import('@/views/GroupChat');
-Vue.use(VueRouter);
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+const Home = () => import('../views/Home.vue');
+const Login = () => import('../views/Login.vue');
+const Conversations = () => import('../views/Conversations.vue');
+const Contacts = () => import('../views/Contacts.vue');
+const PrivateChat = () => import('../views/PrivateChat.vue');
+const GroupChat = () => import('../views/GroupChat.vue');
 
-const routes = [
+const routes: Array<RouteRecordRaw> = [
     {
         path: '/',
         component: Home,
@@ -40,15 +38,16 @@ const routes = [
     },
 ];
 
-const router = new VueRouter({
-    mode: 'history',
-    routes,
-});
-
-router.beforeEach((to, from, next) => {
-    if (to.path !== '/login' && !Vue.prototype.globalData.currentUser) {
-        next({path: '/login'})
-    } else next()
+const router = createRouter({
+    history: createWebHistory(process.env.BASE_URL),
+    routes
 })
+
+
+// router.beforeEach((to, from, next) => {
+//     if (to.path !== '/login' && !Vue.prototype.globalData.currentUser) {
+//         next({path: '/login'})
+//     } else next()
+// })
 
 export default router;
