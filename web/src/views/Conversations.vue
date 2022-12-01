@@ -73,13 +73,15 @@
 <script lang="ts" setup>
   import {ref, reactive, onMounted, onBeforeMount, onBeforeUnmount, inject} from 'vue';
   import {useRouter} from 'vue-router';
+  import { useStore } from 'vuex'
   import restApi from "../api/restapi";
   import {formatDate} from '../utils/utils'
 
   const router = useRouter();
+  const store = useStore();
   const GoEasy:any = inject('GoEasy');
   const goEasy:any = inject('goEasy');
-  let currentUser:any = inject('currentUser');
+  const currentUser:any = store.state.currentUser;
 
   let conversations = ref([]);
   let rightClickMenu = reactive({
@@ -111,7 +113,7 @@
   }
 
   function subscribeGroup() {
-    let groups = restApi.findGroups(currentUser.value);
+    let groups = restApi.findGroups(currentUser);
     let groupIds = groups.map((item:any) => item.id);
     goEasy.im.subscribeGroup({
       groupIds: groupIds,

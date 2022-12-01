@@ -1,6 +1,7 @@
 import { createApp, ref } from 'vue'
 import App from './App.vue'
 import router from './router'
+import store from './store'
 import GoEasy from 'goeasy'
 
 const goEasy = GoEasy.getInstance({
@@ -9,12 +10,10 @@ const goEasy = GoEasy.getInstance({
     modules: ['im'],
 });
 
-let currentUser = ref({})
 
 const app = createApp(App)
 app.provide('GoEasy', GoEasy);
 app.provide('goEasy', goEasy);
-app.provide('currentUser', currentUser);
 
 
-app.use(router).mount('#app')
+app.use(store).use(router).mount('#app')

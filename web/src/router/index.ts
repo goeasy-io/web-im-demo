@@ -1,3 +1,4 @@
+import store from '../store'
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 const Home = () => import('../views/Home.vue');
 const Login = () => import('../views/Login.vue');
@@ -14,7 +15,7 @@ const routes: Array<RouteRecordRaw> = [
         children: [
             {
                 path: 'conversations',
-	            component: Conversations,
+                component: Conversations,
                 children: [
                     {
                         path: 'privatechat/:id',
@@ -22,19 +23,19 @@ const routes: Array<RouteRecordRaw> = [
                     },
                     {
                         path: 'groupchat/:id',
-	                    component: GroupChat,
+                        component: GroupChat,
                     },
                 ],
             },
             {
                 path: 'contacts',
-	            component: Contacts,
+                component: Contacts,
             },
         ],
     },
     {
         path: '/login',
-	    component: Login,
+        component: Login,
     },
 ];
 
@@ -44,10 +45,11 @@ const router = createRouter({
 })
 
 
-// router.beforeEach((to, from, next) => {
-//     if (to.path !== '/login' && !Vue.prototype.globalData.currentUser) {
-//         next({path: '/login'})
-//     } else next()
-// })
+router.beforeEach((to, from, next) => {
+    const currentUser:any = store.state.currentUser;
+    if (to.path !== '/login' && !currentUser) {
+        next({path: '/login'})
+    } else next()
+})
 
 export default router;

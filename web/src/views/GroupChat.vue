@@ -181,7 +181,7 @@
 <script lang="ts" setup>
   import {ref, reactive, onBeforeMount, onBeforeUnmount, inject, nextTick} from 'vue';
   import {useRoute, useRouter} from 'vue-router';
-
+  import { useStore } from 'vuex';
   import {formatDate} from '../utils/utils'
   import restApi from '../api/restapi';
   import EmojiDecoder from '../utils/EmojiDecoder';
@@ -189,9 +189,10 @@
 
   const router = useRouter();
   const route = useRoute();
+  const store = useStore();
   const GoEasy: any = inject('GoEasy');
   const goEasy: any = inject('goEasy');
-  let currentUser: any = inject('currentUser');
+  const currentUser:any = store.state.currentUser;
 
   const IMAGE_MAX_WIDTH = 200;
   const IMAGE_MAX_HEIGHT = 150;
@@ -419,7 +420,7 @@
   function showActionPopup(message: any) {
     const MAX_RECALLABLE_TIME = 3 * 60 * 1000; //3分钟以内的消息才可以撤回
     messageSelector.ids = [message.messageId];
-    if ((Date.now() - message.timestamp) < MAX_RECALLABLE_TIME && message.senderId === currentUser.value.id && message.status === 'success') {
+    if ((Date.now() - message.timestamp) < MAX_RECALLABLE_TIME && message.senderId === currentUser.id && message.status === 'success') {
       actionPopup.recallable = true;
     } else {
       actionPopup.recallable = false;

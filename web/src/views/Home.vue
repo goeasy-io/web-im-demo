@@ -46,18 +46,20 @@
 <script lang="ts" setup>
   import {ref, onBeforeMount, inject} from 'vue';
   import {useRouter} from 'vue-router';
+  import { useStore } from 'vuex';
 
   const router = useRouter();
+  const store = useStore();
   const GoEasy:any = inject('GoEasy');
   const goEasy:any = inject('goEasy');
-  let currentUser:any = inject('currentUser');
+  const currentUser:any = store.state.currentUser;
 
   let unreadAmount = ref(0);
 
   function connectGoEasy() {
     goEasy.connect({
-      id: currentUser.value.id,
-      data: {name: currentUser.value.name, avatar: currentUser.value.avatar},
+      id: currentUser.id,
+      data: {name: currentUser.name, avatar: currentUser.avatar},
       onSuccess: function () {  //连接成功
         console.log("GoEasy connect successfully.") //连接成功
       },
@@ -71,14 +73,14 @@
   }
 
   function setUnreadNumber(content: any) {
-    unreadAmount = content.unreadTotal;
+    unreadAmount.value = content.unreadTotal;
   }
 
   function logout() {
     if (confirm('确认要退出登录吗？')) {
       goEasy.disconnect({
         onSuccess: () => {
-          currentUser.value = null;
+          store.commit('updateCurrentUser', null);
           router.replace({path: './login'});
         },
         onFailed: (error: any) => {

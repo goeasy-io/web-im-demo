@@ -45,16 +45,15 @@
 <script lang="ts" setup>
   import { ref, reactive, onMounted, inject } from 'vue';
   import { useRouter } from 'vue-router';
+  import { useStore } from 'vuex';
   import restApi from '../api/restapi';
   import { version } from '../../package.json';
 
-  // 获取全局对象
-  let currentUser:any = inject('currentUser');
-
+  const store = useStore();
   const router = useRouter();
   // 响应式状态
   let userSelector = reactive({
-    users: [],
+    users: [] as any,
     visible: false,
     selectedUser: null
   })
@@ -89,7 +88,7 @@
     if (username.value.trim() !== '' && password.value.trim() !== '') {
       let user = restApi.findUser(username.value, password.value);
       if (user) {
-        currentUser.value = user;
+        store.commit('updateCurrentUser', user);
         router.replace({path: './conversations'});
         return;
       }

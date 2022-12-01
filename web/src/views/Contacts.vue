@@ -73,12 +73,14 @@
 <script lang="ts" setup>
   import {reactive, inject} from 'vue';
   import {useRouter} from 'vue-router';
+  import { useStore } from 'vuex';
   import restApi from '../api/restapi';
 
   const router = useRouter();
-  let currentUser: any = inject('currentUser');
-  const friends = restApi.findFriends(currentUser.value);
-  const groups = restApi.findGroups(currentUser.value);
+  const store = useStore();
+  const currentUser:any = store.state.currentUser;
+  const friends = restApi.findFriends(currentUser);
+  const groups = restApi.findGroups(currentUser);
 
   let profile = reactive({
     friend: {} as any,
