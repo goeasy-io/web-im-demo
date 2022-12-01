@@ -15,38 +15,36 @@
   </div>
 </template>
 
-<script>
+<script lang="ts" setup>
+  import {ref,defineProps} from 'vue';
+
   const IMAGE_MAX_WIDTH = 200;
   const IMAGE_MAX_HEIGHT = 150;
-  export default {
-    name: 'goeasy-video-player',
-    props: ['src', 'thumbnail'],
-    data() {
-      return {
-        playing: false
-      }
-    },
-    methods: {
-      getImageHeight(width, height) {
-        if (width < IMAGE_MAX_WIDTH && height < IMAGE_MAX_HEIGHT) {
-          return height;
-        } else if (width > height) {
-          return (IMAGE_MAX_WIDTH / width * height);
-        } else if (width === height || width < height) {
-          return IMAGE_MAX_HEIGHT;
-        }
-      },
 
-      play() {
-        this.playing = true;
-      },
+  const props = defineProps({
+    src: String,
+    thumbnail: {} as any
+  })
 
-      end() {
-        this.playing = false;
-      }
+  const playing = ref(false)
 
-    },
-  };
+  function getImageHeight(width: number, height: number) {
+    if (width < IMAGE_MAX_WIDTH && height < IMAGE_MAX_HEIGHT) {
+      return height;
+    } else if (width > height) {
+      return IMAGE_MAX_WIDTH / width * height;
+    } else if (width === height || width < height) {
+      return IMAGE_MAX_HEIGHT;
+    }
+  }
+
+  function play() {
+    playing.value = true;
+  }
+
+  function end() {
+    playing.value = false;
+  }
 </script>
 
 <style scoped>

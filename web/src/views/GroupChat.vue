@@ -179,12 +179,12 @@
 </template>
 
 <script lang="ts" setup>
-  import {ref, reactive, toRefs, onBeforeMount, onBeforeUnmount, inject, nextTick} from 'vue';
+  import {ref, reactive, onBeforeMount, onBeforeUnmount, inject, nextTick} from 'vue';
   import {useRoute, useRouter} from 'vue-router';
 
   import {formatDate} from '../utils/utils'
   import restApi from '../api/restapi';
-  import EmojiDecoder from '../utils/EmojiDecoder.js';
+  import EmojiDecoder from '../utils/EmojiDecoder';
   import GoeasyVideoPlayer from "../components/GoEasyVideoPlayer";
 
   const router = useRouter();
@@ -252,7 +252,7 @@
 
   function onReceivedGroupMessage(message: any) {
     let groupId = message.groupId;
-    if (groupId === group.id) {
+    if (groupId === group.value.id) {
       history.messages.push(message);
       markGroupMessageAsRead();
     }
@@ -531,12 +531,14 @@
       limit: 10,
       onSuccess: (result: any) => {
         history.loading = false;
-        let messages = result.content;
+        let messages = reactive([] as any);
+        messages.push(...result.content);
         if (messages.length === 0) {
           history.allLoaded = true;
         } else {
           if (lastMessageTimeStamp) {
-            history.messages = messages.push(...history.messages);
+            messages.push(...history.messages)
+            history.messages = messages;
           } else {
             history.messages = messages;
           }
@@ -689,7 +691,7 @@
     position: relative;
   }
 
-  .message-item-checkbox input[type="checkbox"]::before, .message-item-checkbox input[type="checkbox"]:checked::before {
+  .message-item-checkbox input[type="checkbox"]:before, .message-item-checkbox input[type="checkbox"]:checked:before {
     content: "";
     position: absolute;
     top: -3px;
@@ -701,7 +703,7 @@
     border-radius: 50%;
   }
 
-  .message-item-checkbox input[type="checkbox"]:checked::before {
+  .message-item-checkbox input[type="checkbox"]:checked:before {
     content: "\2713";
     background-color: #d02129;
     width: 18px;

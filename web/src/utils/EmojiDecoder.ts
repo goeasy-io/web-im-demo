@@ -1,20 +1,20 @@
 class EmojiDecoder {
-    emojiMap = null;
+    emojiMap = {} as any;
     url = "";
-    patterns = [];
+    patterns = [] as any;
     metaChars = /[[\]{}()*+?.\\|^$\-,&#\s]/g;
 
-    constructor(url,emojiMap) {
+    constructor(url:string,emojiMap:any) {
         this.url = url || '';
         this.emojiMap = emojiMap || {};
-        for (let i in this.emojiMap) {
-            if (this.emojiMap.hasOwnProperty(i)){
+        for (const i in this.emojiMap) {
+            if (Object.prototype.hasOwnProperty.call(this.emojiMap, i)){
                 this.patterns.push('('+i.replace(this.metaChars, "\\$&")+')');
             }
         }
     }
 
-    decode (text) {
+    decode (text:string) {
         return text.replace(new RegExp(this.patterns.join('|'),'g'),  (match) => {
             return typeof this.emojiMap[match] != 'undefined' ? '<img height="25px" width="25px" src="'+this.url+this.emojiMap[match]+'" />' : match;
         });
