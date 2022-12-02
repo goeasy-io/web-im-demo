@@ -87,21 +87,21 @@ class RestApi {
             price: '￥12',
             count: 1
         }
-    ];
+    ] as any;
 
     findUsers() {
         return this.users;
-    };
+    }
 
-    findFriends(user) {
+    findFriends(user:any) {
         return this.users.filter((v) => v.id !== user.id);
     }
 
-    findGroups(user) {
+    findGroups(user:any) {
         return this.groups.filter((v) => v.userList.find((id) => id === user.id));
     }
 
-    findUser(username, password) {
+    findUser(username:string, password:string) {
         return this.users.find((user) => user.name === username && user.password === password);
     }
 
@@ -109,24 +109,37 @@ class RestApi {
         return this.orders;
     }
 
-    findGroupById(groupId) {
+    findGroupById(groupId:string) {
         return this.groups.find((group) => group.id === groupId);
     }
 
-    findUserById(userId) {
+    findUserById(userId:string) {
         return this.users.find((user) => user.id === userId);
     }
 
-    findGroupMembers (groupId) {
-        let members = [];
-        let group = this.groups.find(v => v.id === groupId);
+    findGroupMembers (groupId:string) {
+        const members = [] as any;
+        const group:any = this.groups.find(v => v.id === groupId);
         this.users.map(user => {
-            let userId = group.userList.find((id)=>{
+            group.userList.find((id:string)=>{
                 return id === user.id;
             });
             members.push(user);
         });
         return members;
+    }
+
+    findGroupMemberAvatars (groupId:string) {
+        const avatars = [] as any;
+        const group:any = this.groups.find((v) => v.id === groupId);
+        this.users.map((user) => {
+            group.userList.forEach((userId:string) => {
+                if (user.id === userId) {
+                    avatars.push(user.avatar);
+                }
+            });
+        });
+        return avatars;
     }
 }
 

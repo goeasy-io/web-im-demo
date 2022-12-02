@@ -144,7 +144,7 @@ page {
 }
 
 .chatInterface .scroll-view .content .pending {
-    background: url(".~@/static/images/pending.gif") no-repeat center;
+    background: url("/static/images/pending.gif") no-repeat center;
     background-size: 30rpx;
     width: 30rpx;
     height: 30rpx;
@@ -152,7 +152,7 @@ page {
 }
 
 .chatInterface .scroll-view .content .send-fail {
-    background: url(".~@/static/images/failed.png") no-repeat center;
+    background: url("/static/images/failed.png") no-repeat center;
     background-size: 30rpx;
     width: 30rpx;
     height: 30rpx;
@@ -365,7 +365,7 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
     height: 300rpx;
     margin: -150rpx -150rpx;
     background: #262628;
-    background: url(".~@/static/images/recording-loading.gif") no-repeat center;
+    background: url("/static/images/recording-loading.gif") no-repeat center;
     background-size: 100%;
     border-radius: 40rpx;
 }
@@ -485,7 +485,7 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
     width: 40rpx;
     height: 40rpx;
     border-radius: 20rpx;
-    background: url(".~@/static/images/play.png") no-repeat center;
+    background: url("/static/images/play.png") no-repeat center;
     background-size: 100%;
     top: 50%;
     left: 50%;
