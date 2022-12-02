@@ -444,7 +444,7 @@
     history.messages.push(messageRef.value);
     scrollToBottom();
     goEasy.im.sendMessage({
-      message: message,
+      message: messageRef.value,
       onSuccess: function (message:any) {
         console.log('发送成功.', message);
       },
