@@ -57,7 +57,7 @@
   })
   let errorVisible = ref(false)
 
-  onLoad((option) => {
+  onLoad(() => {
     userSelector.users = restApi.findUsers()
   });
 

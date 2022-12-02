@@ -73,7 +73,6 @@
   const GoEasy: any = inject('GoEasy');
   const goEasy: any = inject('goEasy');
   let currentUser: any = inject('currentUser');
-  currentUser.value = uni.getStorageSync('currentUser');
 
   let conversations = ref([]);
   let actionPopup = reactive({
@@ -82,7 +81,7 @@
   });
 
   onShow(() => {
-
+    currentUser.value = uni.getStorageSync('currentUser');
     if (!currentUser.value) {
       uni.navigateTo({url: './login'});
       return;

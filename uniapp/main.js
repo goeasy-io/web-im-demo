@@ -36,7 +36,10 @@ goEasy.onClickNotification((message) => {
     if (routes && routes.length) {
         const curRoute = routes[routes.length - 1].route;
         const curParam = routes[routes.length - 1].options;
-        currentUrl = '/' + curRoute + `?to=${curParam.to}`;
+        currentUrl = '/' + curRoute;
+        if (curParam) {
+          currentUrl+=`?to=${curParam.to}`
+        }
     }
 
     let newUrl;
