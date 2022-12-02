@@ -18,10 +18,14 @@ function setUnreadNumber (content) {
     if(unreadTotal > 0) {
         uni.setTabBarBadge({
             index: 0,
-            text: unreadTotal.toString()
+            text: unreadTotal.toString(),
+            fail(){}
         });
     }else{
-        uni.removeTabBarBadge({index: 0});
+        uni.removeTabBarBadge({
+          index: 0,
+          fail(){}
+        });
     }
 }
 
