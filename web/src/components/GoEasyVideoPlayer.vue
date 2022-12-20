@@ -15,7 +15,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
   import {ref,defineProps} from 'vue';
 
   const IMAGE_MAX_WIDTH = 200;
@@ -23,12 +23,12 @@
 
   const props = defineProps({
     src: String,
-    thumbnail: {} as any
+    thumbnail: {}
   })
 
   const playing = ref(false)
 
-  function getImageHeight(width: number, height: number) {
+  function getImageHeight(width, height) {
     if (width < IMAGE_MAX_WIDTH && height < IMAGE_MAX_HEIGHT) {
       return height;
     } else if (width > height) {

@@ -70,18 +70,18 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
   import {ref, reactive, onMounted, onBeforeMount, onBeforeUnmount, inject} from 'vue';
   import {useRouter} from 'vue-router';
   import { useStore } from 'vuex'
-  import restApi from "../api/restapi";
+  import restApi from "../api/restapi.js";
   import {formatDate} from '../utils/utils'
 
   const router = useRouter();
   const store = useStore();
-  const GoEasy:any = inject('GoEasy');
-  const goEasy:any = inject('goEasy');
-  const currentUser:any = store.state.currentUser;
+  const GoEasy = inject('GoEasy');
+  const goEasy = inject('goEasy');
+  const currentUser = store.state.currentUser;
 
   let conversations = ref([]);
   let rightClickMenu = reactive({
@@ -93,11 +93,11 @@
 
   function loadConversations() {
     goEasy.im.latestConversations({
-      onSuccess: (result:any) => {
+      onSuccess: (result) => {
         let content = result.content;
         renderConversations(content);
       },
-      onFailed: (error:any) => {
+      onFailed: (error) => {
         console.log('获取最新会话列表失败, code:' + error.code + 'content:' + error.content);
       },
     });
@@ -108,25 +108,25 @@
     goEasy.im.on(GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, renderConversations);
   }
 
-  function renderConversations(content:any) {
+  function renderConversations(content) {
     conversations.value = content.conversations;
   }
 
   function subscribeGroup() {
     let groups = restApi.findGroups(currentUser);
-    let groupIds = groups.map((item:any) => item.id);
+    let groupIds = groups.map((item) => item.id);
     goEasy.im.subscribeGroup({
       groupIds: groupIds,
       onSuccess: function () {
         console.log('订阅群消息成功');
       },
-      onFailed: function (error:any) {
+      onFailed: function (error) {
         console.log('订阅群消息失败:', error);
       },
     });
   }
 
-  function showRightClickMenu(e:any, conversation:any) {
+  function showRightClickMenu(e, conversation) {
     rightClickMenu.conversation = conversation;
     rightClickMenu.visible = true;
     rightClickMenu.x = e.pageX;
@@ -138,7 +138,7 @@
   }
 
   function topConversation() {
-    let conversation:any = rightClickMenu.conversation;
+    let conversation = rightClickMenu.conversation;
     let description = conversation.top ? '取消置顶' : '置顶';
     goEasy.im.topConversation({
       conversation: conversation,
@@ -146,7 +146,7 @@
       onSuccess: function () {
         console.log(description, '成功');
       },
-      onFailed: function (error:any) {
+      onFailed: function (error) {
         console.log(description, '失败：', error);
       },
     });
@@ -160,14 +160,14 @@
         onSuccess: function () {
           console.log('删除会话成功');
         },
-        onFailed: function (error:any) {
+        onFailed: function (error) {
           console.log(error);
         },
       });
     }
   }
 
-  function chatLocation (conversation:any) {
+  function chatLocation (conversation) {
     let path = conversation.type === 'private' ?
       '/conversations/privatechat/'+conversation.userId :
       '/conversations/groupchat/'+conversation.groupId

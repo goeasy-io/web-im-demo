@@ -38,7 +38,7 @@
   </view>
 </template>
 
-<script lang="ts" setup>
+<script setup>
   import {ref, reactive} from 'vue'
   import {onLoad} from "@dcloudio/uni-app";
   import restApi from '../lib/restapi.js';
@@ -46,7 +46,7 @@
 
   const versionName = config.versionName;
   let userSelector = reactive({
-    users: [] as any,
+    users: [],
     visible: false,
     selectedUser: null
   })
@@ -65,7 +65,7 @@
     userSelector.visible = !userSelector.visible;
   }
 
-  function selectUser(user: any) {
+  function selectUser(user) {
     userSelector.visible = false;
     userSelector.selectedUser = user;
     username.value = user.name;

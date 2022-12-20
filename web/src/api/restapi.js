@@ -87,21 +87,21 @@ class RestApi {
             price: '￥12',
             count: 1
         }
-    ] as any;
+    ];
 
     findUsers() {
         return this.users;
     }
 
-    findFriends(user:any) {
+    findFriends(user) {
         return this.users.filter((v) => v.id !== user.id);
     }
 
-    findGroups(user:any) {
+    findGroups(user) {
         return this.groups.filter((v) => v.userList.find((id) => id === user.id));
     }
 
-    findUser(username:string, password:string) {
+    findUser(username, password) {
         return this.users.find((user) => user.name === username && user.password === password);
     }
 
@@ -109,19 +109,19 @@ class RestApi {
         return this.orders;
     }
 
-    findGroupById(groupId:string) {
+    findGroupById(groupId) {
         return this.groups.find((group) => group.id === groupId);
     }
 
-    findUserById(userId:string) {
+    findUserById(userId) {
         return this.users.find((user) => user.id === userId);
     }
 
-    findGroupMembers (groupId:string) {
-        const members = [] as any;
-        const group:any = this.groups.find(v => v.id === groupId);
+    findGroupMembers (groupId) {
+        let members = [];
+        let group = this.groups.find(v => v.id === groupId);
         this.users.map(user => {
-            group.userList.find((id:string)=>{
+            group.userList.find((id)=>{
                 return id === user.id;
             });
             members.push(user);
@@ -129,11 +129,11 @@ class RestApi {
         return members;
     }
 
-    findGroupMemberAvatars (groupId:string) {
-        const avatars = [] as any;
-        const group:any = this.groups.find((v) => v.id === groupId);
+    findGroupMemberAvatars (groupId) {
+        let avatars = [];
+        let group = this.groups.find((v) => v.id === groupId);
         this.users.map((user) => {
-            group.userList.forEach((userId:string) => {
+            group.userList.forEach((userId) => {
                 if (user.id === userId) {
                     avatars.push(user.avatar);
                 }

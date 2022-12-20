@@ -3,10 +3,10 @@
  * @prama t 时间戳
  * @return str MM-dd HH:mm
  */
-export function formatDate(t:number): string {
+export function formatDate(t) {
     t = t || Date.now();
     let time = new Date(t);
-    let str = time.getMonth() < 9 ? '0' + (time.getMonth() + 1) : time.getMonth() + 1+'';
+    let str = time.getMonth() < 9 ? '0' + (time.getMonth() + 1) : time.getMonth() + 1;
     str += '-';
     str += time.getDate() < 10 ? '0' + time.getDate() : time.getDate();
     str += ' ';
@@ -21,7 +21,7 @@ export function formatDate(t:number): string {
  * @prama time 13位时间戳
  * @return str x秒 / x分钟 / x小时
  */
-export function formateTime(time:number): string {
+export function formateTime(time) {
     const second = 1000;
     const minute = second * 60;
     const hour = minute * 60;

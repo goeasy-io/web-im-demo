@@ -1,5 +1,5 @@
 import store from '../store'
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router';
 const Home = () => import('../views/Home.vue');
 const Login = () => import('../views/Login.vue');
 const Conversations = () => import('../views/Conversations.vue');
@@ -7,7 +7,7 @@ const Contacts = () => import('../views/Contacts.vue');
 const PrivateChat = () => import('../views/PrivateChat.vue');
 const GroupChat = () => import('../views/GroupChat.vue');
 
-const routes: Array<RouteRecordRaw> = [
+const routes = [
     {
         path: '/',
         component: Home,
@@ -46,7 +46,7 @@ const router = createRouter({
 
 
 router.beforeEach((to, from, next) => {
-    const currentUser:any = store.state.currentUser;
+    const currentUser = store.state.currentUser;
     if (to.path !== '/login' && !currentUser) {
         next({path: '/login'})
     } else next()

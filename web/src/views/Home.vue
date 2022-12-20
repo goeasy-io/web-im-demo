@@ -43,16 +43,16 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
   import {ref, onBeforeMount, inject} from 'vue';
   import {useRouter} from 'vue-router';
   import { useStore } from 'vuex';
 
   const router = useRouter();
   const store = useStore();
-  const GoEasy:any = inject('GoEasy');
-  const goEasy:any = inject('goEasy');
-  const currentUser:any = store.state.currentUser;
+  const GoEasy = inject('GoEasy');
+  const goEasy = inject('goEasy');
+  const currentUser = store.state.currentUser;
 
   let unreadAmount = ref(0);
 
@@ -63,16 +63,16 @@
       onSuccess: function () {  //连接成功
         console.log("GoEasy connect successfully.") //连接成功
       },
-      onFailed: function (error: any) { //连接失败
+      onFailed: function (error) { //连接失败
         console.log("Failed to connect GoEasy, code:" + error.code + ",error:" + error.content);
       },
-      onProgress: function (attempts: any) { //连接或自动重连中
+      onProgress: function (attempts) { //连接或自动重连中
         console.log("GoEasy is connecting", attempts);
       }
     });
   }
 
-  function setUnreadNumber(content: any) {
+  function setUnreadNumber(content) {
     unreadAmount.value = content.unreadTotal;
   }
 
@@ -83,7 +83,7 @@
           store.commit('updateCurrentUser', null);
           router.replace({path: './login'});
         },
-        onFailed: (error: any) => {
+        onFailed: (error) => {
           console.log("Failed to disconnect GoEasy, code:" + error.code + ",error:" + error.content);
         }
       });

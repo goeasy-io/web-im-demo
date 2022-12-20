@@ -70,34 +70,34 @@
   </div>
 </template>
 
-<script lang="ts" setup>
-  import {reactive, inject} from 'vue';
+<script setup>
+  import {reactive} from 'vue';
   import {useRouter} from 'vue-router';
   import { useStore } from 'vuex';
-  import restApi from '../api/restapi';
+  import restApi from '../api/restapi.js';
 
   const router = useRouter();
   const store = useStore();
-  const currentUser:any = store.state.currentUser;
+  const currentUser = store.state.currentUser;
   const friends = restApi.findFriends(currentUser);
   const groups = restApi.findGroups(currentUser);
 
   let profile = reactive({
-    friend: {} as any,
-    group: {} as any
+    friend: {},
+    group: {}
   });
 
-  function showFriendProfile(friend:any) {
+  function showFriendProfile(friend) {
     profile.group = {};
     profile.friend = friend;
   }
 
-  function showGroupProfile(group:any) {
+  function showGroupProfile(group) {
     profile.friend = {};
     profile.group = group;
     profile.group.members = [];
 
-    group.userList.map((item:any) => {
+    group.userList.map((item) => {
       const info = restApi.findUserById(item);
       profile.group.members.push(info);
     });

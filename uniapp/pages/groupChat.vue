@@ -174,16 +174,16 @@
   </view>
 </template>
 
-<script lang="ts" setup>
+<script setup>
   import {ref, reactive, inject, nextTick} from 'vue';
   import {onLoad, onShow, onReady, onUnload, onPullDownRefresh} from "@dcloudio/uni-app";
   import EmojiDecoder from '../lib/EmojiDecoder';
   import restApi from '../lib/restapi';
   import {formatDate} from '../lib/utils';
 
-  const GoEasy: any = inject('GoEasy');
-  const goEasy: any = inject('goEasy');
-  const currentUser: any = inject('currentUser');
+  const GoEasy = inject('GoEasy');
+  const goEasy = inject('goEasy');
+  const currentUser = inject('currentUser');
 
   const IMAGE_MAX_WIDTH = 200;
   const IMAGE_MAX_HEIGHT = 150;
@@ -202,9 +202,9 @@
 
   //聊天文本框
   let text = ref('');
-  let group = ref({} as any);
+  let group = ref({});
   let groupMembers = null;
-  let to = {} as any;// 作为createMessage的参数
+  let to = {};// 作为createMessage的参数
 
   //定义表情列表
   let emoji = reactive({
@@ -220,7 +220,7 @@
     visible: false,
   })
   let history = reactive({
-    messages: [] as any,
+    messages: [],
     allLoaded: false,
     loading: true
   })
@@ -233,7 +233,7 @@
   })
   let audioPlayer = reactive({
     innerAudioContext: null,
-    audio: {} as any,
+    audio: {},
     playingMessage: null,
   })
   let videoPlayer = reactive({
@@ -249,10 +249,10 @@
   })
   // 消息选择
   let messageSelector = reactive({
-    messages: [] as any,
+    messages: [],
     visible: false,
-    ids: [] as any
-  }as any)
+    ids: []
+  })
 
   onLoad((options) => {
     //聊天对象
@@ -303,13 +303,13 @@
 
   //渲染文本消息，如果包含表情，替换为图片
   //todo:本不需要该方法，可以在标签里完成，但小程序有兼容性问题，被迫这样实现
-  function renderTextMessage(message:any) {
+  function renderTextMessage(message) {
     return '<span class="text-content">' + emoji.decoder.decode(message.payload.text) + '</span>'
   }
 
   //像微信那样显示时间，如果有几分钟没发消息了，才显示时间
   //todo:本不需要该方法，可以在标签里完成，但小程序有兼容性问题，被迫这样实现
-  function renderMessageDate(message:any, index:any) {
+  function renderMessageDate(message, index) {
     if (index === 0) {
       return formatDate(message.timestamp)
     } else {
@@ -327,7 +327,7 @@
     goEasy.im.on(GoEasy.IM_EVENT.MESSAGE_DELETED, onMessageDeleted);
   }
 
-  function onMessageReceived(message:any) {
+  function onMessageReceived(message) {
     let groupId = message.groupId;
     if (groupId === group.value.id) {
       history.messages.push(message);
@@ -338,8 +338,8 @@
     }
   }
 
-  function onMessageDeleted(deletedMessages:any) {
-    deletedMessages.forEach((message:any) => {
+  function onMessageDeleted(deletedMessages) {
+    deletedMessages.forEach((message) => {
       let groupId = message.groupId;
       if (groupId && groupId === group.value.id) {
         let index = history.messages.indexOf(message);
@@ -387,13 +387,13 @@
           title: currentUser.value.name + '发来一段语音',
           body: '[语音消息]'		// 字段最长 50 字符
         },
-        onProgress: function (progress:any) {
+        onProgress: function (progress) {
           console.log(progress)
         },
-        onSuccess: (message:any) => {
+        onSuccess: (message) => {
           sendMessage(message);
         },
-        onFailed: (e:any) => {
+        onFailed: (e) => {
           console.log('error :', e);
         }
       });
@@ -423,7 +423,7 @@
    * @returns number
    */
 
-  function getImageHeight(width:number, height:number) {
+  function getImageHeight(width, height) {
     if (width < IMAGE_MAX_WIDTH && height < IMAGE_MAX_HEIGHT) {
       return height * 2;
     } else if (width > height) {
@@ -433,17 +433,17 @@
     }
   }
 
-  function sendMessage(message:any) {
+  function sendMessage(message) {
     let messageRef = ref()
     messageRef.value = message
     history.messages.push(messageRef.value);
     scrollToBottom();
     goEasy.im.sendMessage({
       message: messageRef.value,
-      onSuccess: function (message:any) {
+      onSuccess: function (message) {
         console.log('发送成功.', message);
       },
-      onFailed: function (error:any) {
+      onFailed: function (error) {
         if (error.code === 507) {
           console.log('发送语音/图片/视频/文件失败，没有配置OSS存储，详情参考：https://www.goeasy.io/cn/docs/goeasy-2.x/im/message/media/send-media-message.html');
         } else {
@@ -466,10 +466,10 @@
           title: currentUser.value.name + '发来一段文字',
           body: body
         },
-        onSuccess: (message:any) => {
+        onSuccess: (message) => {
           sendMessage(message);
         },
-        onFailed: (e:any) => {
+        onFailed: (e) => {
           console.log('error :', e);
         }
       });
@@ -487,14 +487,14 @@
             title: currentUser.value.name + '发来一个视频',
             body: '[视频消息]'		// 字段最长 50 字符
           },
-          onProgress: function (progress:any) {
+          onProgress: function (progress) {
             console.log(progress)
           },
-          onSuccess: (message:any) => {
+          onSuccess: (message) => {
             otherTypesMessagePanelVisible.value = false;
             sendMessage(message);
           },
-          onFailed: (e:any) => {
+          onFailed: (e) => {
             console.log('error :', e);
           }
         });
@@ -506,7 +506,7 @@
     uni.chooseImage({
       count: 9,
       success: (res) => {
-        res.tempFiles.forEach((file:any) => {
+        res.tempFiles.forEach((file) => {
           goEasy.im.createImageMessage({
             to: to,
             file: file,
@@ -514,14 +514,14 @@
               title: currentUser.value.name + '发来一张图片',
               body: '[图片消息]'		// 字段最长 50 字符
             },
-            onProgress: function (progress:any) {
+            onProgress: function (progress) {
               console.log(progress)
             },
-            onSuccess: (message:any) => {
+            onSuccess: (message) => {
               otherTypesMessagePanelVisible.value = false;
               sendMessage(message);
             },
-            onFailed: (e:any) => {
+            onFailed: (e) => {
               console.log('error :', e);
             }
           });
@@ -530,7 +530,7 @@
     });
   }
 
-  function sendOrderMessage(order:any) {
+  function sendOrderMessage(order) {
     //GoEasyIM自定义消息,实现订单发送
     goEasy.im.createCustomMessage({
       type: 'order',
@@ -540,18 +540,18 @@
         title: currentUser.value.name + '发来一个订单',
         body: '[订单消息]'
       },
-      onSuccess: (message:any) => {
+      onSuccess: (message) => {
         otherTypesMessagePanelVisible.value = false;
         sendMessage(message);
       },
-      onFailed: (e:any) => {
+      onFailed: (e) => {
         console.log('error :', e);
       }
     });
     orderList.visible = false;
   }
 
-  function showActionPopup(message:any) {
+  function showActionPopup(message) {
     const MAX_RECALLABLE_TIME = 3 * 60 * 1000; //3分钟以内的消息才可以撤回
     messageSelector.messages = [message];
     if ((Date.now() - message.timestamp) < MAX_RECALLABLE_TIME && message.senderId === currentUser.value.id && message.status === 'success') {
@@ -597,7 +597,7 @@
     goEasy.im.deleteMessage({
       messages: messageSelector.messages,
       onSuccess: () => {
-        messageSelector.messages.forEach((message:any) => {
+        messageSelector.messages.forEach((message) => {
           let index = history.messages.indexOf(message);
           if (index > -1) {
             history.messages.splice(index, 1);
@@ -605,7 +605,7 @@
         });
         messageSelector.messages = [];
       },
-      onFailed: (error:any) => {
+      onFailed: (error) => {
         console.log('error:', error);
       }
     });
@@ -618,13 +618,13 @@
       onSuccess: () => {
         console.log('撤回成功');
       },
-      onFailed: (error:any) => {
+      onFailed: (error) => {
         console.log('撤回失败,error:', error);
       }
     });
   }
 
-  function editRecalledMessage(content:string) {
+  function editRecalledMessage(content) {
     if (audio.visible) {
       audio.visible = false;
     }
@@ -637,10 +637,10 @@
     actionPopup.visible = false;
   }
 
-  function selectMessages(e:any) {
+  function selectMessages(e) {
     const selectedMessageIds = e.detail.value;
     let selectedMessages = [];
-    history.messages.forEach((message:any) => {
+    history.messages.forEach((message) => {
       if (selectedMessageIds.includes(message.messageId)) {
         selectedMessages.push(message);
       }
@@ -648,10 +648,10 @@
     messageSelector.messages = selectedMessages;
   }
 
-  function loadHistoryMessage(isScrollToBottom:boolean) {//历史消息
+  function loadHistoryMessage(isScrollToBottom) {//历史消息
     history.loading = true;
-    let lastMessageTimeStamp: any;
-    let lastMessage: any = history.messages[0];
+    let lastMessageTimeStamp;
+    let lastMessage = history.messages[0];
     if (lastMessage) {
       lastMessageTimeStamp = lastMessage.timestamp;
     }
@@ -659,10 +659,10 @@
       groupId: group.value.id,
       lastTimestamp: lastMessageTimeStamp,
       limit: 10,
-      onSuccess: (result:any) => {
+      onSuccess: (result) => {
         uni.stopPullDownRefresh();
         history.loading = false;
-        let messages = reactive([] as any);
+        let messages = reactive([]);
         messages.push(...result.content);
         if (messages.length === 0) {
           history.allLoaded = true;
@@ -683,7 +683,7 @@
           }
         }
       },
-      onFailed: (error:any) => {
+      onFailed: (error) => {
         //获取失败
         console.log('获取历史消息失败:', error);
         uni.stopPullDownRefresh();
@@ -733,14 +733,14 @@
     }
   }
 
-  function showImageFullScreen(e:any) {
+  function showImageFullScreen(e) {
     let imagesUrl = [e.currentTarget.dataset.url];
     uni.previewImage({
       urls: imagesUrl
     });
   }
 
-  function playVideo(e:any) {
+  function playVideo(e) {
     videoPlayer.visible = true;
     videoPlayer.url = e.currentTarget.dataset.url;
     nextTick(() => {
@@ -751,7 +751,7 @@
     });
   }
 
-  function playAudio(audioMessage:any) {
+  function playAudio(audioMessage) {
     let playingMessage = audioPlayer.playingMessage;
 
     if (playingMessage) {
@@ -766,7 +766,7 @@
     audioPlayer.innerAudioContext.play();
   }
 
-  function onVideoFullScreenChange(e:any) {
+  function onVideoFullScreenChange(e) {
     //当退出全屏播放时，隐藏播放器
     if (videoPlayer.visible && !e.detail.fullScreen) {
       videoPlayer.visible = false;
@@ -784,7 +784,7 @@
     emoji.visible = false;
   }
 
-  function chooseEmoji(emojiKey:string) {
+  function chooseEmoji(emojiKey) {
     text.value += emojiKey;
   }
 
@@ -813,7 +813,7 @@
       onSuccess: function () {
         console.log('标记私聊已读成功');
       },
-      onFailed: function (error:any) {
+      onFailed: function (error) {
         console.log("标记私聊已读失败", error);
       }
     });

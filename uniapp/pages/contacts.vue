@@ -27,7 +27,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
   import {inject} from 'vue';
   import restApi from '../lib/restapi';
 
@@ -117,23 +117,4 @@
     color: #262628;
   }
 
-  .contacts .user-item-info__tips {
-    height: 44rpx;
-    width: 64rpx;
-    border-radius: 24rpx;
-    font-size: 26rpx;
-    line-height: 44rpx;
-    background: #D02129;
-    color: #ffffff;
-    font-family: Cabin;
-    text-align: center;
-  }
-
-  .contacts .online-dot {
-    position: absolute;
-    width: 32rpx !important;
-    height: 32rpx !important;
-    right: 0;
-    bottom: 0;
-  }
 </style>

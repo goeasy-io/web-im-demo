@@ -64,15 +64,15 @@
   </scroll-view>
 </template>
 
-<script lang="ts" setup>
+<script setup>
   import {ref, reactive, inject} from 'vue';
   import {onShow,onUnload} from "@dcloudio/uni-app";
   import {formatDate} from '../lib/utils';
   import restApi from '../lib/restapi';
 
-  const GoEasy: any = inject('GoEasy');
-  const goEasy: any = inject('goEasy');
-  let currentUser: any = inject('currentUser');
+  const GoEasy = inject('GoEasy');
+  const goEasy = inject('goEasy');
+  let currentUser = inject('currentUser');
 
   let conversations = ref([]);
   let actionPopup = reactive({
@@ -109,10 +109,10 @@
       onSuccess: () => {
         console.log('GoEasy connect successfully.')
       },
-      onFailed: (error:any) => {
+      onFailed: (error) => {
         console.log('Failed to connect GoEasy, code:' + error.code + ',error:' + error.content);
       },
-      onProgress: (attempts:any) => {
+      onProgress: (attempts) => {
         console.log('GoEasy is connecting', attempts);
       }
     });
@@ -120,7 +120,7 @@
 
   function loadConversations() {
     goEasy.im.latestConversations({
-      onSuccess: (result:any) => {
+      onSuccess: (result) => {
         uni.hideLoading();
         let content = result.content;
         renderConversations(content);
@@ -138,14 +138,14 @@
           });
         }
       },
-      onFailed: (error:any) => {
+      onFailed: (error) => {
         uni.hideLoading();
         console.log('获取最新会话列表失败, error:', error);
       }
     });
   }
 
-  function renderConversations(content:any) {
+  function renderConversations(content) {
     conversations.value = content.conversations;
   }
 
@@ -157,7 +157,7 @@
       onSuccess: function () {
         console.log('订阅群消息成功');
       },
-      onFailed: function (error:any) {
+      onFailed: function (error) {
         console.log('订阅群消息失败:', error);
       }
     });
@@ -176,7 +176,7 @@
           icon: 'none'
         });
       },
-      onFailed: function (error:any) {
+      onFailed: function (error) {
         console.log(description, '失败：', error);
       }
     });
@@ -194,7 +194,7 @@
             onSuccess: function () {
               console.log('删除会话成功');
             },
-            onFailed: function (error:any) {
+            onFailed: function (error) {
               console.log(error);
             },
           });
@@ -205,14 +205,14 @@
     })
   }
 
-  function chat(conversation:any) {
+  function chat(conversation) {
     let path = conversation.type === GoEasy.IM_SCENE.PRIVATE
       ? './privateChat?to=' + conversation.userId
       : './groupChat?to=' + conversation.groupId;
     uni.navigateTo({url: path});
   }
 
-  function showAction(conversation:any) {
+  function showAction(conversation) {
     actionPopup.conversation = conversation;
     actionPopup.visible = true;
   }

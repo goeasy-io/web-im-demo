@@ -91,7 +91,7 @@ class RestApi {
 
     findUsers() {
         return this.users;
-    };
+    }
 
     findFriends(user) {
         return this.users.filter((v) => v.id !== user.id);
@@ -121,7 +121,7 @@ class RestApi {
         let members = [];
         let group = this.groups.find(v => v.id === groupId);
         this.users.map(user => {
-            let userId = group.userList.find((id)=>{
+            group.userList.find((id)=>{
                 return id === user.id;
             });
             members.push(user);

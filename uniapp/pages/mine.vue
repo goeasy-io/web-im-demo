@@ -11,10 +11,10 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
   import {inject} from 'vue';
-  const goEasy: any = inject('goEasy');
-  const currentUser: any = inject('currentUser');
+  const goEasy = inject('goEasy');
+  const currentUser = inject('currentUser');
 
   function logout() {
     if(goEasy.getConnectionStatus() === 'disconnected') {
@@ -33,7 +33,7 @@
           url: './login'
         })
       },
-      onFailed: function (error:any) {
+      onFailed: function (error) {
         uni.hideLoading();
         uni.showToast({
           icon: 'none',

@@ -42,18 +42,18 @@
   </div>
 </template>
 
-<script lang="ts" setup>
-  import { ref, reactive, onMounted, inject } from 'vue';
+<script setup>
+  import { ref, reactive, onMounted } from 'vue';
   import { useRouter } from 'vue-router';
   import { useStore } from 'vuex';
-  import restApi from '../api/restapi';
+  import restApi from '../api/restapi.js';
   import { version } from '../../package.json';
 
   const store = useStore();
   const router = useRouter();
   // 响应式状态
   let userSelector = reactive({
-    users: [] as any,
+    users: [],
     visible: false,
     selectedUser: null
   })
@@ -74,7 +74,7 @@
     userSelector.visible = !userSelector.visible
   }
 
-  function selectUser (user:any) {
+  function selectUser (user) {
     userSelector.visible = false;
     userSelector.selectedUser = user;
     username.value = user.name;

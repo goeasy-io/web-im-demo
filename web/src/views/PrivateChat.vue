@@ -181,22 +181,22 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
   import {ref, reactive, onBeforeMount, onBeforeUnmount, inject, nextTick} from 'vue';
   import {useRoute, useRouter} from 'vue-router';
   import { useStore } from 'vuex';
 
   import {formatDate} from '../utils/utils'
-  import restApi from '../api/restapi';
+  import restApi from '../api/restapi.js';
   import EmojiDecoder from '../utils/EmojiDecoder';
   import GoeasyVideoPlayer from "../components/GoEasyVideoPlayer";
 
   const router = useRouter();
   const route = useRoute();
   const store = useStore();
-  const GoEasy: any = inject('GoEasy');
-  const goEasy: any = inject('goEasy');
-  const currentUser:any = store.state.currentUser;
+  const GoEasy = inject('GoEasy');
+  const goEasy = inject('goEasy');
+  const currentUser = store.state.currentUser;
 
   const IMAGE_MAX_WIDTH = 200;
   const IMAGE_MAX_HEIGHT = 150;
@@ -221,7 +221,7 @@
     data: {name: friend.value.name, avatar: friend.value.avatar}
   };
   let history = reactive({
-    messages: [] as any,
+    messages: [],
     allLoaded: false,
     loading: true
   })
@@ -242,7 +242,7 @@
     url: ''
   })
   let audioPlayer = reactive({
-    audio: {} as any,
+    audio: {},
     playingMessage: null,
   })
   let actionPopup = reactive({
@@ -252,10 +252,10 @@
   })
   let messageSelector = reactive({
     visible: false,
-    ids: [] as any
+    ids: []
   })
 
-  function onReceivedPrivateMessage(message: any) {
+  function onReceivedPrivateMessage(message) {
     if (message.senderId === friend.value.id) {
       history.messages.push(message);
       markPrivateMessageAsRead();
@@ -263,7 +263,7 @@
     scrollToBottom();
   }
 
-  function getImageHeight(width: number, height: number) {
+  function getImageHeight(width, height) {
     if (width < IMAGE_MAX_WIDTH && height < IMAGE_MAX_HEIGHT) {
       return height;
     } else if (width > height) {
@@ -273,7 +273,7 @@
     }
   }
 
-  function playAudio(audioMessage: any) {
+  function playAudio(audioMessage) {
     let playingMessage = audioPlayer.playingMessage;
 
     if (playingMessage) {
@@ -303,11 +303,11 @@
     goEasy.im.createTextMessage({
       text: text.value,
       to: to,
-      onSuccess: (message: any) => {
+      onSuccess: (message) => {
         sendMessage(message);
         text.value = '';
       },
-      onFailed: (err: any) => {
+      onFailed: (err) => {
         console.log("创建消息err:", err);
       }
     });
@@ -317,59 +317,59 @@
     emoji.visible = !emoji.visible;
   }
 
-  function chooseEmoji(emojiKey: any) {
+  function chooseEmoji(emojiKey) {
     text.value += emojiKey;
     emoji.visible = false;
   }
 
-  function sendImageMessage(e: any) {
+  function sendImageMessage(e) {
     let fileList = [...e.target.files];
     fileList.forEach((file) => {
       goEasy.im.createImageMessage({
         file: file,
         to: to,
-        onProgress: function (progress: any) {
+        onProgress: function (progress) {
           console.log(progress)
         },
-        onSuccess: (message: any) => {
+        onSuccess: (message) => {
           sendMessage(message);
         },
-        onFailed: (e: any) => {
+        onFailed: (e) => {
           console.log('error :', e);
         }
       });
     })
   }
 
-  function sendVideoMessage(e: any) {
+  function sendVideoMessage(e) {
     const file = e.target.files[0];
     goEasy.im.createVideoMessage({
       file: file,
       to: to,
-      onProgress: function (progress: any) {
+      onProgress: function (progress) {
         console.log(progress)
       },
-      onSuccess: (message: any) => {
+      onSuccess: (message) => {
         sendMessage(message);
       },
-      onFailed: (e: any) => {
+      onFailed: (e) => {
         console.log('error :', e);
       }
     });
   }
 
-  function sendFileMessage(e: any) {
+  function sendFileMessage(e) {
     const file = e.target.files[0];
     goEasy.im.createFileMessage({
       file: file,
       to: to,
-      onProgress: function (progress: any) {
+      onProgress: function (progress) {
         console.log(progress)
       },
-      onSuccess: (message: any) => {
+      onSuccess: (message) => {
         sendMessage(message);
       },
-      onFailed: (e: any) => {
+      onFailed: (e) => {
         console.log('error :', e);
       }
     });
@@ -384,32 +384,32 @@
     orderList.visible = true;
   }
 
-  function sendOrderMessage(order: any) {
+  function sendOrderMessage(order) {
     orderList.visible = false;
     goEasy.im.createCustomMessage({
       type: 'order',
       payload: order,
       to: to,
-      onSuccess: (message: any) => {
+      onSuccess: (message) => {
         sendMessage(message);
       },
-      onFailed: (err: any) => {
+      onFailed: (err) => {
         console.log("创建消息err:", err);
       }
     });
   }
 
-  function sendMessage(message: any) {
+  function sendMessage(message) {
     let messageRef = ref()
     messageRef.value = message
     history.messages.push(messageRef.value);
     scrollToBottom();
     goEasy.im.sendMessage({
       message: messageRef.value,
-      onSuccess: (message: any) => {
+      onSuccess: (message) => {
         console.log('发送成功', message);
       },
-      onFailed: function (error: any) {
+      onFailed: function (error) {
         if (error.code === 507) {
           alert('发送语音/图片/视频/文件失败，没有配置OSS存储');
           console.log('发送语音/图片/视频/文件失败，没有配置OSS存储，详情参考：https://www.goeasy.io/cn/docs/goeasy-2.x/im/message/media/send-media-message.html');
@@ -420,7 +420,7 @@
     });
   }
 
-  function showActionPopup(message: any) {
+  function showActionPopup(message) {
     const MAX_RECALLABLE_TIME = 3 * 60 * 1000; //3分钟以内的消息才可以撤回
     messageSelector.ids = [message.messageId];
     if ((Date.now() - message.timestamp) < MAX_RECALLABLE_TIME && message.senderId === currentUser.id && message.status === 'success') {
@@ -446,8 +446,8 @@
   function deleteMessage() {
     let conf = confirm("确认删除？");
     if (conf === true) {
-      let selectedMessages = [] as any;
-      history.messages.forEach((message:any) => {
+      let selectedMessages = [];
+      history.messages.forEach((message) => {
         if (messageSelector.ids.includes(message.messageId)) {
           selectedMessages.push(message);
         }
@@ -455,7 +455,7 @@
       goEasy.im.deleteMessage({
         messages: selectedMessages,
         onSuccess: () => {
-          selectedMessages.forEach((message: any) => {
+          selectedMessages.forEach((message) => {
             let index = history.messages.indexOf(message);
             if (index > -1) {
               history.messages.splice(index, 1);
@@ -463,7 +463,7 @@
           });
           messageSelector.ids = [];
         },
-        onFailed: (error: any) => {
+        onFailed: (error) => {
           console.log('error:', error);
         },
       });
@@ -473,8 +473,8 @@
   }
 
   function recallMessage() {
-    let selectedMessages = [] as any;
-    history.messages.forEach((message:any) => {
+    let selectedMessages = [];
+    history.messages.forEach((message) => {
       if (messageSelector.ids.includes(message.messageId)) {
         selectedMessages.push(message);
       }
@@ -485,17 +485,17 @@
       onSuccess: () => {
         console.log('撤回成功');
       },
-      onFailed: (error: any) => {
+      onFailed: (error) => {
         console.log('撤回失败,error:', error);
       }
     });
   }
 
-  function editRecalledMessage(content: any) {
+  function editRecalledMessage(content) {
     text.value = content;
   }
 
-  function showImagePreviewPopup(url: any) {
+  function showImagePreviewPopup(url) {
     imagePreview.visible = true;
     imagePreview.url = url;
   }
@@ -510,7 +510,7 @@
     actionPopup.visible = false;
   }
 
-  function selectMessages(e: any) {
+  function selectMessages(e) {
     if (e.target.checked) {
       messageSelector.ids.push(e.target.value)
     } else {
@@ -521,11 +521,11 @@
     }
   }
 
-  function loadHistoryMessage(isScrollToBottom: boolean) {
+  function loadHistoryMessage(isScrollToBottom) {
     history.loading = true;
     //历史消息
-    let lastMessageTimeStamp: any;
-    let lastMessage: any = history.messages[0];
+    let lastMessageTimeStamp;
+    let lastMessage = history.messages[0];
     if (lastMessage) {
       lastMessageTimeStamp = lastMessage.timestamp;
     }
@@ -533,9 +533,9 @@
       userId: friend.value.id,
       lastTimestamp: lastMessageTimeStamp,
       limit: 10,
-      onSuccess: (result: any) => {
+      onSuccess: (result) => {
         history.loading = false;
-        let messages = reactive([] as any);
+        let messages = reactive([]);
         messages.push(...result.content);
         if (messages.length === 0) {
           history.allLoaded = true;
@@ -556,7 +556,7 @@
           }
         }
       },
-      onFailed: (error: any) => {
+      onFailed: (error) => {
         //获取失败
         history.loading = false;
         console.log('获取历史消息失败, code:' + error.code + ',错误信息:' + error.content);
@@ -571,7 +571,7 @@
       onSuccess: function () {
         console.log('标记私聊已读成功');
       },
-      onFailed: function (error: any) {
+      onFailed: function (error) {
         console.log('标记私聊已读失败', error);
       },
     });
@@ -585,7 +585,7 @@
     });
   }
 
-  function renderMessageDate(message: any, index: any) {
+  function renderMessageDate(message, index) {
     if (index === 0) {
       return formatDate(message.timestamp);
     } else {
