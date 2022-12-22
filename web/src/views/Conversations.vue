@@ -71,13 +71,11 @@
 </template>
 
 <script setup>
-  import {ref, reactive, onMounted, onBeforeMount, onBeforeUnmount, inject} from 'vue';
-  import {useRouter} from 'vue-router';
+  import {ref, reactive, onMounted, onBeforeUnmount, inject} from 'vue';
   import { useStore } from 'vuex'
   import restApi from "../api/restapi.js";
   import {formatDate} from '../utils/utils'
 
-  const router = useRouter();
   const store = useStore();
   const GoEasy = inject('GoEasy');
   const goEasy = inject('goEasy');
@@ -180,12 +178,7 @@
     }
   }
 
-  onBeforeMount(() => {
-    console.log('conversation onBeforeMount')
-  })
-
   onMounted(() => {
-    console.log('conversation onMounted')
     //隐藏Conversation右键菜单
     document.addEventListener('click', () => {
       hideRightClickMenu();

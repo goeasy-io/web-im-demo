@@ -1,30 +1,30 @@
 <template>
-  <div class="contacts">
-    <div class="contacts-container">
-      <div class="user-list">
-        <div class="user-list-item" v-for="(group, id) in groups" :key="id" @click="groupChat(group)">
-          <div class="user-item-avatar">
+  <view class="contacts">
+    <view class="contacts-container">
+      <view class="user-list">
+        <view class="user-list-item" v-for="(group, id) in groups" :key="id" @click="groupChat(group)">
+          <view class="user-item-avatar">
             <image :src="group.avatar"/>
-          </div>
-          <div class="user-item-info">
+          </view>
+          <view class="user-item-info">
             <span class="user-item-info__name">{{ group.name }}</span>
-          </div>
-        </div>
-      </div>
+          </view>
+        </view>
+      </view>
       <view class="contacts-title" v-if="friends && friends.length !==0">联系人</view>
-      <div class="user-list">
-        <div class="user-list-item" v-for="(friend, id) in friends" :key="id"
+      <view class="user-list">
+        <view class="user-list-item" v-for="(friend, id) in friends" :key="id"
              @click="privateChat(friend)">
-          <div class="user-item-avatar">
+          <view class="user-item-avatar">
             <image :src="friend.avatar"></image>
-          </div>
-          <div class="user-item-info">
+          </view>
+          <view class="user-item-info">
             <span class="user-item-info__name">{{ friend.name }}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
 </template>
 
 <script setup>

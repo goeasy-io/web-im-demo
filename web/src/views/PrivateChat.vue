@@ -183,7 +183,7 @@
 
 <script setup>
   import {ref, reactive, onBeforeMount, onBeforeUnmount, inject, nextTick} from 'vue';
-  import {useRoute, useRouter} from 'vue-router';
+  import {useRoute} from 'vue-router';
   import { useStore } from 'vuex';
 
   import {formatDate} from '../utils/utils'
@@ -191,7 +191,6 @@
   import EmojiDecoder from '../utils/EmojiDecoder';
   import GoeasyVideoPlayer from "../components/GoEasyVideoPlayer";
 
-  const router = useRouter();
   const route = useRoute();
   const store = useStore();
   const GoEasy = inject('GoEasy');

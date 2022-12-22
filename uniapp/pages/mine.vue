@@ -1,14 +1,14 @@
 <template>
-  <div class="mine">
-    <div class="top">
+  <view class="mine">
+    <view class="top">
       <image :src="currentUser && currentUser.avatar"></image>
       <view class="name">{{ currentUser && currentUser.name }}</view>
-    </div>
-    <div class="bottom">
+    </view>
+    <view class="bottom">
       <text>欢迎体验GoEasyIM</text>
       <view class="logout" @click="logout">注销</view>
-    </div>
-  </div>
+    </view>
+  </view>
 </template>
 
 <script setup>
