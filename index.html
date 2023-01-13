@@ -5,6 +5,18 @@
 </head>
 <body>
     <div class="demo-container">
+        <div class="demo-download">
+            <div class="text" style="font-weight: 600">源码下载</div>
+            <div class="text">(含Uniapp，PC端和小程序版):</div>
+            <a class="button" href="https://gitee.com/goeasy-io/web-im-demo" target="_blank">
+                <div class="gitee-icon"></div>
+                Gitee
+            </a>
+            <a class="button" href="https://github.com/goeasy-io/web-im-demo" target="_blank">
+                <div class="github-icon"></div>
+                GitHub
+            </a>
+        </div>
         <div class="demo-main">
             <div class="customer-view">
                 <iframe width="300px" height="650px" src="uniapp/"></iframe>
@@ -30,14 +42,44 @@
         background: #ffffff;
         height: 100%;
     }
-    .demo-header {
+
+    .demo-download {
         width: 1170px;
         margin: 0 auto;
-        padding: 40px 0;
-        font-size: 36px;
-        color: #d02129;
-        font-weight: bold;
+        padding: 20px 15px;
+        align-self: start;
+        font-size: 18px;
+        color: #000000;
+        height: 20px;
+        line-height: 20px;
+        display: flex;
+        align-items: center;
     }
+
+    .button {
+        height: 20px;
+        margin-left: 10px;
+        display: flex;
+        font-size: 16px;
+        line-height: 23px;
+        align-items: center;
+    }
+
+    .gitee-icon {
+        width: 20px;
+        height: 20px;
+        background: url('https://www.goeasy.io/images/im/gitee.svg') no-repeat left center;
+        background-size: 62px;
+        margin-right: 5px;
+    }
+
+    .github-icon {
+        width: 20px;
+        height: 20px;
+        background: url('https://www.goeasy.io/images/im/github.svg') no-repeat center;
+        margin-right: 5px;
+    }
+
     .demo-main {
         display: flex;
         width: 1170px;
