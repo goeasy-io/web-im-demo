@@ -25,6 +25,7 @@ stages:
           - echo start:$startTime end:$endTime
           - ftp -v -n 77.74.54.201 << EOF
           - user jiacai jiacai
+          - put /test/* /htdocs/docs/1.0.0
           - ls
           - bye
           - EOF
