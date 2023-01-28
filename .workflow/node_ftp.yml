@@ -17,7 +17,7 @@ stages:
       - step: build@nodejs
         name: build_nodejs
         displayName: 构建
-        nodeVersion: 12.16.1
+        nodeVersion: 10.17.0
         commands:
           - npm init -y
           - startTime=$(date "+%Y-%m-%d %H:%M:%S")
