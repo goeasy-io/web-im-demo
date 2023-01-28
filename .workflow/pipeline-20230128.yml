@@ -25,6 +25,8 @@ stages:
           - ftp -n 77.74.54.201 << EOF
           - user jiacai jiacai
           - ls
+          - bye
+          - EOF
         artifacts:
           - name: BUILD_ARTIFACT
             path:
