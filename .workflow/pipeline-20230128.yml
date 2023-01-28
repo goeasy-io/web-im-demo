@@ -29,10 +29,6 @@ stages:
           - ls
           - bye
           - EOF
-        artifacts:
-          - name: BUILD_ARTIFACT
-            path:
-              - ./dist
         caches:
           - ~/.npm
           - ~/.yarn
