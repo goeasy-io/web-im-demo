@@ -21,7 +21,8 @@ stages:
         commands:
           - uname -a
           - yum -y install ftp
-          - ftp jiacai:jiacai@77.74.54.201
+          - 'ftp -n 77.74.54.201 '
+          - user jiacai jiacai
           - ls
         artifacts:
           - name: BUILD_ARTIFACT
