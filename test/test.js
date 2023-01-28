@@ -1,0 +1,1 @@
+console.log("node ftp 测试");
