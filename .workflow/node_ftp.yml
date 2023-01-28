@@ -21,6 +21,7 @@ stages:
         commands:
           - npm init -y
           - startTime=$(date "+%Y-%m-%d %H:%M:%S")
+          - gcc -v
           - npm install ftp-deploy
           - endTime=$(date "+%Y-%m-%d %H:%M:%S")
           - echo start:$startTime end:$endTime
