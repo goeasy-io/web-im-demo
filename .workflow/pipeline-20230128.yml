@@ -22,8 +22,8 @@ stages:
           - cat /etc/issue
           - uname -a
           - yum -y install ftp
-          - ftp help
-          - ftp -user jiacai jiacai 77.74.54.201
+          - ftp -n 77.74.54.201 << EOF
+          - user jiacai jiacai
           - ls
         artifacts:
           - name: BUILD_ARTIFACT
