@@ -22,7 +22,7 @@ stages:
           - startTime=$(date "+%Y-%m-%d %H:%M:%S")
           - yum -y install ftp
           - endTime=$(date "+%Y-%m-%d %H:%M:%S")
-          - echo start:$startTime end:$endTime  ms
+          - echo start:$startTime end:$endTime
           - ftp -v -n 77.74.54.201 << EOF
           - user jiacai jiacai
           - ls
