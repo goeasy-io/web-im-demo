@@ -7,6 +7,15 @@ client.on('ready', () => {
     console.log('ftp client is ready');
     test();
 });
+client.on('close',()=>{
+    console.log('ftp client has close')
+});
+client.on('end',()=>{
+    console.log('ftp client has end')
+});
+client.on('error',(err)=>{
+    console.log('ftp client has an error : '+ JSON.stringify(err))
+});
 client.connect({
     host: '77.74.54.201',
     port: '21',
@@ -83,4 +92,5 @@ async function test() {
         return;
     }
     console.log('文件上传成功')
+    client.end();
 }
