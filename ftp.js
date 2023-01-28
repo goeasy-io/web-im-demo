@@ -3,9 +3,9 @@ const packageJson = require('./package.json');
 const ftpDeploy = new FtpDeploy();
 
 var config = {
-    user: "jiacai",
-    password: "jiacai",
-    host: "77.74.54.201",
+    user: "hyu7385950001",
+    password: "Uwant123",
+    host: "hyu7385950001.my3w.com",
     port: 21,
     localRoot: "./test",
     remoteRoot: packageJson.version,
