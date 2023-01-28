@@ -8,7 +8,7 @@ var config = {
     host: "hyu7385950001.my3w.com",
     port: 21,
     localRoot: "./test",
-    remoteRoot: packageJson.version,
+    remoteRoot: "/htdocs/docs/" + packageJson.version,
     include: ["*", "**/*"],
     deleteRemote: true,
     forcePasv: true,
