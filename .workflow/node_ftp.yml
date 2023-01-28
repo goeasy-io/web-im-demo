@@ -19,7 +19,6 @@ stages:
         displayName: 构建
         nodeVersion: 16.14.2
         commands:
-          - python -v
           - npm init -y
           - startTime=$(date "+%Y-%m-%d %H:%M:%S")
           - npm install ftp-deploy
