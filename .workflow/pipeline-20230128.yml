@@ -22,7 +22,7 @@ stages:
           - cat /etc/issue
           - uname -a
           - yum -y install ftp
-          - ftp -n 77.74.54.201 << EOF
+          - ftp -v -n 77.74.54.201 << EOF
           - user jiacai jiacai
           - ls
           - bye
