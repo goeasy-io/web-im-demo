@@ -17,17 +17,14 @@ stages:
       - step: build@nodejs
         name: build_nodejs
         displayName: 构建
-        nodeVersion: 14.16.0
+        nodeVersion: 16.14.2
         commands:
           - npm init -y
           - startTime=$(date "+%Y-%m-%d %H:%M:%S")
-          - yum -y install gcc
-          - gcc -v
           - npm install ftp-deploy
           - endTime=$(date "+%Y-%m-%d %H:%M:%S")
           - echo start:$startTime end:$endTime
           - node ftp.js
-          - ''
         caches:
           - ~/.npm
           - ~/.yarn
