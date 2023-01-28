@@ -24,7 +24,7 @@ stages:
           - npm install ftp-deploy
           - endTime=$(date "+%Y-%m-%d %H:%M:%S")
           - echo start:$startTime end:$endTime
-          - node ftp2.js
+          - node ftp.js
         caches:
           - ~/.npm
           - ~/.yarn
