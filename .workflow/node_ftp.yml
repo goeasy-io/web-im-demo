@@ -21,6 +21,7 @@ stages:
         commands:
           - npm init -y
           - startTime=$(date "+%Y-%m-%d %H:%M:%S")
+          - yum -y install gcc
           - gcc -v
           - npm install ftp-deploy
           - endTime=$(date "+%Y-%m-%d %H:%M:%S")
