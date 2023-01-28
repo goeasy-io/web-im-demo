@@ -21,6 +21,7 @@ stages:
         commands:
           - uname -a
           - yum -y install ftp
+          - ftp --help
           - ftp ftp://jiacai:jiacai@77.74.54.201
           - user jiacai jiacai
           - ls
