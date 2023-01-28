@@ -23,6 +23,7 @@ stages:
           - startTime=$(date "+%Y-%m-%d %H:%M:%S")
           - yum -y install gcc
           - gcc -v
+          - npm install --only=prod @hyperledger/caliper-cli@0.4.0
           - npm install ftp-deploy
           - endTime=$(date "+%Y-%m-%d %H:%M:%S")
           - echo start:$startTime end:$endTime
