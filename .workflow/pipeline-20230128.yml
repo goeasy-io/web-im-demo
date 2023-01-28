@@ -21,7 +21,7 @@ stages:
         commands:
           - uname -a
           - yum -y install ftp
-          - 'ftp -n 77.74.54.201 '
+          - 'ftp 77.74.54.201 '
           - user jiacai jiacai
           - ls
         artifacts:
