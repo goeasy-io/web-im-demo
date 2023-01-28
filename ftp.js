@@ -14,7 +14,7 @@ var config = {
     remoteRoot: "/htdocs/docs/" + packageJson.version,
     include: ["*", "**/*"],
     deleteRemote: true,
-    forcePasv: true,
+    forcePasv: false,
     sftp: false
 };
 
