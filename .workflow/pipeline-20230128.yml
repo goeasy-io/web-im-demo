@@ -29,6 +29,7 @@ stages:
           - mkdir test
           - cd test
           - touch 1.md
+          - cd ../..
           - ncftpput -u hyu7385950001 -p Uwant123 -m -R hyu7385950001.my3w.com /htdocs/docs/1.0.0 ./jc/*
           - rm -rf jc
         caches:
