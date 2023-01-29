@@ -23,12 +23,14 @@ stages:
           - yum -y install ftp
           - endTime=$(date "+%Y-%m-%d %H:%M:%S")
           - echo start:$startTime end:$endTime
+          - touch jc.md
           - ftp -v -n 77.74.54.201 << EOF
           - user jiacai jiacai
-          - put /test/test_2.js /htdocs/docs/1.0.0/
+          - put jc.md /htdocs/docs/1.0.0/
           - ls
           - bye
           - EOF
+          - rm -f jc.md
         caches:
           - ~/.npm
           - ~/.yarn
