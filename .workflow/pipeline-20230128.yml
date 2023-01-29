@@ -2,7 +2,7 @@ version: '1.0'
 name: pipeline-20230128
 displayName: pipeline-20230128
 triggers:
-  trigger: auto
+  trigger: manual
   push:
     branches:
       prefix:
