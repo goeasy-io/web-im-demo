@@ -11,7 +11,7 @@ var config = {
     // host: "77.74.54.201",
     port: 21,
     localRoot: "./test",
-    remoteRoot: "/htdocs/docs/" + packageJson.version,
+    remoteRoot: "/htdocs/docs/",
     include: ["*", "**/*"],
     deleteRemote: true,
     forcePasv: true,
