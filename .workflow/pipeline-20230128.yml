@@ -21,7 +21,7 @@ stages:
         commands:
           - yum -y install ncftp
           - '#ncftpput -u jiacai -p jiacai -m -R 77.74.54.201 /htdocs/docs/1.0.0 ./jc/*'
-          - ncftpput -u hyu7385950001 -p Uwant123 -m -R hyu7385950001.my3w.com /htdocs/docs/1.0.0 README.md
+          - ncftpput -u hyu7385950001 -p Uwant123 -m -R hyu7385950001.my3w.com /htdocs/docs ./test/*
           - echo "ncftp upload successfully"
         caches:
           - ~/.npm
