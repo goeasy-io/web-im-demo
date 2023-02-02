@@ -33,10 +33,10 @@
                 <text v-if="conversation.lastMessage.senderId === currentUser.id">
                   你撤回了一条消息
                 </text>
-                <text v-else>
+                <view v-else>
                   {{ conversation.type === 'group' ? conversation.lastMessage.senderData.name : conversation.data.name }}
                   撤回了一条消息
-                </text>
+                </view>
               </view>
               <view class="item-info-bottom_action" @click.stop="showAction(conversation)"></view>
             </view>
