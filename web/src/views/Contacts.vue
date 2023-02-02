@@ -136,7 +136,7 @@
   }
 
   .contact-left {
-    width: 260px;
+    width: 240px;
     height: 100%;
     border-right: #dbd6d6 1px solid;
   }
@@ -224,7 +224,6 @@
   }
 
   .profile-card {
-    padding: 20px 0;
   }
 
   .profile-card-title {

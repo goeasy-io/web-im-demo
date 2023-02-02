@@ -108,14 +108,11 @@
   }
 
   .login-container {
-    width: 1000px;
-    height: 600px;
     border-radius: 12px;
   }
 
   .login-main {
-    width: 600px;
-    margin: 130px auto;
+    width: 850px;
     display: flex;
     flex-direction: column;
     justify-content: center;

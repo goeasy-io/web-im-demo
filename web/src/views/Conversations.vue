@@ -200,7 +200,7 @@
   }
 
   .conversation-list {
-    width: 260px;
+    width: 240px;
   }
 
   .conversation-list-container {

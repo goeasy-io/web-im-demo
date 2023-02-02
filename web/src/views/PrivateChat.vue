@@ -610,7 +610,7 @@
 
   .chat-title {
     height: 61px;
-    padding: 15px;
+    padding: 0 15px;
     display: flex;
     align-items: center;
     font-size: 18px;
@@ -1067,7 +1067,7 @@
 
   .action-popup {
     width: 850px;
-    height: 650px;
+    height: 450px;
     position: absolute;
     top: 0;
     left: -341px;
@@ -1129,7 +1129,7 @@
 
   .order-box {
     width: 850px;
-    height: 650px;
+    height: 450px;
     position: absolute;
     left: -341px;
     right: 0;
