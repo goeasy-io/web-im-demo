@@ -99,7 +99,7 @@
           {{ audio.recording ? '松开发送' : '按住录音' }}
         </view>
         <!-- GoEasyIM最大支持3k的文本消息，如需发送长文本，需调整输入框maxlength值 -->
-        <input v-else v-model="text" class="consult-input" maxlength="700" placeholder="发送消息" type="text" />
+        <input v-else v-model="text" @confirm="sendTextMessage" class="consult-input" maxlength="700" placeholder="发送消息" type="text" />
         <view @click="switchEmojiKeyboard">
           <image class="more" v-if="emoji.visible" src="/static/images/jianpan.png"></image>
           <image class="more" v-else src="/static/images/emoji.png"></image>

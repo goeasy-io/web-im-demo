@@ -112,7 +112,6 @@
   }
 
   .login-main {
-    width: 850px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -120,7 +119,6 @@
   }
 
   .login-header {
-    margin: 20px auto;
     width: 300px;
     text-align: center;
     font-size: 30px;

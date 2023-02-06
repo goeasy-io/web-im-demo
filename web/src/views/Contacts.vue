@@ -136,7 +136,7 @@
   }
 
   .contact-left {
-    width: 240px;
+    width: 220px;
     height: 100%;
     border-right: #dbd6d6 1px solid;
   }
@@ -169,8 +169,8 @@
   }
 
   .friend-avatar img {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     border-radius: 10%;
     margin-left: 10px;
   }
@@ -186,7 +186,7 @@
 
   .friend-name {
     margin: 0;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 400;
   }
 
@@ -197,7 +197,7 @@
 
   .group-item {
     display: flex;
-    padding: 8px 10px;
+    padding: 5px 10px;
     cursor: pointer;
     align-items: center;
   }
@@ -206,15 +206,18 @@
     width: 40px;
     height: 40px;
     margin-left: 10px;
-    overflow: hidden;
-    display: flex;
+  }
+
+  .group-avatar img{
+    width: 40px;
+    height: 40px;
   }
 
   .group-name {
     margin-left: 10px;
     width: 160px;
     text-align: left;
-    font-size: 15px;
+    font-size: 14px;
     line-height: 40px;
   }
 
@@ -224,6 +227,7 @@
   }
 
   .profile-card {
+    padding: 0;
   }
 
   .profile-card-title {
