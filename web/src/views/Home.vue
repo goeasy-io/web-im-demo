@@ -95,6 +95,19 @@
 </script>
 
 <style scoped>
+  @media screen and (max-width:1000px) {
+    .home-container {
+      width: 850px;
+      height: 450px;
+    }
+  }
+  @media screen and (min-width:1000px) {
+    .home-container {
+      width: 850px;
+      height: 650px;
+    }
+  }
+
   .home {
     width: 100%;
     height: 100%;
@@ -104,8 +117,6 @@
   }
 
   .home-container {
-    width: 850px;
-    height: 650px;
     background: #FFFFFF;
     display: flex;
     position: relative;
@@ -113,7 +124,7 @@
   }
 
   .home-menu {
-    width: 80px;
+    width: 60px;
     background-color: #F7F7F7;
     border-right: 1px solid #eeeeee;
     display: flex;
@@ -126,8 +137,8 @@
   }
 
   .user-avatar {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     border-radius: 10px;
     cursor: pointer;
   }
@@ -158,7 +169,6 @@
   .user-profile-header {
     padding: 18px 20px;
     border-bottom: 1px solid #EBEEF5;
-    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -201,7 +211,6 @@
   .menu-item {
     color: #303133;
     cursor: pointer;
-    box-sizing: border-box;
     height: 56px;
     position: relative;
   }

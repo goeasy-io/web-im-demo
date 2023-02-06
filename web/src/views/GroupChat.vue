@@ -131,7 +131,7 @@
 
         <!-- GoEasyIM最大支持3k的文本消息，如需发送长文本，需调整输入框maxlength值 -->
         <div class="input-box">
-          <textarea ref="input" v-model="text" maxlength="700" autocomplete="off" class="input-content"></textarea>
+          <textarea ref="input" @focus="onInputFocus" @keyup.enter="sendTextMessage" v-model="text" maxlength="700" autocomplete="off" class="input-content"></textarea>
         </div>
         <div class="send-box">
           <button class="send-button" @click="sendTextMessage">发送</button>
@@ -336,6 +336,9 @@
             console.log("创建消息err:", err);
           }
         });
+      },
+      onInputFocus () {
+        this.emoji.visible = false;
       },
       showEmojiBox() {
         this.emoji.visible = !this.emoji.visible;
@@ -607,20 +610,21 @@
   }
 
   .chat-title {
-    height: 61px;
-    padding: 15px;
+    height: 40px;
+    padding: 0 15px;
     display: flex;
     align-items: center;
     font-size: 18px;
   }
 
   .chat-avatar {
-    width: 40px;
-    height: 40px;
+    width: 35px;
+    height: 35px;
   }
 
   .chat-name {
     width: 400px;
+    font-size: 15px;
     margin-left: 10px;
     white-space: nowrap;
     overflow: hidden;
@@ -934,7 +938,7 @@
   .chat-footer {
     border-top: 1px solid #dcdfe6;
     width: 100%;
-    height: 200px;
+    height: 140px;
     background: #FFFFFF;
   }
 
@@ -994,9 +998,9 @@
   }
 
   .emoji-box {
-    width: 250px;
+    width: 210px;
     position: absolute;
-    top: -125px;
+    top: -111px;
     left: -11px;
     z-index: 2007;
     background: #fff;
@@ -1010,8 +1014,8 @@
   }
 
   .emoji-item {
-    width: 45px;
-    height: 45px;
+    width: 38px;
+    height: 38px;
     margin: 0 2px;
   }
 
@@ -1021,7 +1025,6 @@
   }
 
   .input-content {
-    height: 110px;
     border: none;
     resize: none;
     display: block;
@@ -1051,10 +1054,10 @@
 
   .action-popup {
     width: 850px;
-    height: 650px;
+    height: 100%;
     position: absolute;
     top: 0;
-    left: -341px;
+    left: -281px;
     background: rgba(51, 51, 51, 0.5);
     display: flex;
     align-items: center;
@@ -1113,9 +1116,8 @@
 
   .order-box {
     width: 850px;
-    height: 650px;
     position: absolute;
-    left: -341px;
+    left: -281px;
     right: 0;
     top: 0;
     bottom: 0;

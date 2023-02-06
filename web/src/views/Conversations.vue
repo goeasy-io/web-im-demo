@@ -200,7 +200,7 @@
   }
 
   .conversation-list {
-    width: 260px;
+    width: 220px;
   }
 
   .conversation-list-container {
@@ -214,7 +214,7 @@
   .conversation-list-content {
     flex: 1;
     overflow-y: auto;
-    padding: 20px 0;
+    padding: 10px 0;
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
@@ -230,14 +230,14 @@
 
   .conversation {
     display: flex;
-    padding: 12px 6px;
+    padding: 10px 5px;
     cursor: pointer;
   }
 
   .unread-count {
     position: absolute;
-    top: -8px;
-    left: 40px;
+    top: -10px;
+    left: 30px;
     width: 18px;
     height: 18px;
     border-radius: 50%;
@@ -256,7 +256,7 @@
     flex: 1;
     padding-left: 5px;
     display: flex;
-    width: 180px;
+    width: 160px;
     flex-direction: column;
     justify-content: space-around;
   }
@@ -269,7 +269,7 @@
   }
 
   .conversation-name {
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 500;
   }
 
@@ -287,7 +287,7 @@
 
   .conversation-content {
     display: flex;
-    width: 180px;
+    width: 160px;
     color: #b3b3b3;
   }
 
@@ -305,8 +305,8 @@
   }
 
   .conversation .avatar {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     position: relative;
   }
 
