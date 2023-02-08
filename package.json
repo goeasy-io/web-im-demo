@@ -1,0 +1,15 @@
+{
+  "name": "web-im-demo",
+  "version": "1.0.0",
+  "description": "无需搭建websocket服务，几行代码，搞定websocket！",
+  "repository": {
+    "type": "git",
+    "url": "https://gitee.com/goeasy-io/web-im-demo"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "ftp-deploy": "^2.4.3"
+  }
+}
