@@ -2,49 +2,30 @@
 # 开启错误退出
 set -e
 
-git_usernamne=${GIT_USER}
-git_password=${GIT_PASS}
-git_email=${GIT_EMAIL}
+publish_live_version () {
+    dir=dist
+    mkdir $dir
+    cp -f index.html $dir
+    sed -i "s/src=\"uniapp\/\"/src=\"\/show-im\/${version}\/uniapp\/\"/" $dir/index.html
+    sed -i "s/src=\"web\/\"/src=\"\/show-im\/${version}\/web\/\"/" $dir/index.html
 
-if ([ "$1" ])
-then
-    versionDir=$1
-    echo "$versionDir"
-else
-  echo "required version dir"
-  exit 1
-fi
+    npm ci
+    node ftp-upload.js $ftp_host $ftp_username $ftp_password
+    echo "successfully deploy ${version}"
+}
 
-# 推送至show-im
-if [ -d "show-im" ]; then
-    rm -rf show-im
-fi
-echo "https://${git_usernamne}:${git_password}@gitee.com/goeasy-io/show-im.git"
-git clone https://${git_usernamne}:${git_password}@gitee.com/goeasy-io/show-im.git
-cd show-im
-# 传入的versionDir不存在退出执行
-if [ -d $versionDir ]
-then
-  echo "exist"
+clear_useless_dir() {
+    rm -rf dist
+    rm -rf node_modules
+}
+
+ftp_host=${FTP_HOST}
+ftp_username=${FTP_USER}
+ftp_password=${FTP_PASS}
+version=${latest_version}
+if [[ ${version} = "" ]]; then
+    echo "version is not undefined"
 else
-  echo "version dir not exists"
-  exit 1
+    publish_live_version
+    clear_useless_dir
 fi
-# 清除老数据
-if [ -d "index.html" ]; then
-    rm -rf index.html
-fi
-# 拷贝versionDir下的index.html到根目录index.html
-cp $versionDir/index.html index.html
-# 设置信息
-git config user.name "${git_usernamne}"
-git config user.password "${git_password}"
-git config user.email "${git_email}"
-# 标记推送
-git add .
-git commit -m "[deploy.sh]将[$versionDir]版本部署到pages"
-git push
-# 退出当前目录
-cd ../
-# 清理本地目录
-rm -rf show-im

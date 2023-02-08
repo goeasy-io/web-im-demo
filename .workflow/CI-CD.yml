@@ -11,6 +11,10 @@ variables:
   global:
     - ACTION
     - APPKEY
+    - FTP_HOST
+    - FTP_PASS
+    - FTP_UPLOAD_COMPRESSED
+    - FTP_USER
     - GIT_EMAIL
     - GIT_PASS
     - GIT_USER
@@ -41,7 +45,7 @@ stages:
           - git config --global user.email "${GIT_EMAIL}"
           - ''
           - '# 执行构建脚本'
-          - bash build.sh ${ACTION}
+          - bash build.sh
         caches:
           - ~/.npm
           - ~/.yarn

@@ -1,24 +1,24 @@
 const FtpDeploy = require("ftp-deploy");
-const packageJson = require('./package.json');
 const ftpDeploy = new FtpDeploy();
 
-var config = {
-    user: "hyu7385950001",
-    password: "Uwant123",
-    host: "hyu7385950001.my3w.com",
-    // user: "jiacai",
-    // password: "jiacai",
-    // host: "77.74.54.201",
+let argvs = process.argv.slice(2);
+let host = argvs[0];
+let username = argvs[1];
+let password = argvs[2];
+
+let config = {
+    user: username,
+    password: password,
+    host: host,
     port: 21,
-    localRoot: "./test",
-    remoteRoot: "/htdocs/docs/",
+    localRoot: "./dist",
+    remoteRoot: "/htdocs/demo/show-im",
     include: ["*", "**/*"],
-    deleteRemote: true,
+    deleteRemote: false,
     forcePasv: true,
     sftp: false
 };
 console.log("config:", config);
-
 ftpDeploy
     .deploy(config)
     .then(res => console.log("finished:", res))
