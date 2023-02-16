@@ -13,11 +13,11 @@ variables:
     - APPKEY
     - FTP_HOST
     - FTP_PASS
-    - FTP_UPLOAD_COMPRESSED
     - FTP_USER
     - GIT_EMAIL
     - GIT_PASS
     - GIT_USER
+    - COMPRESSED
 stages:
   - name: stage-e5664bd5
     displayName: Build
