@@ -1,5 +1,5 @@
 import App from './App'
-import GoEasy from './lib/goeasy.esm.min.js'
+import GoEasy from '@/uni_modules/GOEASY-IM/js_sdk/goeasy-2.6.1.esm.min.js'
 import { createSSRApp, ref } from 'vue'
 
 const goEasy = GoEasy.getInstance({

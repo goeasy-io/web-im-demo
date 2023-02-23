@@ -31,7 +31,7 @@ Page({
 	},
 	onHide(){
 		// 销毁conversation监听器
-		wx.goEasy.im.off(wx.GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, (conversations) => {});
+		wx.goEasy.im.off(wx.GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, this.renderConversations);
 	},
 	connectGoEasy() {
 		wx.goEasy.connect({
@@ -65,9 +65,7 @@ Page({
 	},
 	listenConversationUpdate() {
 		// 监听会话列表变化
-		wx.goEasy.im.on(wx.GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, (content) => {
-			this.renderConversations(content);
-		});
+		wx.goEasy.im.on(wx.GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, this.renderConversations);
 	},
 	subscribeGroup() {
 		let groups = restApi.findGroups(this.data.currentUser);
