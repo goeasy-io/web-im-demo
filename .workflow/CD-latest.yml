@@ -1,0 +1,35 @@
+version: '1.0'
+name: CD-latest
+displayName: CD-latest
+triggers:
+  trigger: manual
+  push:
+    branches:
+      prefix:
+        - 跑不通_vue3
+variables:
+  global:
+    - FTP_HOST
+    - FTP_PASS
+    - FTP_USER
+  latest_version: ''
+stages:
+  - name: stage-b9750053
+    displayName: deploy
+    strategy: naturally
+    trigger: auto
+    executor: []
+    steps:
+      - step: build@nodejs
+        name: deploy
+        displayName: deploy
+        nodeVersion: 16.14.2
+        commands:
+          - '# 执行部署脚本'
+          - bash deploy_latest.sh
+        caches:
+          - ~/.npm
+          - ~/.yarn
+        notify: []
+        strategy:
+          retry: '0'

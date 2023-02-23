@@ -4,7 +4,7 @@ import { createSSRApp, ref } from 'vue'
 
 const goEasy = GoEasy.getInstance({
   host: 'hangzhou.goeasy.io',	//应用所在的区域地址: [hangzhou.goeasy.io, 新加坡暂不支持IM，敬请期待]
-  appkey: 'BC-xxxx',	// common key,
+  appkey: import.meta.env.VITE_VUE_APP_APPKEY,	// common key,
   modules: ['im'],
   // true表示支持通知栏提醒，false则表示不需要通知栏提醒
   allowNotification: true //仅有效于app,小程序和H5将会被自动忽略

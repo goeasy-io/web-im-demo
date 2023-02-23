@@ -1,0 +1,54 @@
+version: '1.0'
+name: CI-CD
+displayName: CI-CD
+triggers:
+  trigger: manual
+  push:
+    branches:
+      prefix:
+        - 跑不通_vue3
+variables:
+  global:
+    - ACTION
+    - APPKEY
+    - FTP_HOST
+    - FTP_PASS
+    - FTP_USER
+    - GIT_EMAIL
+    - GIT_PASS
+    - GIT_USER
+    - COMPRESSED
+stages:
+  - name: stage-e5664bd5
+    displayName: Build
+    strategy: naturally
+    trigger: auto
+    executor: []
+    steps:
+      - step: build@nodejs
+        name: build_nodejs
+        displayName: Nodejs 构建
+        nodeVersion: 16.14.2
+        commands:
+          - '# 设置信息'
+          - git remote rm origin
+          - git remote add origin https://${GIT_USER}:${GIT_PASS}@gitee.com/goeasy-io/web-im-demo.git
+          - ''
+          - '# 更新分支'
+          - git fetch
+          - ''
+          - '# 设置NPM源，提升安装速度'
+          - npm config set registry https://registry.npmmirror.com
+          - ''
+          - git config --global user.name "${GIT_USER}"
+          - git config --global user.password "${GIT_PASS}"
+          - git config --global user.email "${GIT_EMAIL}"
+          - ''
+          - '# 执行构建脚本'
+          - bash build.sh
+        caches:
+          - ~/.npm
+          - ~/.yarn
+        notify: []
+        strategy:
+          retry: '0'
