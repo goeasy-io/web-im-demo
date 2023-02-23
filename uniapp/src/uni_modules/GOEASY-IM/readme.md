@@ -3,8 +3,8 @@
 [GoEasy IM即时通讯](https://www.goeasy.io/cn/im.html)是[GoEasy](https://www.goeasy.io/)专为Web前端开发者打造, 天生支持H5、Uniapp和各种小程序的IM即时通讯, 快速实现私聊、群聊、在线客服!
 
 ## 体验在线示例和源码(免注册)
-* [IM示例体验](https://www.goeasy.io/cn/im-demo.html)
-* [在线客服示例体验](https://www.goeasy.io/cn/cs-demo.html)
+* [IM示例体验](https://www.goeasy.io/cn/demos/demos.html#im)
+* [在线客服示例体验](https://www.goeasy.io/cn/demos/demos.html#cs)
 
 
 ## Demo源码说明
