@@ -1,0 +1,15 @@
+{
+  "name": "helloworld",
+  "version": "1.0.0",
+  "description": "无需搭建websocket服务，几行代码，搞定websocket！",
+  "repository": {
+    "type": "git",
+    "url": "https://gitee.com/goeasy-io/helloworld.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "ftp-deploy": "^2.4.3"
+  }
+}
