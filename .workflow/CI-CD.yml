@@ -1,6 +1,6 @@
 version: '1.0'
-name: CI-CD
-displayName: CI-CD
+name: CI-CD-vue3
+displayName: CI-CD-vue3
 triggers:
   trigger: manual
   push:

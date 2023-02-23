@@ -1,6 +1,6 @@
 version: '1.0'
-name: CD-latest
-displayName: CD-latest
+name: CD-latest-vue3
+displayName: CD-latest-vue3
 triggers:
   trigger: manual
   push:
