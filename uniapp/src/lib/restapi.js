@@ -128,19 +128,6 @@ class RestApi {
         });
         return members;
     }
-
-    findGroupMemberAvatars (groupId) {
-        let avatars = [];
-        let group = this.groups.find((v) => v.id === groupId);
-        this.users.map((user) => {
-            group.userList.forEach((userId) => {
-                if (user.id === userId) {
-                    avatars.push(user.avatar);
-                }
-            });
-        });
-        return avatars;
-    }
 }
 
 export default new RestApi();

@@ -210,7 +210,7 @@
     name: route.query.name,
     avatar: route.query.avatar
   });
-  let to = {
+  let to = {//用于创建消息时传入
     id: group.value.id,
     type: GoEasy.IM_SCENE.GROUP,
     data: {name: group.value.name, avatar: group.value.avatar}
@@ -222,16 +222,19 @@
   })
 
   let text = ref('');
+  //定义表情列表
   let emoji = reactive({
     url: emojiUrl,
     map: emojiMap,
     visible: false,
     decoder: new EmojiDecoder(emojiUrl, emojiMap),
   })
+  // 订单消息
   let orderList = reactive({
     orders: [],
     visible: false,
   })
+  // 图片预览弹出框
   let imagePreview = reactive({
     visible: false,
     url: ''
@@ -240,11 +243,13 @@
     audio: {},
     playingMessage: null,
   })
+  // 展示消息删除弹出框
   let actionPopup = reactive({
     visible: false,
     message: null,
     recallable: false,
   })
+  // 消息选择
   let messageSelector = reactive({
     visible: false,
     ids: []
@@ -258,7 +263,19 @@
     }
     scrollToBottom();
   }
-
+  /**
+   * 核心就是设置高度，产生明确占位
+   *
+   * 小  (宽度和高度都小于预设尺寸)
+   *    设高=原始高度
+   * 宽 (宽度>高度)
+   *    高度= 根据宽度等比缩放
+   * 窄  (宽度<高度)或方(宽度=高度)
+   *    设高=MAX height
+   *
+   * @param width,height
+   * @returns number
+   */
   function getImageHeight(width, height) {
     if (width < IMAGE_MAX_WIDTH && height < IMAGE_MAX_HEIGHT) {
       return height;

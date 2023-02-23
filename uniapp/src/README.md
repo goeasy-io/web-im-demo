@@ -6,7 +6,7 @@
 在main.js里将appkey替换为您自己的common key
 
 ## 运行
-hbilderX 直接运行即可
+hbilderX 打开src目录作为根目录 再直接运行即可
 
 
 ## 注意事项

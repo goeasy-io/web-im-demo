@@ -82,6 +82,7 @@
   const currentUser = store.state.currentUser;
 
   let conversations = ref([]);
+  // Conversation右键菜单
   let rightClickMenu = reactive({
     conversation: null,
     visible: false,

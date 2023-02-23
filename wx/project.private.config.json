@@ -3,5 +3,6 @@
     "projectname": "GoEasyDemo-wxapp-IM-Chat",
     "setting": {
         "compileHotReLoad": true
-    }
+    },
+    "libVersion": "2.30.1"
 }
