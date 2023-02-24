@@ -260,6 +260,7 @@
   .conversation-message {
     flex: 1;
     padding-left: 5px;
+    font-size: 12px;
     display: flex;
     width: 160px;
     flex-direction: column;
