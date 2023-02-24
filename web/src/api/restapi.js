@@ -89,6 +89,17 @@ class RestApi {
         }
     ];
 
+    constructor() {
+        function applyPublicPath(list, property) {
+            list.forEach((item) => {
+                item[property] = 'https://goeasy-io.gitee.io/show-im' + item[property];
+            })
+        }
+        applyPublicPath(this.users, 'avatar', true);
+        applyPublicPath(this.groups, 'avatar', true);
+        applyPublicPath(this.orders, 'url');
+    }
+
     findUsers() {
         return this.users;
     }
