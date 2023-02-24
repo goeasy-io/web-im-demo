@@ -2,11 +2,11 @@
   "name": "GoEasyDeom-Uniapp-IM-Chat",
   "appid": "__UNI__EB91F2A",
   "description": "",
-  "versionName": "2.0.0-1",
+  "versionName": "2.0.0-2",
   "versionCode": "100",
   "transformPx": false,
   "h5": {
-    "publicPath": "/show-im/2.0.0-1/uniapp/",
+    "publicPath": "/show-im/2.0.0-2/uniapp/",
     "devServer": {
       "port": 9003,
       "disableHostCheck": true,
@@ -14,7 +14,7 @@
     },
     "router": {
       "mode": "history",
-      "base": "/show-im/2.0.0-1/uniapp/"
+      "base": "/show-im/2.0.0-2/uniapp/"
     }
   },
   "app-plus": {
