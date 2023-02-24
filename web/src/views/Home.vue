@@ -225,6 +225,7 @@
     right: 5px;
     width: 18px;
     height: 18px;
+    font-size: 12px;
     line-height: 18px;
     text-align: center;
     border-radius: 50%;
