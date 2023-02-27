@@ -1,6 +1,6 @@
 {
   "name": "GoEasyDeom-Uniapp-IM-Chat",
-  "version": "2.0.0-4",
+  "version": "2.0.0-5",
   "scripts": {
     "dev:app": "uni -p app",
     "dev:app-android": "uni -p app-android",
