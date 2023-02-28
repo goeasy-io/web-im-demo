@@ -4,7 +4,10 @@
       <div class="conversation-list-container">
         <div class="conversation-list-content">
           <div v-if="conversations.length">
-            <div v-for="(conversation, key) in conversations" :key="key" @click="chat(conversation)">
+            <router-link replace
+              v-for="(conversation, key) in conversations" :key="key"
+              :to="chatLocation(conversation)"
+            >
               <div class="conversation" @contextmenu.prevent.stop="e => showRightClickMenu(e,conversation)">
                 <div class="avatar">
                   <img :src="conversation.data.avatar"/>
@@ -50,7 +53,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </router-link>
           </div>
           <div v-else class="no-conversation">- 当前没有会话 -</div>
         </div>
@@ -72,10 +75,8 @@
   import { useStore } from 'vuex'
   import restApi from "../api/restapi.js";
   import {formatDate} from '../utils/utils'
-  import {useRouter} from "vue-router";
 
   const store = useStore();
-  const router = useRouter();
   const GoEasy = inject('GoEasy');
   const goEasy = inject('goEasy');
   const currentUser = store.state.currentUser;
@@ -165,16 +166,17 @@
     }
   }
 
-  function chat(conversation) {
+  function chatLocation (conversation) {
     let path = conversation.type === 'private' ?
       '/conversations/privatechat/'+conversation.userId :
       '/conversations/groupchat/'+conversation.groupId
-    router.replace({
+    return {
       path: path,
       query: {
         name: conversation.data.name,
         avatar: conversation.data.avatar
-      }});
+      }
+    }
   }
 
   onMounted(() => {
