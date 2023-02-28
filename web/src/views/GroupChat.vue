@@ -139,7 +139,7 @@
       </div>
     </div>
     <!-- 语音播放器 -->
-    <audio ref="audioPlayer" @ended="onAudioPlayEnd" @pause="onAudioPlayEnd"></audio>
+    <audio ref="audioPlayer.audio" @ended="onAudioPlayEnd" @pause="onAudioPlayEnd"></audio>
     <!-- 图片预览弹窗 -->
     <div v-if="imagePreview.visible" class="image-preview">
       <img :src="imagePreview.url" alt="图片"/>
@@ -328,6 +328,10 @@
 
   function onInputFocus() {
     emoji.visible = false;
+  }
+
+  function showEmojiBox() {
+    emoji.visible = !emoji.visible;
   }
 
   function chooseEmoji(emojiKey) {
