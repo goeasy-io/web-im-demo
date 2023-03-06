@@ -1069,7 +1069,7 @@
   }
 
   .action-popup {
-    width: 850px;
+    width: 848px;
     height: 100%;
     position: absolute;
     top: 0;
