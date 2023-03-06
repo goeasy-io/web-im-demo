@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
 </head>
 <body>
-    <div class="demo-container">
-        <div class="demo-main">
-            <div class="customer-view">
-                <iframe width="240px" height="450px" src="uniapp/"></iframe>
-            </div>
-            <div class="agent-view">
-                <iframe width="850px" height="450px" src="web/"></iframe>
-            </div>
+<div class="demo-container">
+    <div class="demo-main">
+        <div class="customer-view">
+            <iframe width="245px" height="500px" src="uniapp/"></iframe>
+        </div>
+        <div class="agent-view">
+            <iframe width="848px" height="500px" src="web/"></iframe>
         </div>
     </div>
+</div>
 </body>
 <style>
     html, body {
@@ -24,27 +24,6 @@
     .demo-container {
         background: #ffffff;
         height: 100%;
-    }
-
-    .demo-download {
-        width: 1110px;
-        margin: 0 auto;
-        padding: 30px 15px 15px 15px;
-        font-size: 18px;
-        color: #000000;
-        height: 20px;
-        line-height: 20px;
-        display: flex;
-        justify-content: center;
-    }
-
-    .button {
-        height: 20px;
-        margin-left: 10px;
-        display: flex;
-        font-size: 16px;
-        line-height: 23px;
-        align-items: center;
     }
 
     .gitee-icon {
@@ -64,17 +43,31 @@
 
     .demo-main {
         display: flex;
-        width: 1110px;
+        width: 1140px;
         margin: 0 auto;
     }
 
     .customer-view {
-        width: 240px;
+        width: 270px;
+        height: 550px;
         margin-right: 20px;
+        background: url('./phone.png') no-repeat top left;
+        background-size: 100%;
+    }
+
+    .customer-view iframe {
+        margin-left: 11px;
+        margin-top: 30px;
     }
 
     .agent-view {
         width: 850px;
+        height: 500px;
+        padding-top: 46px;
+        background: url(./topbar.png) no-repeat top left;
+        background-size: 100%;
+        border-radius: 20px;
+        border: 2px solid #F1F1F1;
     }
 
     .demo-title {
@@ -82,12 +75,9 @@
     }
 
     iframe {
-        border-radius: 10px;
-        border-width: 1px;
-        border-style: solid;
-        border-color: #cccccc;
+        border-radius: 20px;
+        border: none;
         border-image: none;
-        background: #ffffff;
     }
 
     h2 {
