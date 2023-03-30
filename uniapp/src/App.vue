@@ -24,4 +24,7 @@
     background: transparent;
     color: transparent;
   }
+  .uni-page-head .uni-page-head__title{
+    font-size: 30rpx !important;
+  }
 </style>

@@ -98,7 +98,7 @@
   @media screen and (max-width:1000px) {
     .home-container {
       width: 850px;
-      height: 500px;
+      height: 430px;
     }
   }
   @media screen and (min-width:1000px) {
@@ -139,6 +139,7 @@
   .user-avatar {
     width: 40px;
     height: 40px;
+    border-radius: 10px;
     cursor: pointer;
   }
 

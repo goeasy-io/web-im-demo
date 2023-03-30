@@ -1115,7 +1115,7 @@
   }
 
   .order-box {
-    width: 850px;
+    width: 848px;
     position: absolute;
     left: -281px;
     right: 0;
