@@ -98,7 +98,7 @@
   @media screen and (max-width:1000px) {
     .home-container {
       width: 850px;
-      height: 450px;
+      height: 430px;
     }
   }
   @media screen and (min-width:1000px) {

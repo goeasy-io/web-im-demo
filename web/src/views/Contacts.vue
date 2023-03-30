@@ -227,14 +227,17 @@
   }
 
   .profile-card {
-    padding: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
   }
 
   .profile-card-title {
-    padding: 60px;
+    flex: 1;
     border-bottom: 1px solid #eeeeee;
     display: flex;
     justify-content: space-around;
+    align-items: center;
   }
 
   .profile-name {

@@ -1069,7 +1069,7 @@
   }
 
   .action-popup {
-    width: 850px;
+    width: 848px;
     height: 100%;
     position: absolute;
     top: 0;
@@ -1131,7 +1131,7 @@
   }
 
   .order-box {
-    width: 850px;
+    width: 848px;
     position: absolute;
     left: -281px;
     right: 0;
