@@ -42,7 +42,7 @@
 			"path": "pages/privateChat",
 			"style": {
 				"navigationBarTitleText": "uni-app",
-				"navigationBarBackgroundColor" : "#ffffff",
+				"navigationBarBackgroundColor" : "#F1F1F1",
 				"enablePullDownRefresh": true,
                 "app-plus":{
                     "titleNView":{
@@ -59,7 +59,7 @@
 			"path": "pages/groupChat",
 			"style": {
 				"navigationBarTitleText": "群",
-				"navigationBarBackgroundColor" : "#ffffff",
+				"navigationBarBackgroundColor" : "#F1F1F1",
 				"enablePullDownRefresh": true,
                 "app-plus":{
                     "titleNView":{
