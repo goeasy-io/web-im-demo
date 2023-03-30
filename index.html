@@ -7,10 +7,10 @@
 <div class="demo-container">
     <div class="demo-main">
         <div class="customer-view">
-            <iframe width="245px" height="500px" src="uniapp/"></iframe>
+            <iframe width="245px" height="435px" src="uniapp/"></iframe>
         </div>
         <div class="agent-view">
-            <iframe width="848px" height="500px" src="web/"></iframe>
+            <iframe width="848px" height="430px" src="web/"></iframe>
         </div>
     </div>
 </div>
@@ -43,26 +43,27 @@
 
     .demo-main {
         display: flex;
-        width: 1140px;
+        width: 1200px;
+        justify-content: space-between;
         margin: 0 auto;
     }
 
     .customer-view {
         width: 270px;
-        height: 550px;
-        margin-right: 20px;
+        height: 480px;
         background: url('./phone.png') no-repeat top left;
         background-size: 100%;
+        border-radius: 20px;
     }
 
     .customer-view iframe {
-        margin-left: 11px;
-        margin-top: 30px;
+        margin-left: 12px;
+        margin-top: 25px;
     }
 
     .agent-view {
         width: 850px;
-        height: 500px;
+        height: 430px;
         padding-top: 46px;
         background: url('./topbar.png') no-repeat -5px -8px;
         background-size: 100%;
