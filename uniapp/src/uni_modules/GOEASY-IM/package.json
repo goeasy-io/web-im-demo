@@ -1,7 +1,7 @@
 {
   "id": "GOEASY-IM",
   "displayName": "GoEasy IM即时通讯聊天",
-  "version": "2.6.2",
+  "version": "2.6.4",
   "description": "快速实现im即时通讯聊天(私聊、群聊、在线客服),支持通知栏厂商通道和微信模板消息提醒，发送图片/语音/视频和处方、电商订单、位置坐标或红包等自定义im消息",
   "keywords": [
     "IM",
