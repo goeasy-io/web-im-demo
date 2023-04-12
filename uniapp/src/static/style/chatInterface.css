@@ -17,7 +17,7 @@ page {
 }
 
 .chatInterface .scroll-view .history-loaded {
-    font-size: 24rpx;
+    font-size: 34rpx;
     height: 60rpx;
     line-height: 60rpx;
     width: 100%;
@@ -26,7 +26,7 @@ page {
 }
 
 .chatInterface .scroll-view .load {
-    font-size: 24rpx;
+    font-size: 34rpx;
     height: 60rpx;
     line-height: 60rpx;
     width: 100%;
@@ -107,7 +107,7 @@ page {
 .chatInterface .scroll-view .content .file-content {
     width: 560rpx;
     height: 152rpx;
-    font-size: 28rpx;
+    font-size: 34rpx;
     background: white;
     display: flex;
     align-items: center;
@@ -123,7 +123,7 @@ page {
 .chatInterface .scroll-view .content .file-content .file-info .file-name {
     width: 400rpx;
     margin-top: 15rpx;
-    font-size: 30rpx;
+    font-size: 34rpx;
     text-overflow: ellipsis;
     overflow: hidden;
     display: -webkit-box;
@@ -134,7 +134,7 @@ page {
 
 .chatInterface .scroll-view .content .file-content .file-info .file-size {
     width: 200rpx;
-    font-size: 24rpx;
+    font-size: 34rpx;
     color: #ccc;
 }
 
@@ -191,7 +191,7 @@ page {
     box-sizing: border-box;
     border-radius: 6px;
     background: #FFFFFF;
-    font-size: 32rpx;
+    font-size: 34rpx;
 }
 
 .more {
@@ -214,7 +214,7 @@ page {
 
 .send-btn-box .btn {
     color: #FFFFFF;
-    font-size: 28rpx;
+    font-size: 34rpx;
 }
 
 .action-bottom {
@@ -251,7 +251,7 @@ page {
     background: #FFFFFF;
 }
 .action-box .action-bottom .operation-title {
-    font-size: 24rpx;
+    font-size: 34rpx;
     line-height: 50rpx;
     color: #82868E;
 }
@@ -270,7 +270,7 @@ page {
     border-radius: 6px;
     background: #cccccc;
     color: #FFFFFF;
-    font-size: 28rpx;
+    font-size: 34rpx;
     text-align: center;
 }
 
@@ -287,7 +287,7 @@ page {
     background: #F6F6F6;
     height: 150rpx;
     padding: 20rpx 0;
-    font-size: 32rpx;
+    font-size: 34rpx;
 }
 
 .chatInterface .messageSelector-box .messageSelector-btn {
@@ -413,7 +413,7 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
 
 .title {
     font-weight: 600;
-    font-size: 30rpx;
+    font-size: 34rpx;
     color: #000000;
     margin-left: 20rpx;
     margin-right: 20rpx;
@@ -434,14 +434,14 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
 }
 
 .order-id {
-    font-size: 24rpx;
+    font-size: 34rpx;
     color: #666666;
     margin-bottom: 10rpx;
 }
 
 .order-body {
     display: flex;
-    font-size: 28rpx;
+    font-size: 34rpx;
 }
 
 .order-img {
@@ -467,7 +467,7 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
 }
 
 .order-count {
-    font-size: 24rpx;
+    font-size: 34rpx;
     color: #666666;
 }
 
@@ -510,7 +510,7 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
 }
 
 .time-lag {
-    font-size: 20rpx;
+    font-size: 34rpx;
     text-align: center;
 }
 
@@ -524,7 +524,7 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
     padding: 6rpx 10rpx;
     line-height: 72rpx;
     background: #FFFFFF;
-    font-size: 24rpx;
+    font-size: 34rpx;
     border-radius: 14rpx;
     color: #000000;
     display: flex;
@@ -573,14 +573,14 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
 
 .message-read {
     color: grey;
-    font-size: 24rpx;
+    font-size: 34rpx;
     text-align: end;
     height: 36rpx;
 }
 
 .message-unread {
     color: #d02129;
-    font-size: 24rpx;
+    font-size: 34rpx;
     text-align: end;
 }
 
@@ -589,7 +589,7 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
     align-items: center;
     justify-content: center;
     line-height: 56rpx;
-    font-size: 26rpx;
+    font-size: 34rpx;
     text-align: center;
     color: grey;
 }

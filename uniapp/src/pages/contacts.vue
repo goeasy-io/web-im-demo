@@ -82,7 +82,7 @@
   .contacts .contacts-title {
     height: 80rpx;
     line-height: 100rpx;
-    font-size: 30rpx;
+    font-size: 34rpx;
     color: #666666;
     background: #F3F4F7;
     text-indent: 44rpx;
@@ -121,7 +121,7 @@
   }
 
   .contacts .user-item-info__name {
-    font-size: 30rpx;
+    font-size: 34rpx;
     font-family: Source Han Sans CN;
     font-style: normal;
     font-weight: bold;
@@ -132,7 +132,7 @@
     height: 44rpx;
     width: 64rpx;
     border-radius: 24rpx;
-    font-size: 26rpx;
+    font-size: 34rpx;
     line-height: 44rpx;
     background: #D02129;
     color: #ffffff;
