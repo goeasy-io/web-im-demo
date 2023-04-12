@@ -13,6 +13,12 @@
   }
 
   /*全局样式*/
+  * {
+    font-family: "HanHei SC",PingHei,"PingFang SC","Helvetica Neue",Helvetica,Arial,"Microsoft Yahei","Hiragino Sans GB","Heiti SC","WenQuanYi Micro Hei",sans-serif;;
+    font-style: normal;
+    font-weight: normal;
+  }
+
   body, html {
     margin: 0;
     padding: 0;
