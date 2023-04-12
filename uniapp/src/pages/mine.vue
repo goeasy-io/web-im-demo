@@ -95,6 +95,6 @@
     background-color: #d02129;
     border-radius: 10rpx;
     color: #FFFFFF;
-    font-size: 32rpx;
+    font-size: 34rpx;
   }
 </style>

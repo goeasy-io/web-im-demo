@@ -258,7 +258,7 @@
   }
 
   .conversations .item-info-top_time {
-    font-size: 26rpx;
+    font-size: 34rpx;
     color: rgba(179, 179, 179, 0.8);
     font-family: Source Han Sans CN;
   }
@@ -275,7 +275,7 @@
   }
 
   .item-info-bottom .item-info-top_content {
-    font-size: 30rpx;
+    font-size: 34rpx;
     color: #b3b3b3;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -286,7 +286,7 @@
   .item-info-bottom .item-info-bottom_action {
     width: 50rpx;
     height: 50rpx;
-    font-size: 20rpx;
+    font-size: 34rpx;
     background: url("../static/images/action.png") no-repeat center;
     background-size: 28rpx 30rpx;
   }
@@ -296,7 +296,7 @@
     text-align: center;
     height: 80rpx;
     line-height: 80rpx;
-    font-size: 28rpx;
+    font-size: 34rpx;
     color: #9D9D9D;
   }
 
@@ -308,7 +308,7 @@
     padding: 6rpx;
     background-color: #EE593C;
     color: #FFFFFF;
-    font-size: 24rpx;
+    font-size: 34rpx;
     line-height: 28rpx;
     border-radius: 24rpx;
     min-width: 24rpx;
