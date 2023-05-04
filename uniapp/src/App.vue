@@ -15,11 +15,13 @@
 
 <style>
   @import url('./static/style/chatInterface.css');
-  * {
-    font-family: "HanHei SC",PingHei,"PingFang SC","Helvetica Neue",Helvetica,Arial,"Microsoft Yahei","Hiragino Sans GB","Heiti SC","WenQuanYi Micro Hei",sans-serif;
+  /*  #ifdef  H5  */
+  *{
+    font-family: "HanHei SC",PingHei,"PingFang SC","Helvetica Neue",Helvetica,Arial,"Microsoft Yahei","Hiragino Sans GB","Heiti SC","WenQuanYi Micro Hei",sans-serif;;
     font-style: normal;
     font-weight: normal;
   }
+  /*  #endif  */
   /* 隐藏滚动条 */
   uni-scroll-view .uni-scroll-view::-webkit-scrollbar {
     display: none;
