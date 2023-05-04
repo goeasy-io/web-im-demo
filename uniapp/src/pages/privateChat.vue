@@ -681,7 +681,10 @@
       },
       onRecordStart() {
         try {
-          recorderManager.start();
+          // 更多配置参考uniapp：https://uniapp.dcloud.net.cn/api/media/record-manager.html#getrecordermanager
+          recorderManager.start({
+            duration: 600000 // 指定录音的时长,单位 ms
+          });
         } catch (e) {
           uni.showModal({
             title: '录音错误',

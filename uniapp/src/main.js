@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import App from './App';
-import GoEasy from '@/uni_modules/GOEASY-IM/js_sdk/goeasy-2.6.4.esm.min.js'
+import GoEasy from '@/uni_modules/GOEASY-IM/js_sdk/goeasy-2.6.6.esm.min.js'
 
 Vue.config.productionTip = false;
 App.mpType = 'app';
