@@ -15,7 +15,7 @@ new Vue({
 }).$mount('#app');
 
 const goEasy = GoEasy.getInstance({
-    host: 'hangzhou.goeasy.io', //应用所在的区域地址: [hangzhou.goeasy.io, 新加坡暂不支持IM，敬请期待]
+    host: 'hangzhou.goeasy.io', //应用所在的区域地址: 【hangzhou.goeasy.io |singapore.goeasy.io】
     appkey: 'BC-xxxx', // common key,
     modules: ['im'],
 });
