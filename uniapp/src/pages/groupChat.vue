@@ -425,7 +425,7 @@
           },
           onFailed: function (error) {
             if (error.code === 507) {
-              console.log('发送语音/图片/视频/文件失败，没有配置OSS存储，详情参考：https://www.goeasy.io/cn/docs/goeasy-2.x/im/message/media/send-media-message.html');
+              console.log('发送语音/图片/视频/文件失败，没有配置OSS存储，详情参考：https://docs.goeasy.io/2.x/im/message/media/alioss');
             } else {
               console.log('发送失败:', error);
             }
