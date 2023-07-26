@@ -26,12 +26,7 @@
                   </div>
                   <div class="conversation-bottom">
                     <div class="conversation-content" v-if="conversation.lastMessage.recalled">
-                      <div v-if="conversation.type === 'private'">
-                        {{ conversation.lastMessage.senderId === currentUser.id ? '你' : `"${conversation.data.name}"` }}撤回了一条消息
-                      </div>
-                      <div v-if="conversation.type === 'group'">
-                        {{ conversation.lastMessage.senderId === currentUser.id ? '你' : `"${conversation.lastMessage.senderData.name}"` }}撤回了一条消息
-                      </div>
+                      <div>{{conversation.lastMessage.recaller.id === currentUser.id ? '你' : `${conversation.lastMessage.recaller.data.name}`}}撤回了一条消息</div>
                     </div>
                     <div class="conversation-content" v-else>
                       <div class="unread-text"

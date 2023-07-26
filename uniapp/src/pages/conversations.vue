@@ -29,14 +29,9 @@
                 <text v-else>[[未识别内容]]</text>
               </view>
               <view class="item-info-top_content" v-else>
-
-                <text v-if="conversation.lastMessage.senderId === currentUser.id">
-                  你撤回了一条消息
+                <text>
+                  {{conversation.lastMessage.recaller.id === currentUser.id ? '你' : conversation.lastMessage.recaller.data.name}}撤回了一条消息
                 </text>
-                <view v-else>
-                  {{ conversation.type === 'group' ? conversation.lastMessage.senderData.name : conversation.data.name }}
-                  撤回了一条消息
-                </view>
               </view>
               <view class="item-info-bottom_action" @click.stop="showAction(conversation)"></view>
             </view>
