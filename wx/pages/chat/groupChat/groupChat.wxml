@@ -24,7 +24,7 @@
                             </view>
                         </view>
 						<view wx:else>
-						    {{message.senderData.name}}撤回了一条消息
+						    {{message.recaller.data.name}}撤回了一条消息
 						</view>
                     </view>
                     <view class="message-item" wx:else>
