@@ -15,12 +15,12 @@
         <div v-for="(message, index) in history.messages" :key="index">
           <div class="time-tips">{{ renderMessageDate(message, index) }}</div>
           <div class="message-recalled" v-if="message.recalled">
-            <div v-if="message.recaller.id === currentUser.id" class="message-recalled-self">
+            <div v-if="message.senderId !== currentUser.id">{{ message.senderData.name }}撤回了一条消息</div>
+            <div v-else class="message-recalled-self">
               <div>你撤回了一条消息</div>
               <span v-if="message.type === 'text' && Date.now()-message.timestamp< 60 * 1000 "
                     @click="editRecalledMessage(message.payload.text)">重新编辑</span>
             </div>
-            <div v-else>{{ message.recaller.data.name }}撤回了一条消息</div>
           </div>
           <div class="message-item" v-else>
             <div class="message-item-checkbox" v-if="messageSelector.visible && message.status !== 'sending'">

@@ -26,7 +26,12 @@
                   </div>
                   <div class="conversation-bottom">
                     <div class="conversation-content" v-if="conversation.lastMessage.recalled">
-                      <div>消息已被撤回</div>
+                      <div v-if="conversation.type === 'private'">
+                        {{ conversation.lastMessage.senderId === currentUser.id ? '你' : `"${conversation.data.name}"` }}撤回了一条消息
+                      </div>
+                      <div v-if="conversation.type === 'group'">
+                        {{ conversation.lastMessage.senderId === currentUser.id ? '你' : `"${conversation.lastMessage.senderData.name}"` }}撤回了一条消息
+                      </div>
                     </div>
                     <div class="conversation-content" v-else>
                       <div class="unread-text"

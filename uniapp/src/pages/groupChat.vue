@@ -14,12 +14,12 @@
             {{ renderMessageDate(message, index) }}
           </view>
           <view class="message-recalled" v-if="message.recalled">
-            <view v-if="message.recaller.id === currentUser.id" class="message-recalled-self">
+            <view v-if="message.senderId !== currentUser.id">{{ message.senderData.name }}撤回了一条消息</view>
+            <view v-else class="message-recalled-self">
               <view>你撤回了一条消息</view>
               <span v-if="message.type === 'text' && Date.now()-message.timestamp< 60 * 1000 "
                     @click="editRecalledMessage(message.payload.text)">重新编辑</span>
             </view>
-			<view v-else>{{ message.recaller.data.name }}撤回了一条消息</view>
           </view>
           <view class="message-item" v-else>
             <view class="message-item-checkbox">

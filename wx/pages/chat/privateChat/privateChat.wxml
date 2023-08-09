@@ -17,13 +17,13 @@
                     <view class="time-lag">{{message.showTime}}</view>
                     <!--消息内容-->
                     <view class="message-recalled" wx:if="{{message.recalled}}">
-                        <view wx:if="{{message.recaller.id === currentUser.id}}" class="message-recalled-self">
+                        <view wx:if="{{message.senderId !== currentUser.id}}">{{friend.name}}撤回了一条消息</view>
+                        <view wx:else class="message-recalled-self">
                             <view>你撤回了一条消息</view>
                             <view class="re-edit" wx:if="{{message.editable}}" data-text="{{message.payload.text}}"
                                   bindtap="editRecalledMessage">重新编辑
                             </view>
                         </view>
-                        <view wx:else>{{message.recaller.data.name}}撤回了一条消息</view>
                     </view>
                     <view class="message-item" wx:else>
                         <view class="message-item-checkbox" wx:if="{{messageSelector.visible}}">
