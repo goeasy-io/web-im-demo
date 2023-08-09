@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import App from './App.vue';
 import router from './router/index';
-import GoEasy from 'goeasy'
+import GoEasy from './goeasy-2.7.1.esm.min'
 
 Vue.config.productionTip = false;
 
