@@ -26,7 +26,7 @@
                   </div>
                   <div class="conversation-bottom">
                     <div class="conversation-content" v-if="conversation.lastMessage.recalled">
-                      <div>{{conversation.lastMessage.recaller.id === currentUser.id ? '你' : `${conversation.lastMessage.recaller.data.name}`}}撤回了一条消息</div>
+                      <div>消息已被撤回</div>
                     </div>
                     <div class="conversation-content" v-else>
                       <div class="unread-text"

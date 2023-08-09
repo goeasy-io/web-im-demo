@@ -14,7 +14,7 @@
                     <view class="item-info-bottom">
                         <view class="item-info-bottom-item">
 							<view wx:if="{{conversation.lastMessage.recalled}}" class="item-info-top_content">
-								{{conversation.lastMessage.recaller.id === currentUser.id ? '你' : conversation.lastMessage.recaller.data.name }}撤回了一条消息
+                                消息已被撤回
 							</view>
                             <view wx:else class="item-info-top_content" >
                                 <view class="unread-text">
@@ -31,7 +31,7 @@
                                 <view wx:elif="{{conversation.lastMessage.type == 'order'}}">[自定义消息:订单]</view>
                                 <view wx:else>[[未识别内容]]</view>
                             </view>
-                        
+
                             <view class="item-info-bottom_action" catchtap="showAction" data-conversation="{{conversation}}">
                                 <image class="item-info-bottom_action-image" src="/static/images/action.png"></image>
                             </view>

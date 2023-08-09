@@ -30,7 +30,7 @@
               </view>
               <view class="item-info-top_content" v-else>
                 <text>
-                  {{conversation.lastMessage.recaller.id === currentUser.id ? '你' : conversation.lastMessage.recaller.data.name}}撤回了一条消息
+                  消息已被撤回
                 </text>
               </view>
               <view class="item-info-bottom_action" @click.stop="showAction(conversation)"></view>
@@ -116,6 +116,7 @@
             uni.hideLoading();
             let content = result.content;
             this.renderConversations(content);
+            console.log('renderConversations',content)
             let unreadTotal = content.unreadTotal;
             if(unreadTotal > 0) {
               uni.setTabBarBadge({
