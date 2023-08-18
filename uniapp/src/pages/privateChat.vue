@@ -449,22 +449,7 @@
             notification: {
               title: this.currentUser.name + '发来一段文字',
               body: body,
-              sound: 'sound',
-              vendorOptions:{
-              	huawei: {
-              	  category: 'EXPRESS'
-              	},
-              	oppo: {
-              	  channel_id: 'order_channel'
-              	},
-              	xiaomi: {
-              	  channel_id: '108482'
-              	},
-              	vivo:{
-              	  classification:1,
-              	  category: "ORDER"
-              	}
-              }
+              sound: 'sound'
             },
             onSuccess: (message) => {
               this.sendMessage(message);
