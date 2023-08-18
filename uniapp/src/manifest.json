@@ -60,7 +60,10 @@
                     "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
                 ]
             },
-            "ios" : {},
+            "ios" : {
+                "UIBackgroundModes" : "audio",
+                "dSYMs" : false
+            },
             "sdkConfigs" : {
                 "ad" : {},
                 "push" : {},

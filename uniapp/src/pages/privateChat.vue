@@ -373,7 +373,8 @@
             file: res,
             notification: {
               title: this.currentUser.name + '发来一段语音',
-              body: '[语音消息]'		// 字段最长 50 字符
+              body: '[语音消息]',		// 字段最长 50 字符
+              sound: 'sound'
             },
             onProgress: function (progress) {
               console.log(progress)
@@ -447,7 +448,23 @@
             to: this.to,
             notification: {
               title: this.currentUser.name + '发来一段文字',
-              body: body
+              body: body,
+              sound: 'sound',
+              vendorOptions:{
+              	huawei: {
+              	  category: 'EXPRESS'
+              	},
+              	oppo: {
+              	  channel_id: 'order_channel'
+              	},
+              	xiaomi: {
+              	  channel_id: '108482'
+              	},
+              	vivo:{
+              	  classification:1,
+              	  category: "ORDER"
+              	}
+              }
             },
             onSuccess: (message) => {
               this.sendMessage(message);
@@ -467,7 +484,8 @@
               file: res,
               notification: {
                 title: this.currentUser.name + '发来一个视频',
-                body: '[视频消息]'		// 字段最长 50 字符
+                body: '[视频消息]',		// 字段最长 50 字符
+                sound: 'sound'
               },
               onProgress: function (progress) {
                 console.log(progress)
@@ -493,7 +511,8 @@
                 file: file,
                 notification: {
                   title: this.currentUser.name + '发来一张图片',
-                  body: '[图片消息]'		// 字段最长 50 字符
+                  body: '[图片消息]',		// 字段最长 50 字符
+                  sound: 'sound'
                 },
                 onProgress: function (progress) {
                   console.log(progress)
@@ -518,7 +537,8 @@
           to: this.to,
           notification: {
             title: this.currentUser.name + '发来一个订单',
-            body: '[订单消息]'
+            body: '[订单消息]',
+            sound: 'sound'
           },
           onSuccess: (message) => {
             this.otherTypesMessagePanelVisible = false;

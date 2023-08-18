@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
-    "goeasy": "^2.7.2",
+    "goeasy": "^2.8.0",
     "vue": "^2.6.11",
     "vue-router": "~3.0.7"
   },
