@@ -38,10 +38,8 @@
                   <view v-if="message.type === 'text'" v-html="renderTextMessage(message)"></view>
                   <image v-if="message.type === 'image'"
                      :data-url="message.payload.url"
-                     :src="message.payload.url"
-                     :style="{height: getImageHeight(message.payload.width,message.payload.height)+'rpx' }"
+                     :src="message.payload.thumbnail"
                      class="image-content"
-                     mode="heightFix"
                      @click="showImageFullScreen"
                   ></image>
                   <view class="video-snapshot" v-if="message.type === 'video'" :data-url="message.payload.video.url"

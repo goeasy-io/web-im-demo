@@ -40,8 +40,7 @@
                        v-html="emoji.decoder.decode(message.payload.text)"></div>
                   <div v-if="message.type === 'image'" class="content-image"
                        @click="showImagePreviewPopup(message.payload.url)">
-                    <img :src="message.payload.url"
-                         :style="{height:getImageHeight(message.payload.width,message.payload.height)+'px'}"/>
+                    <img :src="message.payload.thumbnail" />
                   </div>
                   <a v-if="message.type === 'file'" :href="message.payload.url" target="_blank" download="download">
                     <div class="content-file" title="点击下载">

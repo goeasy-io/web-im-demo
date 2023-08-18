@@ -46,7 +46,7 @@
                                     <rich-text class="text-content" nodes="{{message.node}}"
                                                wx:if="{{message.type ==='text'}}"></rich-text>
                                     <image class="image-content" wx:if="{{message.type === 'image'}}"
-                                           src="{{message.payload.url}}" bindtap="previewImage"
+                                           src="{{message.payload.thumbnail}}" bindtap="previewImage"
                                            data-src="{{message.payload.url}}" mode="widthFix"/>
                                     <view wx:if="{{message.type ==='audio'}}" class="audio-content"
                                           bindtap="playAudio" data-message="{{message}}">
