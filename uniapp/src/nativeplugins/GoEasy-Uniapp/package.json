@@ -71,7 +71,7 @@
 				"name": "GoEasy-Uniapp",
 				"class": "UniappModule"
 			}],
-			"resources":["sound.caf"],
+			"resources":["message.caf"],
 			"hooksClass": "UniappProxy",
 			"integrateType": "framework",
 			"deploymentTarget": "11.0"
