@@ -31,7 +31,9 @@
 		},
         "modules" : {
             "VideoPlayer" : {},
-            "Push" : {}
+            "Push" : {},
+            "Camera" : {},
+            "Record" : {}
         },
         "distribute" : {
             "android" : {
