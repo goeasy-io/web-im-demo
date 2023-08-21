@@ -497,10 +497,6 @@
                   body: '[图片消息]',		// 字段最长 50 字符
                   sound: 'message'
                 },
-                beforeSend: (message) => {
-                  message.read=true
-                  console.log('message',message)
-                },
                 onProgress: function (progress) {
                   console.log(progress)
                 },
