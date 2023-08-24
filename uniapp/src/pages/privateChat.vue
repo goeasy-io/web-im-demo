@@ -372,7 +372,8 @@
             notification: {
               title: this.currentUser.name + '发来一段语音',
               body: '[语音消息]',		// 字段最长 50 字符
-              sound: 'message'
+              sound: 'message',
+              badge: '+1'
             },
             onProgress: function (progress) {
               console.log(progress)
@@ -447,7 +448,8 @@
             notification: {
               title: this.currentUser.name + '发来一段文字',
               body: body,
-              sound: 'message'
+              sound: 'message',
+              badge: '+1'
             },
             onSuccess: (message) => {
               this.sendMessage(message);
@@ -468,7 +470,8 @@
               notification: {
                 title: this.currentUser.name + '发来一个视频',
                 body: '[视频消息]',		// 字段最长 50 字符
-                sound: 'message'
+                sound: 'message',
+                badge: '+1'
               },
               onProgress: function (progress) {
                 console.log(progress)
@@ -495,7 +498,8 @@
                 notification: {
                   title: this.currentUser.name + '发来一张图片',
                   body: '[图片消息]',		// 字段最长 50 字符
-                  sound: 'message'
+                  sound: 'message',
+                  badge: '+1'
                 },
                 onProgress: function (progress) {
                   console.log(progress)
@@ -521,7 +525,8 @@
           notification: {
             title: this.currentUser.name + '发来一个订单',
             body: '[订单消息]',
-            sound: 'message'
+            sound: 'message',
+            badge: '+1'
           },
           onSuccess: (message) => {
             this.otherTypesMessagePanelVisible = false;

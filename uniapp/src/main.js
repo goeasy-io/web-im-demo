@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import App from './App';
-import GoEasy from '@/uni_modules/GOEASY-IM/js_sdk/goeasy-2.8.0.esm.min.js'
+import GoEasy from '@/uni_modules/GOEASY-IM/js_sdk/goeasy-2.8.3.esm.min.js'
 
 Vue.config.productionTip = false;
 App.mpType = 'app';
@@ -27,6 +27,17 @@ function setUnreadNumber (content) {
     }else{
         uni.removeTabBarBadge({index: 0});
     }
+    // #ifdef APP-PLUS
+    goEasy.setBadge({
+      badge: unreadTotal,
+      onSuccess: function () {
+        console.log("setBadge successfully.")
+      },
+      onFailed: function (error) {
+        console.log("Failed to setBadge,error:" + error);
+      }
+    });
+    // #endif
 }
 
 goEasy.onClickNotification((message) => {
