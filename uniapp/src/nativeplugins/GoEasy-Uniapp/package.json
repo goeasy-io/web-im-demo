@@ -1,7 +1,7 @@
 {
-	"name": "GoEasy消息推送v1.5.0",
+	"name": "GoEasy消息推送v1.5.1",
 	"id": "GoEasy-Uniapp",
-	"version": "1.5.0",
+	"version": "1.5.1",
 	"description": "GoEasy消息推送，厂商通道集成, 参数顺序乱七八糟，GoEasy也很无奈：），因为Uniapp插件的参数是无序的",
 	"_dp_type": "nativeplugin",
 	"_dp_nativeplugin": {
