@@ -47,7 +47,7 @@
                                                wx:if="{{message.type ==='text'}}"></rich-text>
                                     <image class="image-content" wx:if="{{message.type === 'image'}}"
                                            src="{{message.payload.thumbnail}}" bindtap="previewImage"
-                                           data-src="{{message.payload.url}}" mode="widthFix"/>
+                                           data-src="{{message.payload.url}}" mode="heightFix"/>
                                     <view wx:if="{{message.type ==='audio'}}" class="audio-content"
                                           bindtap="playAudio" data-message="{{message}}">
                                         <view class="audio-facade" style="width:{{message.width}}">

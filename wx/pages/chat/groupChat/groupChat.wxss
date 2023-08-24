@@ -149,7 +149,7 @@ page {
 
 .image-content{
 	border-radius: 12rpx;
-	width: 300rpx;
+    height: 300rpx;
 }
 
 .audio-content .audio-facade {

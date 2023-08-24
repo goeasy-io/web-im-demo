@@ -40,6 +40,7 @@
                      :data-url="message.payload.url"
                      :src="message.payload.thumbnail"
                      class="image-content"
+                     mode="heightFix"
                      @click="showImageFullScreen"
                   ></image>
                   <view class="video-snapshot" v-if="message.type === 'video'" :data-url="message.payload.video.url"

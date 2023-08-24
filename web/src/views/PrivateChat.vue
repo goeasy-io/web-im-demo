@@ -790,7 +790,7 @@
   }
 
   .content-image img {
-    height: 100%;
+    max-height: 200px;
   }
 
   .content-audio {

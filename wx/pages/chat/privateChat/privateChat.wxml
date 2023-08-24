@@ -46,7 +46,7 @@
                                            wx:if="{{message.status == 'fail'}}"></image>
                                     <rich-text class="text-content" nodes="{{message.node}}"
                                                wx:if="{{message.type ==='text'}}"></rich-text>
-                                    <image class="image-content" wx:if="{{message.type === 'image'}}"
+                                    <image class="image-content" wx:if="{{message.type === 'image'}}" mode="heightFix"
                                            src="{{message.payload.thumbnail}}" bindtap="previewImage"
                                            data-src="{{message.payload.url}}" />
                                     <view wx:if="{{message.type ==='audio'}}" class="audio-content"

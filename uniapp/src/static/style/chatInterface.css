@@ -84,8 +84,7 @@ page {
 
 .chatInterface .scroll-view .content .image-content {
     border-radius: 12rpx;
-    width: 300rpx;
-    height: 300rpx;
+    max-height: 200px;
 }
 
 .chatInterface .scroll-view .content .text-content {
